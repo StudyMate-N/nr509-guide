@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NR509 Final Exam Guide — Chamberlain FNP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0F1F3D;--navy-mid:#1B2A5A;
+  --teal:#0D7377;--teal-light:#14A085;--teal-pale:#E0F5F1;
+  --amber:#E8A020;--coral:#C9432A;
+  --gray-50:#F9F8F6;--gray-100:#F1EFE9;
+  --text:#1A1917;--text-muted:#5F5D57;--text-light:#9B9890;
+  --border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.14);
+  --green:#2E7D52;--red:#C0392B;
+  --font-serif:'DM Serif Display',serif;
+  --font-sans:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html,body{
+  min-height:100vh;
+  font-family:var(--font-sans);
+  background:var(--navy);
+  color:#fff;
+  font-size:15px;
+  line-height:1.7;
+}
+
+/* ── FULL-SCREEN LANDING ── */
+.landing{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+
+/* background blobs */
+.landing::before{
+  content:'';position:absolute;right:-120px;top:-120px;
+  width:500px;height:500px;border-radius:50%;
+  background:rgba(13,115,119,.12);pointer-events:none;
+}
+.landing::after{
+  content:'';position:absolute;left:-100px;bottom:-100px;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(232,160,32,.07);pointer-events:none;
+}
+
+/* ── SCREENS ── */
+.screen{
+  display:none;
+  width:100%;
+  max-width:520px;
+  animation:fadeUp .35s ease both;
+  position:relative;
+  z-index:1;
+}
+.screen.active{display:block;}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── HERO SCREEN ── */
+.hero-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--teal-light);
+  text-align:center;margin-bottom:.75rem;
+}
+.hero-title{
+  font-family:var(--font-serif);font-size:clamp(36px,6vw,58px);
+  color:#fff;text-align:center;line-height:1.1;margin-bottom:1rem;
+}
+.hero-title span{color:var(--teal-light);}
+.hero-desc{
+  font-size:15px;color:rgba(255,255,255,.55);
+  text-align:center;max-width:420px;margin:0 auto 2rem;
+  line-height:1.7;
+}
+.hero-badges{
+  display:flex;justify-content:center;gap:.5rem;
+  flex-wrap:wrap;margin-bottom:2.5rem;
+}
+.hbadge{
+  font-size:11px;font-weight:600;
+  background:rgba(255,255,255,.08);
+  border:0.5px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.7);
+  padding:4px 12px;border-radius:20px;
+}
+.hero-cta{
+  display:flex;flex-direction:column;align-items:center;gap:.75rem;
+}
+.btn-primary{
+  background:var(--teal);color:#fff;border:none;
+  border-radius:12px;padding:14px 36px;
+  font-size:15px;font-weight:600;cursor:pointer;
+  font-family:var(--font-sans);transition:all .15s;
+  width:100%;max-width:320px;
+  box-shadow:0 4px 20px rgba(13,115,119,.35);
+}
+.btn-primary:hover{background:var(--teal-light);transform:translateY(-1px);box-shadow:0 6px 24px rgba(13,115,119,.45);}
+.hero-note{font-size:12px;color:rgba(255,255,255,.3);text-align:center;}
+
+/* ── FEATURE PILLS ── */
+.features{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:.6rem;margin-bottom:2.5rem;max-width:440px;margin-left:auto;margin-right:auto;
+}
+.feat{
+  background:rgba(255,255,255,.05);
+  border:0.5px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:.8rem .7rem;text-align:center;
+}
+.feat-icon{font-size:20px;margin-bottom:.3rem;}
+.feat-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);line-height:1.3;}
+.feat-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;}
+
+/* ── FORM CARD ── */
+.form-card{
+  background:rgba(255,255,255,.04);
+  border:0.5px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:2rem;
+  backdrop-filter:blur(8px);
+}
+.form-title{
+  font-family:var(--font-serif);font-size:24px;
+  color:#fff;margin-bottom:.35rem;
+}
+.form-sub{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:1.5rem;line-height:1.5;}
+.form-group{margin-bottom:1rem;}
+.form-group label{
+  display:block;font-size:11px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-bottom:.4rem;
+}
+.form-group input{
+  width:100%;padding:11px 14px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  font-size:14px;font-family:var(--font-sans);
+  color:#fff;
+  outline:none;transition:border-color .15s,background .15s;
+}
+.form-group input::placeholder{color:rgba(255,255,255,.3);}
+.form-group input:focus{
+  border-color:var(--teal);
+  background:rgba(255,255,255,.1);
+}
+.form-group input.error{border-color:var(--coral);}
+.form-group input::-webkit-calendar-picker-indicator{filter:invert(.6);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.form-error{
+  font-size:12px;color:#F5B7B1;
+  margin-top:.4rem;display:none;
+}
+.form-error.show{display:block;}
+
+.access-code-wrap{
+  position:relative;
+}
+.access-code-wrap input{
+  letter-spacing:.15em;font-family:var(--font-mono);
+  font-size:16px;text-align:center;
+  text-transform:uppercase;
+}
+.code-status{
+  position:absolute;right:12px;top:50%;
+  transform:translateY(-50%);font-size:16px;
+  display:none;
+}
+.code-status.ok{display:block;color:#A3E4C0;}
+.code-status.no{display:block;color:#F5B7B1;}
+
+.btn-submit{
+  background:var(--teal);color:#fff;border:none;
+  border-radius:10px;padding:13px;
+  font-size:14px;font-weight:600;cursor:pointer;
+  font-family:var(--font-sans);transition:all .15s;
+  width:100%;margin-top:.5rem;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{background:var(--teal-light);}
+.btn-submit:disabled{opacity:.45;cursor:not-allowed;}
+.btn-submit .spinner{
+  width:16px;height:16px;
+  border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .6s linear infinite;
+  display:none;
+}
+.btn-submit.loading .spinner{display:block;}
+.btn-submit.loading .btn-txt{opacity:.5;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.form-back{
+  background:transparent;border:none;
+  color:rgba(255,255,255,.35);font-size:13px;
+  cursor:pointer;font-family:var(--font-sans);
+  margin-top:.75rem;display:block;width:100%;text-align:center;
+  transition:color .15s;
+}
+.form-back:hover{color:rgba(255,255,255,.65);}
+
+/* ── ACCESS CODE SCREEN ── */
+.code-screen .form-title{text-align:center;}
+.code-screen .form-sub{text-align:center;}
+.lock-icon{
+  width:60px;height:60px;background:rgba(13,115,119,.15);
+  border:1px solid rgba(13,115,119,.3);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin:0 auto 1.25rem;
+}
+.code-attempts{
+  font-size:12px;color:rgba(255,255,255,.3);
+  text-align:center;margin-top:.5rem;
+}
+.code-attempts span{color:#F5B7B1;font-weight:600;}
+
+/* ── SUCCESS / WELCOME SCREEN ── */
+.welcome-screen{text-align:center;}
+.welcome-icon{
+  width:72px;height:72px;background:rgba(46,125,82,.2);
+  border:1.5px solid rgba(46,125,82,.4);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 1.25rem;
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.welcome-title{
+  font-family:var(--font-serif);font-size:28px;
+  color:#fff;margin-bottom:.5rem;
+}
+.welcome-name{color:var(--teal-light);}
+.welcome-sub{
+  font-size:14px;color:rgba(255,255,255,.5);
+  margin-bottom:.75rem;line-height:1.6;max-width:380px;margin-left:auto;margin-right:auto;
+}
+.welcome-countdown{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(232,160,32,.12);border:0.5px solid rgba(232,160,32,.25);
+  border-radius:10px;padding:.6rem 1.25rem;
+  font-size:14px;font-weight:600;color:#F5D18A;
+  margin-bottom:2rem;
+}
+.btn-enter{
+  background:var(--teal);color:#fff;border:none;
+  border-radius:12px;padding:14px 36px;
+  font-size:15px;font-weight:600;cursor:pointer;
+  font-family:var(--font-sans);transition:all .15s;
+  width:100%;max-width:320px;
+  box-shadow:0 4px 20px rgba(13,115,119,.35);
+}
+.btn-enter:hover{background:var(--teal-light);transform:translateY(-1px);}
+
+/* ── STEP DOTS ── */
+.step-dots{
+  display:flex;justify-content:center;gap:6px;
+  margin-bottom:2rem;position:relative;z-index:1;
+}
+.sdot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.2);transition:all .25s;
+}
+.sdot.active{background:var(--teal-light);width:20px;border-radius:3px;}
+.sdot.done{background:rgba(13,115,119,.5);}
+
+/* ── MOBILE ── */
+@media(max-width:500px){
+  .form-row{grid-template-columns:1fr;}
+  .features{grid-template-columns:1fr 1fr;}
+  .form-card{padding:1.5rem 1.25rem;}
+  .hero-title{font-size:32px;}
+  .landing{padding:1.5rem 1rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="landing">
+
+  <!-- STEP DOTS -->
+  <div class="step-dots" id="stepDots">
+    <div class="sdot active" id="dot1"></div>
+    <div class="sdot"        id="dot2"></div>
+    <div class="sdot"        id="dot3"></div>
+  </div>
+
+  <!-- ── SCREEN 1: HERO ── -->
+  <div class="screen active" id="screenHero">
+    <div class="hero-eyebrow">Chamberlain University · FNP Track · NR509</div>
+    <h1 class="hero-title">NR509 <span>Final Exam</span> Guide</h1>
+    <p class="hero-desc">The only exam prep built specifically for NR509 Advanced Physical Assessment — drawn from Bates', confirmed exam patterns, and real student decks.</p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">📚</div>
+        <div class="feat-label">7 Systems</div>
+        <div class="feat-sub">42 concepts</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">❓</div>
+        <div class="feat-label">84 Questions</div>
+        <div class="feat-sub">NR509 format</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🎧</div>
+        <div class="feat-label">Audio Guide</div>
+        <div class="feat-sub">3 episodes</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🃏</div>
+        <div class="feat-label">Flashcards</div>
+        <div class="feat-sub">70 cards</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-label">Quick Drills</div>
+        <div class="feat-sub">Performance view</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📅</div>
+        <div class="feat-label">Countdown</div>
+        <div class="feat-sub">Paced to your exam</div>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="goToScreen('screenInfo')">Get access →</button>
+      <div class="hero-note">Access code required · One-time setup</div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: INFO FORM ── -->
+  <div class="screen" id="screenInfo">
+    <div class="form-card">
+      <div class="form-title">Set up your guide</div>
+      <div class="form-sub">We'll personalize your countdown and study pace based on your exam date.</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inputFirst">First name</label>
+          <input type="text" id="inputFirst" placeholder="Sarah" autocomplete="given-name">
+          <div class="form-error" id="errFirst">Please enter your first name</div>
+        </div>
+        <div class="form-group">
+          <label for="inputLast">Last name</label>
+          <input type="text" id="inputLast" placeholder="Mitchell" autocomplete="family-name">
+          <div class="form-error" id="errLast">Please enter your last name</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inputEmail">Email address</label>
+        <input type="email" id="inputEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="form-error" id="errEmail">Please enter a valid email address</div>
+      </div>
+
+      <div class="form-group">
+        <label for="inputExam">NR509 final exam date</label>
+        <input type="date" id="inputExam">
+        <div class="form-error" id="errExam">Please select your exam date</div>
+      </div>
+
+      <button class="btn-submit" onclick="submitInfo()" id="btnInfo">
+        <span class="spinner"></span>
+        <span class="btn-txt">Continue to access code →</span>
+      </button>
+      <button class="form-back" onclick="goToScreen('screenHero')">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3: ACCESS CODE ── -->
+  <div class="screen code-screen" id="screenCode">
+    <div class="form-card">
+      <div class="lock-icon">🔐</div>
+      <div class="form-title">Enter your access code</div>
+      <div class="form-sub">Your access code was included with your purchase. Check your email or order confirmation.</div>
+
+      <div class="form-group">
+        <label for="inputCode">Access code</label>
+        <div class="access-code-wrap">
+          <input type="text" id="inputCode" placeholder="NR509-XXXX" maxlength="12"
+            oninput="onCodeInput(this)" autocomplete="off" spellcheck="false">
+          <span class="code-status" id="codeStatus"></span>
+        </div>
+        <div class="form-error" id="errCode">Invalid access code. Please check and try again.</div>
+      </div>
+
+      <div class="code-attempts" id="codeAttempts" style="display:none">
+        <span id="attemptsLeft">3</span> attempts remaining
+      </div>
+
+      <button class="btn-submit" onclick="submitCode()" id="btnCode" disabled>
+        <span class="spinner"></span>
+        <span class="btn-txt">Unlock guide →</span>
+      </button>
+      <button class="form-back" onclick="goToScreen('screenInfo')">← Back</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 4: WELCOME ── -->
+  <div class="screen welcome-screen" id="screenWelcome">
+    <div class="welcome-icon">✓</div>
+    <div class="welcome-title">Welcome, <span class="welcome-name" id="welcomeName"></span></div>
+    <div class="welcome-sub">Your guide is unlocked and personalized. Your exam countdown starts now.</div>
+    <div class="welcome-countdown" id="welcomeCountdown">
+      📅 <span id="daysText"></span>
+    </div>
+    <button class="btn-enter" onclick="enterGuide()">Enter the guide →</button>
+  </div>
+
+</div>
+
+<script>
+// ── VALID ACCESS CODES ──────────────────────────────────────
+// Add/remove codes here. Format: uppercase, no spaces.
+// In production: move validation to a server-side endpoint.
+const VALID_CODES = [
+  'NR509-2024',
+  'NR509-2025',
+  'NR509-FNP1',
+  'NR509-FNP2',
+  'NR509-BETA',
+  'CHAMBERLAIN',
+  'BATES2025',
+  'FNPTRACK',
+];
+
+let attempts = 3;
+
+// ── SCREEN NAVIGATION ──────────────────────────────────────
+const SCREEN_ORDER = ['screenHero','screenInfo','screenCode','screenWelcome'];
+
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) {
+    // Re-trigger animation
+    target.style.animation = 'none';
+    requestAnimationFrame(() => {
+      target.style.animation = '';
+      target.classList.add('active');
+    });
+  }
+  updateDots(id);
+}
+
+function updateDots(screenId) {
+  const idx = SCREEN_ORDER.indexOf(screenId);
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot' + i);
+    if (!dot) continue;
+    const di = i - 1;
+    dot.className = 'sdot';
+    if (di === idx)      dot.classList.add('active');
+    else if (di < idx)   dot.classList.add('done');
+  }
+  // Hide dots on welcome screen
+  document.getElementById('stepDots').style.display = screenId === 'screenWelcome' ? 'none' : 'flex';
+}
+
+// ── INFO FORM SUBMISSION ────────────────────────────────────
+function submitInfo() {
+  const first = document.getElementById('inputFirst').value.trim();
+  const last  = document.getElementById('inputLast').value.trim();
+  const email = document.getElementById('inputEmail').value.trim();
+  const exam  = document.getElementById('inputExam').value;
+  let valid   = true;
+
+  clearErrors();
+
+  if (!first) { showError('errFirst'); valid = false; }
+  if (!last)  { showError('errLast');  valid = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showError('errEmail'); valid = false;
+  }
+  if (!exam)  { showError('errExam');  valid = false; }
+  if (!valid) return;
+
+  // Save to sessionStorage (not sent anywhere until code validated)
+  sessionStorage.setItem('nr509_first', first);
+  sessionStorage.setItem('nr509_last',  last);
+  sessionStorage.setItem('nr509_email', email);
+  sessionStorage.setItem('nr509_exam',  exam);
+
+  goToScreen('screenCode');
+}
+
+// ── CODE HANDLING ───────────────────────────────────────────
+function onCodeInput(input) {
+  const val = input.value.toUpperCase().replace(/[^A-Z0-9\-]/g,'');
+  input.value = val;
+
+  const statusEl = document.getElementById('codeStatus');
+  const btnCode  = document.getElementById('btnCode');
+  const isValid  = VALID_CODES.includes(val);
+
+  statusEl.textContent = isValid ? '✓' : (val.length >= 6 ? '✗' : '');
+  statusEl.className = 'code-status ' + (isValid ? 'ok' : val.length >= 6 ? 'no' : '');
+  btnCode.disabled = !isValid;
+  hideError('errCode');
+}
+
+function submitCode() {
+  const code = document.getElementById('inputCode').value.toUpperCase().trim();
+  const btn  = document.getElementById('btnCode');
+
+  if (!VALID_CODES.includes(code)) {
+    attempts--;
+    showError('errCode');
+    if (attempts <= 0) {
+      btn.disabled = true;
+      document.getElementById('errCode').textContent = 'Too many attempts. Please contact support.';
+    } else {
+      const attEl = document.getElementById('codeAttempts');
+      attEl.style.display = 'block';
+      document.getElementById('attemptsLeft').textContent = attempts;
+    }
+    return;
+  }
+
+  // Code valid — show loading briefly then welcome
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  setTimeout(() => {
+    activateSession();
+    showWelcome();
+  }, 800);
+}
+
+function activateSession() {
+  const first   = sessionStorage.getItem('nr509_first') || '';
+  const last    = sessionStorage.getItem('nr509_last')  || '';
+  const email   = sessionStorage.getItem('nr509_email') || '';
+  const exam    = sessionStorage.getItem('nr509_exam')  || '';
+  const code    = document.getElementById('inputCode').value.toUpperCase().trim();
+
+  // Persist to localStorage — these are read by core.js on every page
+  localStorage.setItem('nr509exam',      exam);
+  localStorage.setItem('nr509first',     first);
+  localStorage.setItem('nr509last',      last);
+  localStorage.setItem('nr509email',     email);
+  localStorage.setItem('nr509code',      code);
+  localStorage.setItem('nr509unlocked',  'true');
+}
+
+function showWelcome() {
+  const first  = sessionStorage.getItem('nr509_first') || 'there';
+  const exam   = sessionStorage.getItem('nr509_exam');
+  const diff   = exam ? Math.round((new Date(exam + 'T00:00:00') - new Date().setHours(0,0,0,0)) / 864e5) : null;
+  const days   = diff !== null
+    ? (diff > 1 ? diff + ' days until your exam' : diff === 1 ? 'Exam is tomorrow' : diff === 0 ? 'Exam is today' : 'Exam was ' + Math.abs(diff) + ' days ago')
+    : 'Exam date set';
+
+  document.getElementById('welcomeName').textContent    = first;
+  document.getElementById('daysText').textContent       = days;
+  goToScreen('screenWelcome');
+}
+
+function enterGuide() {
+  window.location.href = 'index.html';
+}
+
+// ── HELPERS ─────────────────────────────────────────────────
+function showError(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add('show');
+  const inp = document.getElementById(id.replace('err','input').replace('Err','input'));
+  if (inp) inp.classList.add('error');
+}
+function hideError(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+}
+function clearErrors() {
+  document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('input').forEach(e => e.classList.remove('error'));
+}
+
+// ── INIT ────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  // If already unlocked, skip straight to dashboard
+  if (localStorage.getItem('nr509unlocked') === 'true') {
+    window.location.replace('index.html');
+    return;
+  }
+
+  // Pre-fill exam date if previously set
+  const storedExam = localStorage.getItem('nr509exam');
+  if (storedExam) document.getElementById('inputExam').value = storedExam;
+
+  // Pre-fill name/email if returning
+  const storedFirst = localStorage.getItem('nr509first');
+  const storedEmail = localStorage.getItem('nr509email');
+  if (storedFirst) document.getElementById('inputFirst').value = storedFirst;
+  if (storedEmail) document.getElementById('inputEmail').value = storedEmail;
+
+  // Enter key support
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+    const active = document.querySelector('.screen.active');
+    if (!active) return;
+    if (active.id === 'screenInfo') submitInfo();
+    if (active.id === 'screenCode') {
+      if (!document.getElementById('btnCode').disabled) submitCode();
+    }
+  });
+});
+</script>
+</body>
+</html>
