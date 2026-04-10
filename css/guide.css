@@ -884,14 +884,66 @@ body {
 }
 .hdb-btn:hover { background: var(--teal-light); }
 
+/* ── CONCEPT ROW (per-concept two-col) ── */
+.concept-row  { margin-bottom: 1.5rem; }
+.concept-left { min-width: 0; }
+
+/* ── MOBILE SYSTEM NAV STRIP ── */
+.mobile-sys-nav {
+  display: none;
+  background: var(--navy);
+  border-radius: var(--radius-md);
+  padding: .6rem .75rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.mobile-sys-nav::-webkit-scrollbar { display: none; }
+.mobile-sys-nav-inner {
+  display: flex;
+  gap: 6px;
+  min-width: max-content;
+}
+.mob-sys-dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  transition: all .15s;
+}
+.mob-sys-dot.done    { background: var(--teal);  color: #fff; }
+.mob-sys-dot.active  { background: #fff;         color: var(--navy); }
+.mob-sys-dot.pending { background: rgba(255,255,255,.1); color: rgba(255,255,255,.4); }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 700px) {
-  .two-col          { grid-template-columns: 1fr; }
-  .snap-row         { grid-template-columns: 1fr 1fr; }
-  .anatomy-imgs     { grid-template-columns: 1fr 1fr; }
-  .perf-stats       { grid-template-columns: 1fr 1fr; }
-  .page             { padding: 1.25rem 1rem 3rem; }
-  .nav-systems      { display: none; }
-  .systems-grid     { grid-template-columns: 1fr; }
-  .home-drill-banner{ flex-direction: column; }
+  .two-col              { grid-template-columns: 1fr; }
+  .concept-row .margin  { margin-top: .5rem; }
+  .snap-row             { grid-template-columns: 1fr 1fr; }
+  .anatomy-imgs         { grid-template-columns: 1fr; }
+  .perf-stats           { grid-template-columns: 1fr 1fr; }
+  .page                 { padding: 1.25rem 1rem 5rem; }
+  .nav-systems          { display: none; }
+  .mobile-sys-nav       { display: block; }
+  .systems-grid         { grid-template-columns: 1fr; }
+  .home-drill-banner    { flex-direction: column; }
+  .sys-hdr              { padding: 1.25rem 1rem; }
+  .sys-title            { font-size: 22px; }
+  .card-body            { padding: 1rem; }
+  .exam-body            { padding: .75rem; }
+  .drill-wrap           { padding: 1.25rem 1rem; }
+  .perf-actions         { grid-template-columns: 1fr; }
+  .home-title           { font-size: 26px; }
+  .nav                  { padding: 0 1rem; }
+  .nav-brand            { font-size: 14px; }
+  .cd-pill              { padding: 4px 8px; font-size: 11px; }
+  .nav-btn              { padding: 5px 10px; font-size: 11px; }
 }
