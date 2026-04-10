@@ -4,7 +4,14 @@
       "Bash(gh auth:*)",
       "Bash(mv \"files \\(6\\)\"/* .)",
       "Bash(rmdir \"files \\(6\\)\")",
-      "Bash(rm -f \"files \\(6\\).zip\")"
+      "Bash(rm -f \"files \\(6\\).zip\")",
+      "Bash(gh repo:*)",
+      "Bash(npx vercel:*)",
+      "Bash(mkdir -p css js components data)",
+      "Bash(mv guide.css css/)",
+      "Bash(mv core.js js/)",
+      "Bash(mv drill.js js/)",
+      "Bash(mv system-render.js js/)"
     ]
   }
 }
