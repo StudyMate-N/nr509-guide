@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth:*)",
+      "Bash(mv \"files \\(6\\)\"/* .)",
+      "Bash(rmdir \"files \\(6\\)\")",
+      "Bash(rm -f \"files \\(6\\).zip\")"
+    ]
+  }
+}
