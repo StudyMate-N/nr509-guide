@@ -797,9 +797,12 @@ body {
 }
 .systems-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
+}
+.systems-grid .sys-card:last-child:nth-child(3n + 1) {
+  grid-column: 2;
 }
 .sys-card {
   background: #fff;
@@ -934,6 +937,7 @@ body {
   .nav-systems          { display: none; }
   .mobile-sys-nav       { display: block; }
   .systems-grid         { grid-template-columns: 1fr; }
+  .systems-grid .sys-card:last-child:nth-child(3n + 1) { grid-column: 1; }
   .home-drill-banner    { flex-direction: column; }
   .sys-hdr              { padding: 1.25rem 1rem; }
   .sys-title            { font-size: 22px; }

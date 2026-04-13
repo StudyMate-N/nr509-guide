@@ -49,28 +49,30 @@
   color: rgba(255,255,255,.45);
 }
 .dash-cd {
-  background: rgba(232,160,32,.12);
-  border: 0.5px solid rgba(232,160,32,.25);
+  background: rgba(232,160,32,.18);
+  border: 1.5px solid rgba(232,160,32,.5);
   border-radius: 12px;
-  padding: .65rem 1.25rem;
+  padding: .75rem 1.5rem;
   text-align: center;
   flex-shrink: 0;
   position: relative;
   z-index: 1;
+  min-width: 110px;
 }
 .dash-cd-num {
   font-family: var(--font-serif);
-  font-size: 32px;
-  color: #F5D18A;
+  font-size: 38px;
+  color: #FFD97D;
   line-height: 1;
+  text-shadow: 0 1px 8px rgba(0,0,0,.3);
 }
 .dash-cd-lbl {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: rgba(232,160,32,.6);
-  margin-top: 2px;
+  color: rgba(255,220,120,.85);
+  margin-top: 4px;
 }
 .section-title {
   font-family: var(--font-serif);
@@ -251,7 +253,7 @@
 
   <!-- SYSTEM CARDS -->
   <div class="section-title">Study Systems</div>
-  <div class="systems-grid">
+  <div class="systems-grid" id="systemsGrid">
 
     <a href="system-1.html" class="sys-card">
       <div class="sys-card-num">System 1</div>
@@ -336,11 +338,8 @@
       </div>
     </div>
     <div class="audio-tracks" id="audioTracks">
-      <!-- Tracks rendered by JS — swap iframe src with your Podbean/Spotify embed URLs -->
       <div class="audio-placeholder" id="audioPlaceholder">
-        🎧 Audio episodes coming soon — your instructor will share the episode links.
-        <br><br>
-        <small style="color:var(--text-light)">Once audio is uploaded to Podbean or Spotify, paste the embed URLs in index.html line ~320</small>
+        🎧 Audio episodes coming soon — check back before your exam.
       </div>
     </div>
   </div>
@@ -353,7 +352,7 @@
       <p>All 7 systems · High-yield only · Spaced repetition ready</p>
       <span class="fc-badge">70 cards · 7 systems</span>
     </div>
-    <a href="flashcards.html" class="btn-fc">Open flashcards &rarr;</a>
+    <a href="flashcards.html" class="btn-fc">Open flashcards →</a>
   </div>
 
   <!-- FULL EXAM DRILL -->
