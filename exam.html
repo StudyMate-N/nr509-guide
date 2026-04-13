@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Simulator — NR509 Final Exam Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F1F3D;--navy-mid:#1B2A5A;
+  --teal:#0D7377;--teal-light:#14A085;--teal-pale:#E0F5F1;
+  --amber:#E8A020;--amber-pale:#FFF3DC;
+  --green:#2E7D52;--green-pale:#E6F5EC;
+  --red:#C0392B;--red-pale:#FDECEA;
+  --purple:#5B4FCF;--purple-pale:#EFEDFE;
+  --gray-50:#F9F8F6;--gray-100:#F1EFE9;
+  --text:#1A1917;--text-muted:#5F5D57;--text-light:#9B9890;
+  --border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.14);
+  --font-serif:'DM Serif Display',serif;
+  --font-sans:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--gray-50);color:var(--text);min-height:100vh}
+.nav{background:var(--navy);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200}
+.nav-brand{font-family:var(--font-serif);color:#fff;font-size:16px;text-decoration:none}
+.nav-brand span{color:var(--teal-light)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-back{background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.7);border-radius:8px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:var(--font-sans);text-decoration:none}
+.timer-pill{background:rgba(255,255,255,.08);border:0.5px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;color:#fff;font-family:var(--font-mono);display:flex;align-items:center;gap:6px}
+.timer-dot{width:7px;height:7px;border-radius:50%;background:#A3E4C0}
+.timer-dot.warn{background:var(--amber);animation:pulse 1s infinite}
+.timer-dot.danger{background:#F5B7B1;animation:pulse .5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.page{max-width:760px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* ── INTRO SCREEN ── */
+.intro{background:var(--navy);border-radius:20px;padding:2.5rem;text-align:center;margin-bottom:2rem}
+.intro-eye{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-light);margin-bottom:.5rem}
+.intro-title{font-family:var(--font-serif);font-size:32px;color:#fff;margin-bottom:.75rem}
+.intro-sub{font-size:14px;color:rgba(255,255,255,.5);max-width:460px;margin:0 auto 1.75rem;line-height:1.6}
+.intro-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;max-width:400px;margin:0 auto 2rem}
+.istat{background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem;text-align:center}
+.istat-num{font-family:var(--font-serif);font-size:26px;color:#fff;margin-bottom:3px}
+.istat-lbl{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em}
+.intro-rules{background:rgba(255,255,255,.04);border-radius:12px;padding:1rem 1.25rem;max-width:440px;margin:0 auto 1.75rem;text-align:left}
+.intro-rule{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:.4rem;padding-left:1.25rem;position:relative}
+.intro-rule::before{content:'·';position:absolute;left:0;color:var(--teal-light)}
+.intro-rule:last-child{margin-bottom:0}
+.btn-start{background:var(--teal);color:#fff;border:none;border-radius:12px;padding:14px 40px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all .15s;box-shadow:0 4px 20px rgba(13,115,119,.4)}
+.btn-start:hover{background:var(--teal-light);transform:translateY(-1px)}
+
+/* ── EXAM UI ── */
+.exam-ui{display:none}
+.exam-progress{background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:.75rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:14px}
+.ep-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+.ep-track{flex:1;height:6px;background:var(--gray-100);border-radius:3px}
+.ep-fill{height:100%;border-radius:3px;background:var(--teal);transition:width .3s}
+.ep-count{font-size:12px;font-weight:700;color:var(--teal);white-space:nowrap;font-family:var(--font-mono)}
+
+.q-card{background:#fff;border:0.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1rem}
+.q-card-hdr{background:var(--gray-50);border-bottom:0.5px solid var(--border);padding:.55rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.q-card-num{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-light)}
+.q-card-sys{font-size:11px;font-weight:600;color:var(--teal);background:var(--teal-pale);padding:2px 9px;border-radius:20px}
+.q-card-body{padding:1.25rem 1.25rem .75rem}
+.q-stem{font-size:14px;line-height:1.8;color:var(--text);margin-bottom:1rem}
+.opts{display:flex;flex-direction:column;gap:.35rem;padding:.25rem 0 .75rem}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:.55rem .75rem;border-radius:8px;cursor:pointer;border:0.5px solid var(--border);font-size:13px;color:var(--text);background:#fff;transition:all .12s;line-height:1.5;text-align:left;width:100%;font-family:var(--font-sans)}
+.opt:hover{background:var(--gray-50);border-color:var(--border-strong)}
+.opt.selected{border-color:var(--navy);background:#EEF1FA;border-width:1.5px}
+.opt-lt{font-weight:700;font-size:10px;min-width:20px;height:20px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;color:var(--text-muted);font-family:var(--font-mono)}
+.opt.selected .opt-lt{background:var(--navy);color:#fff}
+
+.exam-nav{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
+.btn-prev{background:#fff;border:0.5px solid var(--border);border-radius:8px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);color:var(--text);transition:all .12s}
+.btn-prev:hover{border-color:var(--border-strong)}
+.btn-prev:disabled{opacity:.3;cursor:not-allowed}
+.btn-next{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all .12s}
+.btn-next:hover{background:var(--teal-light)}
+.btn-submit{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:8px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans)}
+.btn-submit:hover{background:var(--navy-mid)}
+
+/* question map */
+.q-map{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1.5rem}
+.qm-dot{width:28px;height:28px;border-radius:6px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:var(--font-mono);border:1.5px solid transparent;transition:all .1s}
+.qm-dot.answered{background:var(--teal-pale);color:var(--teal);border-color:rgba(13,115,119,.2)}
+.qm-dot.current{background:var(--navy);color:#fff;border-color:var(--navy)}
+.qm-dot.unanswered{background:var(--gray-100);color:var(--text-light);border-color:var(--border)}
+.qm-dot:hover{transform:scale(1.1)}
+
+/* ── RESULTS SCREEN ── */
+.results{display:none}
+.results-hero{background:var(--navy);border-radius:20px;padding:2.5rem;text-align:center;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.results-hero::before{content:'';position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:rgba(13,115,119,.15)}
+.results-pct{font-family:var(--font-serif);font-size:80px;color:#fff;line-height:1}
+.results-grade{font-size:15px;font-weight:500;padding:5px 18px;border-radius:20px;display:inline-block;margin-top:.75rem}
+.rg-pass{background:rgba(46,125,82,.3);color:#A3E4C0}
+.rg-close{background:rgba(232,160,32,.25);color:#F5D18A}
+.rg-fail{background:rgba(192,57,43,.25);color:#F5B7B1}
+.results-meta{font-size:13px;color:rgba(255,255,255,.4);margin-top:.5rem}
+.results-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.5rem}
+.rs{background:#fff;border:0.5px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+.rs-num{font-family:var(--font-serif);font-size:26px;font-weight:700}
+.rs-lbl{font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.results-breakdown{background:#fff;border:0.5px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem}
+.rb-hdr{background:var(--gray-50);border-bottom:0.5px solid var(--border);padding:.65rem 1.25rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-light)}
+.rb-row{border-bottom:0.5px solid var(--border);padding:.7rem 1.25rem}
+.rb-row:last-child{border-bottom:none}
+.rb-q{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:.35rem}
+.rb-meta{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.rb-tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px}
+.rb-tag.correct{background:var(--green-pale);color:var(--green)}
+.rb-tag.wrong{background:var(--red-pale);color:var(--red)}
+.rb-tag.skip{background:var(--gray-100);color:var(--text-muted)}
+.rb-ans{font-size:12px;color:var(--text-muted)}
+.rb-rat{font-size:12px;color:var(--text-muted);margin-top:.3rem;line-height:1.55;padding-top:.3rem;border-top:0.5px solid var(--border)}
+.results-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.ra-btn{flex:1;min-width:140px;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.ra-primary{background:var(--teal);color:#fff}
+.ra-primary:hover{background:var(--teal-light)}
+.ra-secondary{background:var(--gray-100);color:var(--text)}
+.ra-secondary:hover{background:var(--gray-200)}
+
+@media(max-width:600px){
+  .intro-stats,.results-stats{grid-template-columns:1fr 1fr}
+  .exam-progress{flex-wrap:wrap}
+  .page{padding:1.25rem 1rem 4rem}
+  .results-pct{font-size:64px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-brand">NR509 <span>Exam Simulator</span></a>
+  <div class="nav-right">
+    <div class="timer-pill" id="timerPill" style="display:none">
+      <div class="timer-dot" id="timerDot"></div>
+      <span id="timerText">45:00</span>
+    </div>
+    <a href="index.html" class="nav-back">← Dashboard</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- INTRO SCREEN -->
+  <div id="introScreen">
+    <div class="intro">
+      <div class="intro-eye">NR509 Final Exam · Timed Simulation</div>
+      <div class="intro-title">Full Mock Exam</div>
+      <div class="intro-sub">35 questions across all 7 systems — the same format, difficulty, and clinical vignette style as the actual NR509 final exam.</div>
+      <div class="intro-stats">
+        <div class="istat"><div class="istat-num">35</div><div class="istat-lbl">Questions</div></div>
+        <div class="istat"><div class="istat-num">45</div><div class="istat-lbl">Minutes</div></div>
+        <div class="istat"><div class="istat-num">84%</div><div class="istat-lbl">Pass mark</div></div>
+      </div>
+      <div class="intro-rules">
+        <div class="intro-rule">Answer all 35 questions before seeing results</div>
+        <div class="intro-rule">You can go back and change answers before submitting</div>
+        <div class="intro-rule">Timer starts when you click Begin — 45 minutes</div>
+        <div class="intro-rule">Full performance breakdown with rationales at the end</div>
+      </div>
+      <button class="btn-start" onclick="startExam()">Begin Exam →</button>
+    </div>
+  </div>
+
+  <!-- EXAM UI -->
+  <div class="exam-ui" id="examUI">
+    <div class="exam-progress">
+      <span class="ep-label">Progress</span>
+      <div class="ep-track"><div class="ep-fill" id="epFill" style="width:0%"></div></div>
+      <span class="ep-count" id="epCount">0 / 35</span>
+    </div>
+    <div class="q-map" id="qMap"></div>
+    <div id="qCardContainer"></div>
+    <div class="exam-nav">
+      <button class="btn-prev" id="btnPrev" onclick="goQ(state.cur-1)" disabled>← Previous</button>
+      <button class="btn-next" id="btnNext" onclick="goQ(state.cur+1)">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="resultsScreen">
+    <div class="results-hero">
+      <div class="results-pct" id="resPct"></div>
+      <div class="results-grade" id="resGrade"></div>
+      <div class="results-meta" id="resMeta"></div>
+    </div>
+    <div class="results-stats">
+      <div class="rs"><div class="rs-num" id="rsCorr" style="color:var(--green)"></div><div class="rs-lbl">Correct</div></div>
+      <div class="rs"><div class="rs-num" id="rsWrong" style="color:var(--red)"></div><div class="rs-lbl">Wrong</div></div>
+      <div class="rs"><div class="rs-num" id="rsTime" style="color:var(--navy)"></div><div class="rs-lbl">Time</div></div>
+      <div class="rs"><div class="rs-num" id="rsPass" style="color:var(--teal)"></div><div class="rs-lbl">Pass mark</div></div>
+    </div>
+    <div class="results-breakdown">
+      <div class="rb-hdr">Question Breakdown</div>
+      <div id="rbContent"></div>
+    </div>
+    <div class="results-actions">
+      <button class="ra-btn ra-primary" onclick="retakeExam()">Retake Exam</button>
+      <a href="flashcards.html" class="ra-btn ra-secondary">Study Flashcards</a>
+      <a href="index.html" class="ra-btn ra-secondary">← Dashboard</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Auth guard
+if (localStorage.getItem('nr509unlocked') !== 'true') {
+  window.location.replace('landing.html');
+}
+
+// ── 35 EXAM QUESTIONS (5 per system) ─────────────────────────
+var EXAM_Q = [
+  // SYSTEM 1 — ABDOMINAL
+  {sys:'S1 Abdominal',
+   stem:'A <strong>39-year-old woman</strong> presents with severe RUQ pain after a fatty meal. HR 112. Direct palpation finds tenderness. On deep inspiration with fingers hooked under the RUQ costal margin, she stops abruptly mid-breath. Which condition is most consistent?',
+   opts:['Biliary colic','Acute cholecystitis','Acute pancreatitis','Peptic ulcer disease'],ans:1,
+   rat:'Positive Murphy\'s sign (involuntary inspiratory arrest) + RUQ tenderness + fatty meal trigger = acute cholecystitis. Biliary colic resolves spontaneously without Murphy\'s sign. Pancreatitis causes epigastric pain radiating to the back.'},
+  {sys:'S1 Abdominal',
+   stem:'A <strong>17-year-old male</strong> has had periumbilical pain for 14 hours that has migrated to the RLQ. Anorexia preceded the pain. You apply sustained pressure to the LLQ and he reports RLQ pain. Which sign is this?',
+   opts:['Psoas sign','Blumberg sign','Rovsing sign','Obturator sign'],ans:2,
+   rat:'Rovsing sign: sustained LLQ pressure → referred RLQ pain = peritoneal irritation from appendicitis. Blumberg = rebound on RELEASE. Psoas = hip flexion resistance. Obturator = hip rotation.'},
+  {sys:'S1 Abdominal',
+   stem:'What is the correct sequence for abdominal examination — and what makes it unique among all body systems?',
+   opts:['Inspection → Palpation → Percussion → Auscultation','Inspection → Auscultation → Percussion → Palpation','Auscultation → Inspection → Palpation → Percussion','Percussion → Inspection → Auscultation → Palpation'],ans:1,
+   rat:'IAPP: Inspect → Auscultate → Percuss → Palpate. The abdomen is the ONLY system where auscultation precedes palpation, because palpation/percussion stimulate peristalsis and alter bowel sounds.'},
+  {sys:'S1 Abdominal',
+   stem:'A <strong>61-year-old male</strong> has painless jaundice, 12 lb weight loss over 8 weeks, and a smooth, non-tender, palpable gallbladder. Murphy\'s sign is negative. Which diagnosis is most likely?',
+   opts:['Acute cholecystitis','Choledocholithiasis','Pancreatic cancer of the head','Viral hepatitis'],ans:2,
+   rat:'Courvoisier\'s sign: painless jaundice + palpable non-tender gallbladder = pancreatic head cancer until proven otherwise. Cholecystitis = tender GB + positive Murphy\'s. Choledocholithiasis = painful jaundice.'},
+  {sys:'S1 Abdominal',
+   stem:'A patient with chronic loose stools reports being woken from sleep last night by cramping and diarrhea. The stool was blood-tinged. Which finding most strongly argues AGAINST irritable bowel syndrome?',
+   opts:['Diffuse abdominal cramping','Blood in the stool','Post-meal diarrhea','Stress-related flares'],ans:1,
+   rat:'IBS NEVER produces blood in the stool. Blood is the red flag that shifts diagnosis to IBD. Nocturnal symptoms waking the patient also argue against IBS. Cramping, post-meal diarrhea, and stress-related flares can all occur in IBS.'},
+
+  // SYSTEM 2 — MSK
+  {sys:'S2 Musculoskeletal',
+   stem:'A <strong>42-year-old woman</strong> has symmetric joint pain affecting the MCPs, PIPs, and wrists — worse for >1 hour in the morning. RF positive, anti-CCP positive. Which condition is most consistent?',
+   opts:['Osteoarthritis','Gout','Rheumatoid arthritis','Ankylosing spondylitis'],ans:2,
+   rat:'RA: symmetric MCP/PIP/wrist involvement, morning stiffness >1 hour, RF+, anti-CCP+ (most specific). OA affects DIP and weight-bearing joints. Gout is asymmetric, acute, affects 1st MTP. AS affects SI joints and spine.'},
+  {sys:'S2 Musculoskeletal',
+   stem:'A <strong>17-year-old male</strong> had a left arm fracture 8 weeks ago. His shoulders are now unequal in height and his left medial scapular border wings away from his chest wall. Which maneuver confirms the diagnosis?',
+   opts:['Anterior drawer test','Compare trapezius muscle strength bilaterally','Romberg test','Obturator sign'],ans:1,
+   rat:'Scapular winging + unequal shoulder heights after injury = serratus anterior or trapezius weakness. Comparing trapezius strength (ask patient to shrug against resistance) confirms CN XI involvement. This is a torticollis/scapular winging question.'},
+  {sys:'S2 Musculoskeletal',
+   stem:'During a musculoskeletal exam, you flex the patient\'s right knee at 90 degrees, stabilize the thigh, and pull the tibia anteriorly. Pain and anterior translation occur. Which structure is likely injured?',
+   opts:['Posterior cruciate ligament','Medial collateral ligament','Anterior cruciate ligament','Lateral meniscus'],ans:2,
+   rat:'Anterior drawer test: anterior tibial translation at 90° knee flexion = ACL injury. PCL = posterior drawer test (push tibia posterior). MCL = valgus stress test. Meniscus = McMurray test.'},
+  {sys:'S2 Musculoskeletal',
+   stem:'A <strong>28-year-old male</strong> presents with low back pain radiating to the buttocks, worse with rest and improving with activity. Morning stiffness lasts >1 hour. X-ray shows bilateral sacroiliac joint fusion. Which condition?',
+   opts:['Lumbar disc herniation','Osteoarthritis of the spine','Ankylosing spondylitis','Cauda equina syndrome'],ans:2,
+   rat:'AS: young male, bilateral SI joint involvement, morning stiffness >1 hour BETTER with activity (vs RA worse with activity), bamboo spine on imaging. Cauda equina = bowel/bladder dysfunction + saddle anesthesia = emergency.'},
+  {sys:'S2 Musculoskeletal',
+   stem:'A patient with a history of tennis elbow (lateral epicondylitis) asks how to confirm the diagnosis clinically. Which maneuver is most specific?',
+   opts:['Resisted wrist FLEXION with elbow extended','Resisted wrist EXTENSION with elbow extended','Valgus stress test at the elbow','Anterior drawer test of the elbow'],ans:1,
+   rat:'Lateral epicondylitis: pain with resisted wrist EXTENSION (extensor tendons attach at lateral epicondyle). Cozen\'s test = resisted wrist extension. Medial epicondylitis (golfer\'s elbow) = pain with resisted wrist FLEXION.'},
+
+  // SYSTEM 3 — NEURO
+  {sys:'S3 Neurological',
+   stem:'A <strong>35-year-old woman</strong> on OCPs presents with the worst headache of her life — sudden onset, maximal intensity within seconds. She has never had this headache before. Neck is stiff. What is the most urgent concern?',
+   opts:['Migraine with aura','Tension headache','Subarachnoid hemorrhage','Hypertensive urgency'],ans:2,
+   rat:'"Thunderclap headache" — worst headache of life, sudden onset, maximal in seconds + neck stiffness = subarachnoid hemorrhage until proven otherwise. This is a neurological emergency. CT head without contrast → LP if CT negative.'},
+  {sys:'S3 Neurological',
+   stem:'You passively flex the patient\'s neck toward the chest. The patient involuntarily flexes both hips and knees. Which sign is this and what does it indicate?',
+   opts:['Kernig\'s sign — meningeal irritation','Brudzinski\'s sign — meningeal irritation','Romberg sign — cerebellar dysfunction','Babinski sign — UMN lesion'],ans:1,
+   rat:'Brudzinski\'s sign: passive neck flexion → involuntary hip/knee flexion = meningeal irritation. Kernig\'s = supine, hip 90°, extend knee → resistance/pain at <135° = meningeal irritation. Both have low sensitivity (~25%) but high specificity (~95%).'},
+  {sys:'S3 Neurological',
+   stem:'A patient looks laterally to the RIGHT. Which cranial nerve is being tested, and which muscle is the primary mover?',
+   opts:['CN III — medial rectus left eye','CN IV — superior oblique','CN VI — lateral rectus right eye','CN II — optic nerve'],ans:2,
+   rat:'Lateral gaze = CN VI (Abducens) activates the LATERAL RECTUS of the eye moving in that direction. CN III = most extraocular movements + pupil constriction. CN IV = superior oblique (intorsion/depression). CN VI = lateral rectus only.'},
+  {sys:'S3 Neurological',
+   stem:'A patient stands with feet together and eyes closed. She begins to sway and nearly falls. Eyes open — no sway. What does this indicate?',
+   opts:['Cerebellar ataxia','Positive Romberg — proprioceptive dysfunction','UMN lesion','Vestibular hypofunction'],ans:1,
+   rat:'Positive Romberg: normal with eyes open + falls with eyes closed = proprioceptive dysfunction (dorsal columns). Cerebellar ataxia = sways with eyes OPEN AND CLOSED. Romberg tests whether the patient compensates for proprioceptive loss using vision.'},
+  {sys:'S3 Neurological',
+   stem:'A patient presents with papilledema, headache, blurred vision, and decreased consciousness. Which condition is most consistent?',
+   opts:['Migraine','Subarachnoid hemorrhage','Increased intracranial pressure','Multiple sclerosis'],ans:2,
+   rat:'Increased ICP: papilledema (swollen optic disc) + headache + blurred vision + altered LOC. The classic triad is Cushing\'s triad (hypertension + bradycardia + irregular respirations) — a late, ominous sign. Papilledema = hallmark finding.'},
+
+  // SYSTEM 4 — GU/OB
+  {sys:'S4 GU & Obstetric',
+   stem:'A pregnant patient\'s last menstrual period was January 10. Using Naegele\'s Rule, what is her estimated due date?',
+   opts:['October 3','October 17','November 3','September 17'],ans:1,
+   rat:'Naegele\'s Rule: LMP + 9 months + 7 days (or LMP - 3 months + 7 days + 1 year). Jan 10 → subtract 3 months = Oct 10 → add 7 days = October 17. EDD = October 17.'},
+  {sys:'S4 GU & Obstetric',
+   stem:'On speculum exam, you identify the transformation zone of the cervix. Where should you obtain cells for a Pap smear?',
+   opts:['Endocervical canal only','Ectocervix only','Transformation zone — squamocolumnar junction','Vaginal fornix'],ans:2,
+   rat:'Pap smear cells must be obtained from the TRANSFORMATION ZONE (squamocolumnar junction) — where squamous meets columnar epithelium. This is where dysplastic changes and cervical cancer develop. Both endocervix and ectocervix sampling required.'},
+  {sys:'S4 GU & Obstetric',
+   stem:'A <strong>28-year-old woman</strong> at 8 weeks gestation presents with unilateral pelvic pain and vaginal bleeding. On exam, her uterus is normal size but she has adnexal tenderness. Beta-hCG is elevated. What is the priority diagnosis to rule out?',
+   opts:['Threatened abortion','Ectopic pregnancy','Ovarian cyst rupture','Pelvic inflammatory disease'],ans:1,
+   rat:'Ectopic pregnancy: unilateral pelvic pain + vaginal bleeding + elevated hCG + small uterus for dates = ectopic until proven otherwise. This is a surgical emergency — rupture causes hemorrhage. Immediate TVUS and surgical consult.'},
+  {sys:'S4 GU & Obstetric',
+   stem:'A <strong>70-year-old male</strong> has urinary hesitancy, weak stream, nocturia x3, and sensation of incomplete emptying for 6 months. On DRE, the prostate is enlarged, smooth, and non-tender. PSA is mildly elevated. What is the most likely diagnosis?',
+   opts:['Prostate cancer','Bacterial prostatitis','Benign prostatic hyperplasia (BPH)','Urinary tract infection'],ans:2,
+   rat:'BPH: older male + LUTS (hesitancy, weak stream, nocturia, incomplete emptying) + smooth enlarged non-tender prostate. Prostate cancer = hard, irregular, nodular. Prostatitis = tender, boggy. BPH is the most common cause of LUTS in men >50.'},
+  {sys:'S4 GU & Obstetric',
+   stem:'A <strong>22-year-old woman</strong> has vaginal discharge described as thin, gray, and fishy-smelling — worse after intercourse. Whiff test is positive. What is the diagnosis?',
+   opts:['Candida vaginitis','Trichomonas vaginitis','Bacterial vaginosis','Gonorrhea'],ans:2,
+   rat:'BV: thin gray/white discharge + fishy odor (especially post-coital with alkaline semen) + positive whiff test (KOH adds amine odor) + clue cells on wet prep. Candida = thick white cottage-cheese discharge, pruritus. Trichomonas = frothy yellow-green, motile protozoa.'},
+
+  // SYSTEM 5 — SPECIAL POPS
+  {sys:'S5 Special Populations',
+   stem:'A <strong>12-year-old girl</strong> has breast development with the areola and nipple projecting forward to form a secondary mound above the level of the breast. This represents which Tanner stage?',
+   opts:['Tanner Stage II','Tanner Stage III','Tanner Stage IV','Tanner Stage V'],ans:2,
+   rat:'Tanner Stage IV: areola and nipple project as a secondary mound above the breast contour. This is the key distinguishing feature of Stage IV. Stage V = areola and breast are in the same plane (no secondary mound) = adult.'},
+  {sys:'S5 Special Populations',
+   stem:'Parents bring a <strong>1-week-old male infant</strong> to clinic. On exam, the testes are not visible or palpable in the scrotum. What is the most appropriate next step?',
+   opts:['Immediate surgical referral for orchiopexy','Attempt to milk the testes down into the scrotum','Observe and reassess at 3 months — this is normal at birth','Order testicular ultrasound today'],ans:2,
+   rat:'Undescended testes at 1 week = normal. Most descend by 3 months. If still undescended at 6 months → refer for orchiopexy (ideally before 12–18 months). Do NOT milk the scrotum. Do NOT call surgical emergency at 1 week.'},
+  {sys:'S5 Special Populations',
+   stem:'Which of the following is a NORMAL expected change with aging?',
+   opts:['Dementia','Depression','Presbycusis (high-frequency hearing loss)','Orthostatic hypotension requiring treatment'],ans:2,
+   rat:'Presbycusis (age-related hearing loss, starting with HIGH frequencies) is a normal aging change. Dementia, depression, and orthostatic hypotension requiring treatment are NOT normal aging — they warrant workup and management.'},
+  {sys:'S5 Special Populations',
+   stem:'According to the 2024 USPSTF update, at what age should average-risk women begin screening mammography?',
+   opts:['Age 50 — prior guideline','Age 40 — 2024 update','Age 45','Age 35 for all women'],ans:1,
+   rat:'2024 USPSTF: start mammography at age 40 (changed from 50). Every 2 years for average-risk women aged 40–74. This is a HIGH-YIELD exam change — the old answer of 50 is WRONG. Age 40 is the current correct answer.'},
+  {sys:'S5 Special Populations',
+   stem:'A <strong>6-month-old infant</strong> takes 35 minutes to finish a 4 oz bottle and is diaphoretic during feeds. Weight is below the 3rd percentile. What does this pattern suggest?',
+   opts:['Normal feeding behavior for a 6-month-old','Gastroesophageal reflux','Cardiac distress — feeding as exertion','Cow\'s milk protein allergy'],ans:2,
+   rat:'Infant cardiac feeding sign: >30 minutes to finish a bottle = cardiac distress. Feeding = exercise for infants with heart disease. Diaphoresis + tachypnea + failure to thrive during feeds = refer for cardiac workup. Normal feeds complete in 15–20 minutes.'},
+
+  // SYSTEM 6 — BREAST
+  {sys:'S6 Breast',
+   stem:'You are performing a clinical breast exam. Which palpation pattern provides the highest coverage of breast tissue?',
+   opts:['Circular (concentric rings)','Radial spokes from nipple','Vertical strip (lawnmower pattern)','Random palpation based on symptoms'],ans:2,
+   rat:'Vertical strip technique: overlapping vertical columns axilla to sternum = 64–68% coverage. Circular = 38%, radial = 44%. Use pads of 3 middle fingers, small circular motions at each point, with patient supine and ipsilateral arm raised.'},
+  {sys:'S6 Breast',
+   stem:'On breast exam, you find a <strong>2 cm mass</strong> in the upper outer quadrant — hard, irregular borders, and does not move when you try to displace it. Which feature is most concerning for malignancy?',
+   opts:['Upper outer quadrant location','2 cm size','Fixed to surrounding tissue','Single mass vs. multiple'],ans:2,
+   rat:'FIXED = most concerning feature for malignancy. Benign masses (fibroadenoma, cysts) are MOBILE. Fixed = invasion of Cooper\'s ligaments or fascia. Other malignant features: hard, irregular, skin dimpling, nipple retraction, axillary nodes.'},
+  {sys:'S6 Breast',
+   stem:'A <strong>44-year-old woman</strong> has nipple discharge from a single duct — spontaneous, unilateral, and blood-tinged. What is the most likely cause?',
+   opts:['Galactorrhea from hyperprolactinemia','Intraductal papilloma','Fibrocystic changes','Breast abscess'],ans:1,
+   rat:'Bloody unilateral single-duct spontaneous discharge = intraductal papilloma most common cause. CONCERNING discharge: unilateral, spontaneous, bloody or clear (serous), single duct. Galactorrhea = bilateral, milky, multiductal — check prolactin.'},
+  {sys:'S6 Breast',
+   stem:'You ask a patient to press her hands firmly against her hips during breast inspection. You notice upward displacement of her right breast. What does this test for and what does the finding indicate?',
+   opts:['Serratus anterior weakness — normal finding','Pectoral fascia fixation — suspicious for malignancy','Lymphedema — sign of infection','Fibrocystic changes — benign'],ans:1,
+   rat:'Pressing hands on hips contracts the pectoralis major. If the breast is fixed to the pectoral fascia (by tumor), it moves upward abnormally. This is the pectoral fascia test — a positive result raises suspicion for malignancy.'},
+  {sys:'S6 Breast',
+   stem:'Which skin finding on breast inspection suggests inflammatory breast cancer or advanced local invasion?',
+   opts:['Nipple inversion present since puberty','Peau d\'orange appearance','Scattered Montgomery glands','Areolar hyperpigmentation'],ans:1,
+   rat:"Peau d'orange: orange-peel dimpling caused by lymphedema when tumor blocks dermal lymphatics → skin tethering and pitting. This is a sign of inflammatory breast cancer or advanced invasion. Bilateral nipple inversion since puberty is normal. Montgomery glands are normal."},
+
+  // SYSTEM 7 — CROSS-SYSTEM
+  {sys:'S7 Cross-System',
+   stem:'A 53-year-old patient asks about routine colonoscopy. According to current USPSTF guidelines, at what age should average-risk adults begin colorectal cancer screening?',
+   opts:['Age 40','Age 45','Age 50','Age 55'],ans:1,
+   rat:'USPSTF: colorectal cancer screening starts at age 45 for average-risk adults (updated from 50). Colonoscopy every 10 years OR annual FIT. Stop at 75 for routine screening. High-risk patients (family history, IBD, polyp history) screen earlier.'},
+  {sys:'S7 Cross-System',
+   stem:'During fundoscopic exam, you observe fluffy white patches on the retina. Which condition is the MOST COMMON cause of cotton-wool spots?',
+   opts:['Diabetic retinopathy','Hypertensive retinopathy','HIV retinopathy','Systemic lupus erythematosus'],ans:1,
+   rat:'Cotton-wool spots = nerve fiber layer infarcts from retinal ischemia. Most common cause: HYPERTENSION. Other causes: DM, HIV, SLE, leukemia, anemia, radiation, CMV, sarcoidosis, CRVO, polyarteritis nodosa — exam tests whether you know ALL causes.'},
+  {sys:'S7 Cross-System',
+   stem:'Using the 5 As model for smoking cessation, which step involves offering pharmacotherapy and behavioral counseling to a patient ready to quit?',
+   opts:['Ask','Advise','Assess','Assist'],ans:3,
+   rat:'5 As: Ask (screen every visit) → Advise (clear strong message) → Assess (readiness to quit) → ASSIST (quit plan: NRT/varenicline/bupropion + counseling) → Arrange (follow-up within 1 week of quit date). Assist = the intervention step.'},
+  {sys:'S7 Cross-System',
+   stem:'A novel screening test for a condition produces 200 true positives and 200 false positives in a study of 1,000 patients. What is the positive predictive value (PPV)?',
+   opts:['20%','40%','50%','80%'],ans:2,
+   rat:'PPV = TP / (TP + FP) = 200 / (200 + 200) = 200/400 = 50%. High specificity → low false positives → higher PPV. Sensitivity = TP/(TP+FN). Specificity = TN/(TN+FP). PPV depends on both test performance AND disease prevalence.'},
+  {sys:'S7 Cross-System',
+   stem:'A 48-year-old man develops rectal bleeding, an unintentional 15 lb weight loss over 3 months, and new pencil-thin stools. Which diagnosis must be ruled out first?',
+   opts:['Irritable bowel syndrome','Hemorrhoids','Colorectal cancer','Infectious colitis'],ans:2,
+   rat:'Red flags for colorectal cancer: rectal bleeding + weight loss + pencil-thin stools (mass narrowing lumen) = colorectal cancer until proven otherwise. IBS does NOT cause bleeding or weight loss. Hemorrhoids cause bright red rectal bleeding without systemic symptoms.'}
+];
+
+// Shuffle utility
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+// ── STATE ──────────────────────────────────────────────────
+var state = {
+  questions: [],
+  answers:   [],  // index of selected option, or -1
+  cur:       0,
+  started:   false,
+  finished:  false,
+  startTime: 0,
+  timerInterval: null,
+  TOTAL_SECONDS: 45 * 60
+};
+
+function startExam() {
+  state.questions = shuffle(EXAM_Q);
+  state.answers   = new Array(state.questions.length).fill(-1);
+  state.cur       = 0;
+  state.started   = true;
+  state.startTime = Date.now();
+
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('examUI').style.display      = 'block';
+  document.getElementById('timerPill').style.display   = 'flex';
+
+  buildQMap();
+  renderQuestion();
+  startTimer();
+}
+
+function startTimer() {
+  updateTimer();
+  state.timerInterval = setInterval(function() {
+    var elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+    var remaining = state.TOTAL_SECONDS - elapsed;
+    if (remaining <= 0) {
+      clearInterval(state.timerInterval);
+      submitExam();
+      return;
+    }
+    updateTimer();
+  }, 1000);
+}
+
+function updateTimer() {
+  var elapsed   = Math.floor((Date.now() - state.startTime) / 1000);
+  var remaining = Math.max(0, state.TOTAL_SECONDS - elapsed);
+  var m = Math.floor(remaining / 60);
+  var s = remaining % 60;
+  document.getElementById('timerText').textContent =
+    (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  var dot = document.getElementById('timerDot');
+  dot.className = 'timer-dot';
+  if (remaining < 300) dot.classList.add('danger');
+  else if (remaining < 600) dot.classList.add('warn');
+}
+
+function buildQMap() {
+  var map = document.getElementById('qMap');
+  map.innerHTML = '';
+  state.questions.forEach(function(_, i) {
+    var d = document.createElement('div');
+    d.className = 'qm-dot ' + (i === state.cur ? 'current' : 'unanswered');
+    d.textContent = i + 1;
+    d.onclick = function() { goQ(i); };
+    map.appendChild(d);
+  });
+}
+
+function updateQMap() {
+  var dots = document.querySelectorAll('.qm-dot');
+  dots.forEach(function(d, i) {
+    d.className = 'qm-dot';
+    if      (i === state.cur)             d.classList.add('current');
+    else if (state.answers[i] !== -1)     d.classList.add('answered');
+    else                                  d.classList.add('unanswered');
+  });
+}
+
+function renderQuestion() {
+  var q   = state.questions[state.cur];
+  var tot = state.questions.length;
+  var ans = state.answers.filter(function(a){ return a !== -1; }).length;
+  var L   = ['A','B','C','D'];
+
+  // Progress
+  document.getElementById('epFill').style.width  = (ans / tot * 100) + '%';
+  document.getElementById('epCount').textContent = ans + ' / ' + tot;
+
+  // Card
+  var html = '<div class="q-card">' +
+    '<div class="q-card-hdr">' +
+      '<span class="q-card-num">Question ' + (state.cur + 1) + ' of ' + tot + '</span>' +
+      '<span class="q-card-sys">' + q.sys + '</span>' +
+    '</div>' +
+    '<div class="q-card-body">' +
+      '<div class="q-stem">' + q.stem + '</div>' +
+      '<div class="opts">';
+
+  q.opts.forEach(function(o, i) {
+    var sel = state.answers[state.cur] === i ? ' selected' : '';
+    html += '<button type="button" class="opt' + sel + '" data-idx="' + i + '">' +
+      '<div class="opt-lt">' + L[i] + '</div>' + o + '</button>';
+  });
+
+  html += '</div></div></div>';
+  document.getElementById('qCardContainer').innerHTML = html;
+
+  // Attach listeners
+  document.querySelectorAll('.opt').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(this.dataset.idx);
+      state.answers[state.cur] = idx;
+      document.querySelectorAll('.opt').forEach(function(b){ b.classList.remove('selected'); });
+      this.classList.add('selected');
+      // Update opt-lt
+      document.querySelectorAll('.opt-lt').forEach(function(lt, i){
+        lt.style.background = state.answers[state.cur] === i ? 'var(--navy)' : '';
+        lt.style.color      = state.answers[state.cur] === i ? '#fff' : '';
+      });
+      updateQMap();
+      updateProgress();
+      // Auto-advance after brief delay
+      setTimeout(function(){ if (state.cur < tot - 1) goQ(state.cur + 1); }, 350);
+    });
+  });
+
+  // Nav buttons
+  document.getElementById('btnPrev').disabled = state.cur === 0;
+  var nextBtn = document.getElementById('btnNext');
+  if (state.cur === tot - 1) {
+    nextBtn.outerHTML = '<button class="btn-submit" id="btnNext" onclick="confirmSubmit()">Submit Exam →</button>';
+  } else {
+    if (nextBtn.className !== 'btn-next') {
+      nextBtn.outerHTML = '<button class="btn-next" id="btnNext" onclick="goQ(state.cur+1)">Next →</button>';
+    }
+  }
+
+  updateQMap();
+}
+
+function updateProgress() {
+  var ans = state.answers.filter(function(a){ return a !== -1; }).length;
+  var tot = state.questions.length;
+  document.getElementById('epFill').style.width  = (ans / tot * 100) + '%';
+  document.getElementById('epCount').textContent = ans + ' / ' + tot;
+}
+
+function goQ(idx) {
+  if (idx < 0 || idx >= state.questions.length) return;
+  state.cur = idx;
+  renderQuestion();
+}
+
+function confirmSubmit() {
+  var unanswered = state.answers.filter(function(a){ return a === -1; }).length;
+  if (unanswered > 0) {
+    if (!confirm(unanswered + ' question' + (unanswered > 1 ? 's' : '') + ' unanswered. Submit anyway?')) return;
+  }
+  submitExam();
+}
+
+function submitExam() {
+  clearInterval(state.timerInterval);
+  state.finished = true;
+
+  var elapsed  = Math.floor((Date.now() - state.startTime) / 1000);
+  var m        = Math.floor(elapsed / 60);
+  var s        = elapsed % 60;
+  var timeStr  = m + 'm ' + (s < 10 ? '0' : '') + s + 's';
+  var tot      = state.questions.length;
+  var correct  = 0;
+
+  state.questions.forEach(function(q, i) {
+    if (state.answers[i] === q.ans) correct++;
+  });
+
+  var pct      = Math.round(correct / tot * 100);
+  var passmark = 84;
+  var passed   = pct >= passmark;
+  var gradeText, gradeClass;
+
+  if (pct >= 93)      { gradeText = 'Excellent — well above pass mark';    gradeClass = 'rg-pass'; }
+  else if (passed)    { gradeText = 'Pass — above 84% pass mark';          gradeClass = 'rg-pass'; }
+  else if (pct >= 75) { gradeText = 'Close — just below pass mark';        gradeClass = 'rg-close'; }
+  else                { gradeText = 'Below pass mark — review and retake'; gradeClass = 'rg-fail'; }
+
+  document.getElementById('resPct').textContent   = pct + '%';
+  document.getElementById('resGrade').textContent = gradeText;
+  document.getElementById('resGrade').className   = 'results-grade ' + gradeClass;
+  document.getElementById('resMeta').textContent  = correct + ' of ' + tot + ' correct · ' + timeStr;
+  document.getElementById('rsCorr').textContent   = correct;
+  document.getElementById('rsWrong').textContent  = tot - correct;
+  document.getElementById('rsTime').textContent   = timeStr;
+  document.getElementById('rsPass').textContent   = passmark + '%';
+
+  // Breakdown
+  var L   = ['A','B','C','D'];
+  var html = '';
+  state.questions.forEach(function(q, i) {
+    var userAns = state.answers[i];
+    var correct2 = userAns === q.ans;
+    var skipped  = userAns === -1;
+    var tagClass = correct2 ? 'correct' : (skipped ? 'skip' : 'wrong');
+    var tagText  = correct2 ? '✓ Correct' : (skipped ? '— Skipped' : '✗ Wrong');
+    var ansInfo  = skipped
+      ? 'Not answered · Correct: ' + L[q.ans]
+      : 'You chose: ' + L[userAns] + ' · Correct: ' + L[q.ans];
+
+    html += '<div class="rb-row">' +
+      '<div class="rb-q"><strong>' + q.sys + '</strong> — ' + q.stem.replace(/<[^>]+>/g,'') + '</div>' +
+      '<div class="rb-meta">' +
+        '<span class="rb-tag ' + tagClass + '">' + tagText + '</span>' +
+        '<span class="rb-ans">' + ansInfo + '</span>' +
+      '</div>' +
+      (!correct2 ? '<div class="rb-rat">' + q.rat + '</div>' : '') +
+      '</div>';
+  });
+  document.getElementById('rbContent').innerHTML = html;
+
+  document.getElementById('examUI').style.display      = 'none';
+  document.getElementById('timerPill').style.display   = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function retakeExam() {
+  state.questions = shuffle(EXAM_Q);
+  state.answers   = new Array(state.questions.length).fill(-1);
+  state.cur       = 0;
+  state.finished  = false;
+  state.startTime = Date.now();
+
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('examUI').style.display        = 'block';
+  document.getElementById('timerPill').style.display     = 'flex';
+
+  buildQMap();
+  renderQuestion();
+  startTimer();
+}
+</script>
+</body>
+</html>
