@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard Deck — NR509 Final Exam Guide</title>
+<link rel="stylesheet" href="css/guide.css">
+<style>
+/* ── Flashcard page ── */
+.fc-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.fc-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  color: var(--navy);
+  margin-bottom: .25rem;
+}
+.fc-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Filter pills */
+.fc-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+.fc-pill {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: #fff;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all .15s;
+  font-family: var(--font-sans);
+}
+.fc-pill:hover { border-color: var(--teal); color: var(--teal); }
+.fc-pill.active {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+
+/* Progress bar */
+.fc-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+.fc-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--gray-200);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.fc-progress-fill {
+  height: 100%;
+  background: var(--teal);
+  border-radius: 3px;
+  transition: width .3s;
+}
+.fc-progress-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
+/* Card area */
+.fc-card-wrap {
+  perspective: 900px;
+  margin-bottom: 1.25rem;
+  min-height: 280px;
+}
+.fc-card {
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform .45s;
+  border-radius: var(--radius-lg);
+}
+.fc-card.flipped { transform: rotateY(180deg); }
+.fc-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.fc-front {
+  background: #fff;
+  border: 1px solid var(--border);
+}
+.fc-back {
+  background: var(--navy);
+  color: #fff;
+  transform: rotateY(180deg);
+}
+.fc-sys-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--teal);
+  margin-bottom: .5rem;
+}
+.fc-back .fc-sys-label { color: var(--teal-light); }
+.fc-stem {
+  font-size: 15px;
+  line-height: 1.7;
+  flex: 1;
+}
+.fc-hint {
+  font-size: 11px;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: 1rem;
+}
+.fc-back .fc-hint { color: rgba(255,255,255,.35); }
+.fc-answer-letter {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--teal-light);
+  margin-bottom: .5rem;
+}
+.fc-rationale {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255,255,255,.8);
+  flex: 1;
+}
+.fc-rationale strong { color: #fff; }
+.fc-options {
+  margin-top: .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.fc-opt {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: .4rem .65rem;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+}
+.fc-opt.correct {
+  background: var(--green-pale);
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* Controls */
+.fc-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.fc-btn {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+  transition: all .15s;
+}
+.fc-btn:hover { border-color: var(--teal); color: var(--teal); }
+.fc-btn.primary {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+.fc-btn.primary:hover { background: #0a5f62; }
+.fc-btn:disabled { opacity: .35; pointer-events: none; }
+
+/* Keyboard hint */
+.fc-keys {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+.fc-keys kbd {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 0 2px;
+}
+
+/* Shuffle / reset row */
+.fc-actions {
+  display: flex;
+  justify-content: center;
+  gap: .75rem;
+  margin-bottom: 2rem;
+}
+.fc-action-link {
+  font-size: 12px;
+  color: var(--text-light);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  text-decoration: underline;
+}
+.fc-action-link:hover { color: var(--teal); }
+
+/* Empty state */
+.fc-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .fc-card-wrap { min-height: 320px; }
+  .fc-card { min-height: 320px; }
+  .fc-face { padding: 1.25rem; }
+  .fc-controls { gap: .5rem; }
+  .fc-btn { padding: 10px 14px; font-size: 12px; }
+}
+</style>
+</head>
+<body data-system="0">
+
+<div class="page" id="pageRoot">
+  <div class="fc-header">
+    <div class="fc-title">Flashcard Deck</div>
+    <div class="fc-subtitle">All 7 systems — tap a card to flip, arrow keys to navigate</div>
+  </div>
+
+  <div class="fc-filters" id="fcFilters"></div>
+
+  <div class="fc-progress-wrap">
+    <div class="fc-progress-bar"><div class="fc-progress-fill" id="fcProgressFill"></div></div>
+    <div class="fc-progress-text" id="fcProgressText">0 / 0</div>
+  </div>
+
+  <div class="fc-card-wrap" id="fcCardWrap">
+    <div class="fc-card" id="fcCard">
+      <div class="fc-face fc-front" id="fcFront"></div>
+      <div class="fc-face fc-back" id="fcBack"></div>
+    </div>
+  </div>
+
+  <div class="fc-controls">
+    <button class="fc-btn" id="fcPrev" disabled>&larr; Prev</button>
+    <button class="fc-btn primary" id="fcFlip">Flip card</button>
+    <button class="fc-btn" id="fcNext">Next &rarr;</button>
+  </div>
+
+  <div class="fc-keys">
+    <kbd>&larr;</kbd> prev &nbsp; <kbd>Space</kbd> flip &nbsp; <kbd>&rarr;</kbd> next
+  </div>
+
+  <div class="fc-actions">
+    <button class="fc-action-link" id="fcShuffle">Shuffle deck</button>
+    <button class="fc-action-link" id="fcReset">Reset to start</button>
+  </div>
+</div>
+
+<!-- Load shared scripts -->
+<script src="js/core.js"></script>
+<script src="components/nav.js"></script>
+<script>
+(function() {
+  /* ── Load all 7 system data files in isolated scopes ── */
+  function loadSystemData(url) {
+    return fetch(url).then(function(r) { return r.text(); }).then(function(src) {
+      var fn = new Function(src + '; return SYSTEM_DATA;');
+      return fn();
+    });
+  }
+
+  function init(allSystems) {
+  var allCards = [];
+  var LETTERS = ['A','B','C','D'];
+
+  allSystems.forEach(function(sys) {
+    if (!sys || !sys.concepts) return;
+    sys.concepts.forEach(function(c) {
+      if (!c.questions) return;
+      c.questions.forEach(function(q) {
+        allCards.push({
+          sysNum:     sys.num,
+          sysTitle:   sys.title,
+          concept:    c.name,
+          stem:       q.stem,
+          options:    q.options || [],
+          answer:     q.answer,
+          rationale:  q.rationale || ''
+        });
+      });
+    });
+  });
+
+  /* ── State ── */
+  var filtered = allCards.slice();
+  var idx = 0;
+  var activeFilter = 'all';
+
+  /* ── DOM refs ── */
+  var card      = document.getElementById('fcCard');
+  var front     = document.getElementById('fcFront');
+  var back      = document.getElementById('fcBack');
+  var prevBtn   = document.getElementById('fcPrev');
+  var nextBtn   = document.getElementById('fcNext');
+  var flipBtn   = document.getElementById('fcFlip');
+  var progFill  = document.getElementById('fcProgressFill');
+  var progText  = document.getElementById('fcProgressText');
+  var filters   = document.getElementById('fcFilters');
+  var cardWrap  = document.getElementById('fcCardWrap');
+
+  /* ── Filters ── */
+  function buildFilters() {
+    var html = '<button class="fc-pill active" data-filter="all">All systems</button>';
+    allSystems.forEach(function(sys) {
+      if (!sys) return;
+      html += '<button class="fc-pill" data-filter="' + sys.num + '">S' + sys.num + ' ' + sys.title.replace(/Assessment|&amp;/g,'').trim() + '</button>';
+    });
+    filters.innerHTML = html;
+    filters.addEventListener('click', function(e) {
+      var pill = e.target.closest('.fc-pill');
+      if (!pill) return;
+      filters.querySelectorAll('.fc-pill').forEach(function(p) { p.classList.remove('active'); });
+      pill.classList.add('active');
+      var f = pill.dataset.filter;
+      activeFilter = f;
+      if (f === 'all') {
+        filtered = allCards.slice();
+      } else {
+        var num = parseInt(f);
+        filtered = allCards.filter(function(c) { return c.sysNum === num; });
+      }
+      idx = 0;
+      render();
+    });
+  }
+
+  /* ── Render ── */
+  function render() {
+    card.classList.remove('flipped');
+    if (filtered.length === 0) {
+      cardWrap.innerHTML = '<div class="fc-empty">No cards available for this filter.</div>';
+      progText.textContent = '0 / 0';
+      progFill.style.width = '0%';
+      prevBtn.disabled = true;
+      nextBtn.disabled = true;
+      return;
+    }
+    // Restore card if it was replaced by empty state
+    if (!document.getElementById('fcCard')) {
+      cardWrap.innerHTML = '';
+      card = document.createElement('div');
+      card.className = 'fc-card';
+      card.id = 'fcCard';
+      front = document.createElement('div');
+      front.className = 'fc-face fc-front';
+      front.id = 'fcFront';
+      back = document.createElement('div');
+      back.className = 'fc-face fc-back';
+      back.id = 'fcBack';
+      card.appendChild(front);
+      card.appendChild(back);
+      cardWrap.appendChild(card);
+      card.addEventListener('click', flipCard);
+    }
+
+    var c = filtered[idx];
+    var ansIdx = LETTERS.indexOf(c.answer);
+
+    // Front
+    var optHtml = '';
+    c.options.forEach(function(o, i) {
+      var cls = 'fc-opt';
+      optHtml += '<div class="' + cls + '"><strong>' + LETTERS[i] + '.</strong> ' + o + '</div>';
+    });
+    front.innerHTML =
+      '<div class="fc-sys-label">System ' + c.sysNum + ' — ' + c.concept + '</div>' +
+      '<div class="fc-stem">' + c.stem + '</div>' +
+      '<div class="fc-options">' + optHtml + '</div>' +
+      '<div class="fc-hint">Tap to reveal answer</div>';
+
+    // Back
+    back.innerHTML =
+      '<div class="fc-sys-label">System ' + c.sysNum + ' — ' + c.concept + '</div>' +
+      '<div class="fc-answer-letter">Answer: ' + c.answer + '</div>' +
+      '<div class="fc-rationale">' + c.rationale + '</div>' +
+      '<div class="fc-hint">Tap to see question</div>';
+
+    // Progress
+    progText.textContent = (idx + 1) + ' / ' + filtered.length;
+    progFill.style.width = ((idx + 1) / filtered.length * 100) + '%';
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === filtered.length - 1;
+  }
+
+  /* ── Actions ── */
+  function flipCard() { card.classList.toggle('flipped'); }
+  function goNext() { if (idx < filtered.length - 1) { idx++; render(); } }
+  function goPrev() { if (idx > 0) { idx--; render(); } }
+
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
+  }
+
+  /* ── Events ── */
+  card.addEventListener('click', flipCard);
+  flipBtn.addEventListener('click', flipCard);
+  nextBtn.addEventListener('click', goNext);
+  prevBtn.addEventListener('click', goPrev);
+
+  document.getElementById('fcShuffle').addEventListener('click', function() {
+    shuffle(filtered);
+    idx = 0;
+    render();
+  });
+  document.getElementById('fcReset').addEventListener('click', function() {
+    if (activeFilter === 'all') {
+      filtered = allCards.slice();
+    } else {
+      var num = parseInt(activeFilter);
+      filtered = allCards.filter(function(c) { return c.sysNum === num; });
+    }
+    idx = 0;
+    render();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); goPrev(); }
+    else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  });
+
+  /* ── Init ── */
+  buildFilters();
+  render();
+
+  } // end init()
+
+  /* ── Auth guard ── */
+  if (localStorage.getItem('nr509unlocked') !== 'true') {
+    window.location.replace('landing.html');
+    return;
+  }
+
+  Promise.all([
+    loadSystemData('data/system-1.js'),
+    loadSystemData('data/system-2.js'),
+    loadSystemData('data/system-3.js'),
+    loadSystemData('data/system-4.js'),
+    loadSystemData('data/system-5.js'),
+    loadSystemData('data/system-6.js'),
+    loadSystemData('data/system-7.js')
+  ]).then(function(allSystems) {
+    init(allSystems);
+  });
+
+})();
+</script>
+</body>
+</html>

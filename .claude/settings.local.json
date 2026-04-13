@@ -11,7 +11,22 @@
       "Bash(mv guide.css css/)",
       "Bash(mv core.js js/)",
       "Bash(mv drill.js js/)",
-      "Bash(mv system-render.js js/)"
+      "Bash(mv system-render.js js/)",
+      "Bash(cp \"files \\(7\\)/guide.css\" css/guide.css)",
+      "Bash(cp \"files \\(7\\)/nav.js\" components/nav.js)",
+      "Bash(cp \"files \\(7\\)/system-render.js\" js/system-render.js)",
+      "Bash(rm -rf \"files \\(7\\)\" \"files \\(7\\).zip\")",
+      "Bash(cp \"files \\(8\\)/core.js\" js/core.js)",
+      "Bash(cp \"files \\(8\\)/index.html\" index.html)",
+      "Bash(cp \"files \\(8\\)/landing.html\" landing.html)",
+      "Bash(rm -rf \"files \\(8\\)\" \"files \\(8\\).zip\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(unzip -l \"files \\(10\\).zip\")",
+      "Bash(mkdir -p /tmp/nr509-new)",
+      "Bash(unzip -o \"files \\(10\\).zip\" -d /tmp/nr509-new)",
+      "Bash(wc -l /tmp/nr509-new/*.js /tmp/nr509-new/*.html /tmp/nr509-new/*.css /tmp/nr509-new/*.json)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(grep -l \"nav.js\" \"C:/Users/G840/Desktop/nr509-guide\"/*.html)"
     ]
   }
 }
