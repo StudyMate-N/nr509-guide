@@ -669,7 +669,7 @@ input[type=range].vol::-webkit-slider-thumb {
 </head>
 <body data-system="0">
 
-<audio id="audio" crossorigin="anonymous" preload="metadata"></audio>
+<audio id="audio" preload="none"></audio>
 
 <div class="pod-page">
 
@@ -997,7 +997,7 @@ const EPISODES = EPISODE_META.map(meta => {
 });
 
 // ── STATE ─────────────────────────────────────────────────────
-const audio = document.getElementById('audio');
+let audio = document.getElementById('audio');
 let curEp = 0, playing = false, chapOpen = false, curSpeed = 1.0, playerModeOpen = false;
 const progress = {};
 
@@ -1069,7 +1069,7 @@ function showResumeBanner(saved) {
     banner.classList.add('show');
     document.getElementById('resume-btn').onclick = function() {
       banner.classList.remove('show');
-      audio.src = ep.src; audio.load(); audio.playbackRate = curSpeed;
+      replaceAudio(ep.src);
       audio.addEventListener('loadedmetadata', function onMeta() {
         audio.removeEventListener('loadedmetadata', onMeta);
         audio.currentTime = p.time;
@@ -1286,8 +1286,49 @@ function renderEpList() {
   }).join('');
 }
 
+// ── AUDIO ELEMENT MANAGEMENT ──────────────────────────────────
+// Replace the audio element with a fresh one to clear stale error state.
+// This is necessary because reusing an <audio> element after a load error
+// can leave it in an unrecoverable state in some browsers.
+function replaceAudio(src) {
+  const old = audio;
+  old.pause();
+  const vol = old.volume;
+  // Create fresh element in the DOM
+  const fresh = document.createElement('audio');
+  fresh.id = 'audio';
+  fresh.preload = 'none';
+  fresh.volume = vol;
+  fresh.playbackRate = curSpeed;
+  if (src) fresh.src = src;
+  // Replace in DOM (needed for some browsers to load network audio)
+  old.parentNode.replaceChild(fresh, old);
+  // Re-attach all event listeners
+  fresh.addEventListener('play', onPlay);
+  fresh.addEventListener('pause', onPause);
+  fresh.addEventListener('timeupdate', onTimeUpdate);
+  fresh.addEventListener('loadedmetadata', onLoadedMeta);
+  fresh.addEventListener('ended', onEnded);
+  // Swap global reference
+  audio = fresh;
+  // Start loading
+  if (src) fresh.load();
+}
+
 // ── CONTROLS ──────────────────────────────────────────────────
-function togglePlay() { if (audio.paused) audio.play().catch(function(){}); else audio.pause(); }
+function togglePlay() {
+  if (audio.paused) {
+    if (audio.readyState === 0) {
+      audio.load();
+      audio.addEventListener('canplay', function onCan() {
+        audio.removeEventListener('canplay', onCan);
+        audio.play().catch(function(){});
+      });
+    } else {
+      audio.play().catch(function(){});
+    }
+  } else { audio.pause(); }
+}
 function seek(d) { audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + d)); }
 function jumpTo(pct) { if (!isNaN(audio.duration)) { audio.currentTime = pct * audio.duration; if (!playing) audio.play().catch(function(){}); } }
 function nextEp() { const n = curEp + 1; if (n < EPISODES.length) selectEp(n); }
@@ -1316,18 +1357,17 @@ function selectEp(id) {
     }
     curEp = id;
     const ep = EPISODES[id];
-    audio.src = ep.src; audio.load(); audio.playbackRate = curSpeed;
-    // Resume from saved position if available
+    // Replace audio element to clear any stale error state
+    replaceAudio(ep.src);
+    // Wait for metadata before playing — required with preload="none"
     const savedTime = progress[id].time || 0;
-    if (savedTime > 0 && !progress[id].done) {
-      audio.addEventListener('loadedmetadata', function onMeta() {
-        audio.removeEventListener('loadedmetadata', onMeta);
+    audio.addEventListener('loadedmetadata', function onMeta() {
+      audio.removeEventListener('loadedmetadata', onMeta);
+      if (savedTime > 0 && !progress[id].done) {
         audio.currentTime = savedTime;
-        audio.play().catch(function(){});
-      });
-    } else {
+      }
       audio.play().catch(function(){});
-    }
+    });
     applyAccent(ep);
     saveState();
   }
@@ -1374,10 +1414,10 @@ function setIcons(p) {
   ['play-icon','pm-play-icon','mini-icon'].forEach(id => document.getElementById(id).innerHTML = p ? pause : play);
 }
 
-// ── AUDIO EVENTS ──────────────────────────────────────────────
-audio.addEventListener('play', () => { playing = true; setIcons(true); startEq(); render(getPct()); });
-audio.addEventListener('pause', () => { playing = false; setIcons(false); stopEq(); render(getPct()); saveState(); });
-audio.addEventListener('timeupdate', () => {
+// ── AUDIO EVENTS (named so replaceAudio can reattach them) ────
+function onPlay() { playing = true; setIcons(true); startEq(); render(getPct()); }
+function onPause() { playing = false; setIcons(false); stopEq(); render(getPct()); saveState(); }
+function onTimeUpdate() {
   if (!audio.duration) return;
   const pct = getPct();
   progress[curEp].pct = pct;
@@ -1385,15 +1425,20 @@ audio.addEventListener('timeupdate', () => {
   progress[curEp].time = audio.currentTime;
   progress[curEp].dur = audio.duration;
   render(pct);
-});
-audio.addEventListener('loadedmetadata', () => { render(progress[curEp].pct); });
-audio.addEventListener('ended', () => {
+}
+function onLoadedMeta() { render(progress[curEp].pct); }
+function onEnded() {
   progress[curEp].done = true;
   saveState();
   const n = curEp + 1;
   if (n < EPISODES.length) selectEp(n);
   else { playing = false; setIcons(false); stopEq(); render(1); }
-});
+}
+audio.addEventListener('play', onPlay);
+audio.addEventListener('pause', onPause);
+audio.addEventListener('timeupdate', onTimeUpdate);
+audio.addEventListener('loadedmetadata', onLoadedMeta);
+audio.addEventListener('ended', onEnded);
 
 // ── MINI PLAYER VISIBILITY ────────────────────────────────────
 // Observe the controls pill (not the whole card) so the mini player
