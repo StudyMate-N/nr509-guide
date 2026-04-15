@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NR509 — Podcast Episodes</title>
+<link rel="stylesheet" href="css/guide.css">
+<style>
+/* ══ PODCAST PAGE ══ */
+.pod-page {
+  max-width: 760px; margin: 0 auto;
+  padding: 0 1rem 140px;
+}
+.pod-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 1.5rem 0 1.25rem;
+}
+.pod-head h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 4vw, 27px);
+  color: var(--navy);
+}
+.pod-head p {
+  font-family: var(--font-mono);
+  font-size: 11px; color: var(--text-muted); margin-top: 3px;
+}
+.kbd-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-light); }
+.kbd {
+  font-family: var(--font-mono); font-size: 10px;
+  background: #fff; border: 1px solid var(--gray-200);
+  border-radius: 4px; padding: 2px 6px; color: var(--text);
+  box-shadow: inset 0 1px 0 #fff, 0 1px 3px rgba(0,0,0,.06);
+}
+@media(max-width:520px){ .kbd-row { display:none; } }
+
+/* ══ ACCENT SYSTEM ══ */
+:root {
+  --ep-accent:  var(--teal);
+  --ep-accent2: var(--teal-light);
+  --ep-hero:    linear-gradient(135deg, #122236 0%, #0F1F3D 100%);
+}
+
+/* ══ HERO EPISODE BANNER ══ */
+.ep-hero {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--ep-hero);
+  margin-bottom: 1.25rem;
+  position: relative;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 16px 48px rgba(15,31,61,.2), 0 4px 16px rgba(15,31,61,.1);
+  min-height: 160px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.ep-hero:hover { transform: translateY(-2px); box-shadow: 0 24px 60px rgba(15,31,61,.25); }
+.ep-hero-bg {
+  position: absolute; inset: 0;
+  background: var(--ep-hero);
+  transition: background .5s;
+}
+.ep-hero-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 100% at 90% 50%, rgba(13,115,119,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ep-hero-sheen {
+  position: absolute; top: 0; left: 0; right: 0; height: 45%;
+  background: linear-gradient(180deg, rgba(255,255,255,.06) 0%, transparent 100%);
+  pointer-events: none;
+}
+.ep-hero-emoji {
+  position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%);
+  font-size: clamp(56px, 10vw, 80px);
+  opacity: .2; filter: blur(1px);
+  transition: opacity .4s;
+  pointer-events: none;
+}
+.ep-hero:hover .ep-hero-emoji { opacity: .3; }
+.ep-hero-content {
+  position: relative; z-index: 2;
+  padding: 1.5rem 1.25rem 1.25rem;
+}
+.ep-hero-eye {
+  font-family: var(--font-mono);
+  font-size: 10px; font-weight: 500;
+  color: var(--teal-light);
+  letter-spacing: .12em; text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.live-pulse {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--teal-light);
+  box-shadow: 0 0 6px rgba(20,160,133,.6);
+  animation: pulse 1.8s infinite;
+}
+.ep-hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(15px, 3.5vw, 19px);
+  color: #fff;
+  line-height: 1.3; margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(15,31,61,.4);
+}
+.ep-hero-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ep-hero-sys {
+  font-family: var(--font-mono); font-size: 10px;
+  background: rgba(13,115,119,.2); color: var(--teal-light);
+  border: 1px solid rgba(13,115,119,.4); border-radius: 4px; padding: 2px 9px;
+}
+.ep-hero-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.ep-hero-tag {
+  font-size: 10px; font-family: var(--font-mono);
+  background: rgba(255,255,255,.1); color: rgba(255,255,255,.6);
+  border: 1px solid rgba(255,255,255,.14); border-radius: 3px; padding: 2px 7px;
+}
+.ep-hero-expand-hint {
+  position: absolute; bottom: 1rem; right: 1.25rem;
+  font-family: var(--font-mono); font-size: 9px;
+  color: rgba(255,255,255,.3); letter-spacing: .08em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 4px;
+}
+.ep-hero-expand-hint svg { width: 11px; height: 11px; }
+
+/* ══ PLAYER CARD ══ */
+.player-card {
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: .5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(15,31,61,.1), 0 2px 8px rgba(15,31,61,.06);
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+/* Speed row */
+.speed-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: .7rem 1.25rem 0;
+  position: relative; z-index: 2;
+}
+.speed-lbl {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+  letter-spacing: .07em; text-transform: uppercase; margin-right: 2px;
+}
+.sp {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  padding: 4px 9px; border-radius: 6px; cursor: pointer; border: 1px solid var(--gray-200);
+  background: rgba(255,255,255,.7); color: var(--text-muted); transition: all .15s;
+  line-height: 1;
+}
+.sp:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-pale); }
+.sp.on {
+  background: linear-gradient(180deg, var(--navy-light) 0%, var(--navy) 100%);
+  border-color: rgba(255,255,255,.12); color: #fff;
+  box-shadow: 0 2px 8px rgba(15,31,61,.3), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.sp-eta { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); }
+.sp-eta strong { color: var(--amber); }
+
+/* Sleep timer button */
+.sleep-btn {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  padding: 4px 9px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--gray-200); background: rgba(255,255,255,.7);
+  color: var(--text-muted); transition: all .15s; line-height: 1;
+  margin-left: 6px;
+}
+.sleep-btn:hover { border-color: var(--purple); color: var(--purple); }
+.sleep-btn.on {
+  background: var(--purple-pale); border-color: var(--purple);
+  color: var(--purple); font-weight: 600;
+}
+
+/* Waveform scrubber */
+.waveform-section { padding: .9rem 1.25rem 0; position: relative; z-index: 2; }
+.waveform-wrap {
+  position: relative; height: 56px; border-radius: var(--radius-sm);
+  overflow: hidden; cursor: pointer;
+  background: var(--navy);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+}
+.waveform-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: fill; opacity: .35; transition: opacity .3s; pointer-events: none;
+}
+.waveform-wrap:hover .waveform-img { opacity: .45; }
+.waveform-played {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, rgba(13,115,119,.55) 0%, rgba(20,160,133,.45) 100%);
+  transition: width .1s linear; pointer-events: none;
+}
+.waveform-unplayed {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  background: rgba(15,31,61,.3);
+  transition: width .1s linear; pointer-events: none;
+}
+.waveform-cursor {
+  position: absolute; top: 0; bottom: 0; width: 2px;
+  background: #fff; box-shadow: 0 0 8px rgba(255,255,255,.6);
+  transform: translateX(-50%); transition: left .1s linear; pointer-events: none;
+}
+.waveform-ticks { position: absolute; inset: 0; pointer-events: none; }
+.wf-tick {
+  position: absolute; top: 0; bottom: 0; width: 1.5px;
+  background: rgba(255,255,255,.3);
+}
+.wf-tick.past { background: rgba(255,255,255,.18); }
+.wf-time-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 6px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-light);
+}
+.wf-time-combined { display: flex; align-items: center; gap: 4px; }
+.wf-time-cur { color: var(--text); font-weight: 500; }
+.wf-time-sep { color: var(--gray-200); }
+.wf-time-dur { color: var(--text-light); }
+.wf-chap-lbl {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--ep-accent); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 55%;
+}
+
+/* EQ Visualizer */
+.eq-canvas-wrap {
+  padding: 0 1.25rem; position: relative; z-index: 2; height: 28px;
+  display: flex; align-items: flex-end; gap: 2px; margin-top: 8px;
+}
+.eq-bar {
+  flex: 1; border-radius: 2px 2px 0 0;
+  background: linear-gradient(180deg, var(--ep-accent2) 0%, var(--ep-accent) 100%);
+  transition: height .08s ease;
+  opacity: .4; min-height: 2px;
+}
+
+/* Controls */
+.controls-wrap {
+  padding: .75rem 1.25rem 1rem; position: relative; z-index: 2;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ctrl-pill {
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  background: rgba(255,255,255,.65);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.8);
+  border-radius: 60px; padding: 8px 20px;
+  box-shadow: 0 4px 20px rgba(15,31,61,.08), inset 0 1px 0 rgba(255,255,255,1);
+  align-self: center;
+}
+.cb {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); padding: 8px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.cb:hover { background: rgba(255,255,255,.8); color: var(--text); }
+.cb svg { width: 20px; height: 20px; display: block; }
+.cb.play {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: linear-gradient(145deg, var(--navy-light) 0%, var(--navy) 55%, #080f18 100%);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 6px 24px rgba(15,31,61,.4), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(0,0,0,.3);
+  position: relative; overflow: hidden; flex-shrink: 0;
+  transition: all .15s;
+}
+.cb.play::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 48%;
+  background: linear-gradient(180deg, rgba(255,255,255,.16) 0%, transparent 100%);
+  border-radius: 50% 50% 0 0; pointer-events: none;
+}
+.cb.play:hover { transform: scale(1.06); box-shadow: 0 10px 32px rgba(15,31,61,.5), inset 0 1px 0 rgba(255,255,255,.25); }
+.cb.play:active { transform: scale(.97); }
+.cb.play svg { width: 22px; height: 22px; position: relative; z-index: 1; }
+.cb.lg svg { width: 21px; height: 21px; }
+
+.btm-row { display: flex; align-items: center; justify-content: space-between; }
+.vol-row { display: flex; align-items: center; gap: 6px; }
+.vol-row svg { width: 13px; height: 13px; color: var(--text-light); flex-shrink: 0; }
+input[type=range].vol {
+  width: 70px; -webkit-appearance: none; height: 3px;
+  background: var(--gray-200); border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range].vol::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
+  background: linear-gradient(145deg, var(--navy-light), var(--navy));
+  border: 1px solid rgba(255,255,255,.2); border-radius: 50%;
+  cursor: pointer;
+}
+.expand-btn {
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+  letter-spacing: .06em; text-transform: uppercase; padding: 5px 0;
+  transition: color .15s;
+}
+.expand-btn:hover { color: var(--ep-accent); }
+.expand-btn svg { width: 13px; height: 13px; }
+
+/* Chapters */
+.chap-btn {
+  width: 100%; background: rgba(255,255,255,.35); border: none;
+  border-top: 1px solid rgba(255,255,255,.55);
+  padding: 9px 1.25rem; text-align: left;
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+  letter-spacing: .06em; text-transform: uppercase; cursor: pointer;
+  transition: all .15s; position: relative; z-index: 2;
+}
+.chap-btn:hover { background: rgba(255,255,255,.55); color: var(--ep-accent); }
+.chap-btn.open { color: var(--ep-accent); background: var(--teal-pale); }
+.chap-btn svg { width: 12px; height: 12px; transition: transform .25s; }
+.chap-btn.open svg { transform: rotate(180deg); }
+.chap-section {
+  overflow: hidden; max-height: 0; transition: max-height .3s ease;
+  position: relative; z-index: 2;
+}
+.chap-section.open { max-height: 280px; overflow-y: auto; }
+.chap-item {
+  display: flex; align-items: center; gap: 10px; padding: 9px 1.25rem;
+  cursor: pointer; border-bottom: 1px solid rgba(255,255,255,.5); transition: background .1s;
+}
+.chap-item:hover { background: rgba(255,255,255,.5); }
+.chap-item.on { background: linear-gradient(90deg, var(--teal-pale) 0%, rgba(255,255,255,.4) 100%); }
+.chap-ts { font-family: var(--font-mono); font-size: 10px; color: var(--ep-accent); min-width: 36px; }
+.chap-dot { width: 7px; height: 7px; border-radius: 50%; border: 2px solid var(--gray-200); flex-shrink: 0; transition: all .15s; }
+.chap-item.on .chap-dot { background: var(--ep-accent); border-color: var(--ep-accent); box-shadow: 0 0 6px rgba(13,115,119,.4); }
+.chap-name { font-size: 12px; color: var(--text); }
+.chap-item.on .chap-name { color: var(--ep-accent); font-weight: 500; }
+
+/* ══ FULL-SCREEN PLAYER MODE ══ */
+.player-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  flex-direction: column; background: var(--navy);
+  transition: opacity .3s;
+}
+.player-modal.open { display: flex; }
+.player-modal-bg {
+  position: absolute; inset: 0;
+  background: var(--ep-hero);
+  transition: background .5s;
+}
+.player-modal-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(15,31,61,.4) 0%, rgba(15,31,61,.85) 55%, rgba(15,31,61,.98) 100%);
+}
+.pm-inner {
+  position: relative; z-index: 2; flex: 1;
+  display: flex; flex-direction: column;
+  max-width: 440px; margin: 0 auto; width: 100%;
+  padding: env(safe-area-inset-top, 0) 1.5rem env(safe-area-inset-bottom, 0);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+}
+.pm-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.pm-close {
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.12);
+  cursor: pointer; width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.7); transition: all .15s;
+  backdrop-filter: blur(8px);
+}
+.pm-close:hover { background: rgba(255,255,255,.2); color: #fff; }
+.pm-close svg { width: 18px; height: 18px; }
+.pm-ep-label {
+  font-family: var(--font-mono); font-size: 10px;
+  color: rgba(255,255,255,.5); letter-spacing: .1em; text-transform: uppercase;
+}
+.pm-placeholder { width: 36px; }
+
+/* Large artwork */
+.pm-art-wrap {
+  flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0;
+  padding: .5rem 0 1rem;
+}
+.pm-art {
+  width: min(280px, 70vw); height: min(280px, 70vw);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--navy-light) 0%, var(--navy) 60%, #050d18 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: min(110px, 28vw);
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.15);
+  position: relative; overflow: hidden; flex-shrink: 0;
+}
+.pm-art::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%;
+  background: linear-gradient(180deg, rgba(255,255,255,.12) 0%, transparent 100%);
+}
+
+.pm-eq { display: flex; align-items: flex-end; gap: 3px; height: 32px; margin: .75rem 0 .25rem; justify-content: center; }
+.pm-eq-b { width: 4px; border-radius: 2px; background: linear-gradient(180deg, var(--teal-light) 0%, var(--teal) 100%); opacity: .7; }
+
+.pm-title { font-family: var(--font-serif); font-size: clamp(18px,4vw,24px); color: #fff; margin-bottom: 4px; text-align: center; line-height: 1.25; }
+.pm-sub { font-size: 12px; color: rgba(255,255,255,.45); text-align: center; font-family: var(--font-mono); margin-bottom: 1.25rem; }
+
+.pm-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 5px; margin-bottom: 1.5rem; }
+.pm-tag {
+  font-size: 10px; font-family: var(--font-mono);
+  background: rgba(13,115,119,.15); color: var(--teal-light);
+  border: 1px solid rgba(13,115,119,.3); border-radius: 4px; padding: 2px 8px;
+}
+
+.pm-prog-wrap { margin-bottom: .5rem; }
+.pm-prog-track {
+  height: 4px; background: rgba(255,255,255,.15); border-radius: 3px; cursor: pointer; position: relative;
+}
+.pm-prog-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--teal), var(--teal-light));
+  border-radius: 3px; transition: width .1s linear;
+  box-shadow: 0 0 8px rgba(13,115,119,.4);
+}
+.pm-prog-thumb {
+  position: absolute; top: 50%; transform: translate(-50%,-50%);
+  width: 16px; height: 16px; background: #fff; border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  transition: left .1s linear; cursor: pointer;
+}
+.pm-times { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,.4); margin-top: 5px; margin-bottom: 1.25rem; }
+
+.pm-speed { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 1.25rem; }
+.pm-sp {
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  padding: 5px 11px; border-radius: 20px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.08); color: rgba(255,255,255,.5);
+  transition: all .12s;
+}
+.pm-sp:hover { background: rgba(255,255,255,.14); color: rgba(255,255,255,.8); }
+.pm-sp.on {
+  background: rgba(13,115,119,.2); border-color: rgba(13,115,119,.4);
+  color: var(--teal-light); box-shadow: 0 0 10px rgba(13,115,119,.2);
+}
+.pm-eta { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,.3); text-align: center; margin-bottom: 1.5rem; }
+.pm-eta strong { color: var(--amber); }
+
+.pm-ctrl-pill {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 60px; padding: 10px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(12px);
+}
+.pm-cb {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.65); padding: 8px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; transition: all .15s;
+}
+.pm-cb:hover { background: rgba(255,255,255,.1); color: #fff; }
+.pm-cb svg { width: 22px; height: 22px; display: block; }
+.pm-cb.play {
+  width: 60px; height: 60px;
+  background: linear-gradient(145deg, var(--teal) 0%, #0a6a60 100%);
+  color: #fff; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2);
+  box-shadow: 0 6px 24px rgba(13,115,119,.5), inset 0 1px 0 rgba(255,255,255,.2);
+  position: relative; overflow: hidden; flex-shrink: 0; transition: all .15s;
+}
+.pm-cb.play::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 48%;
+  background: linear-gradient(180deg, rgba(255,255,255,.18) 0%, transparent 100%);
+  pointer-events: none;
+}
+.pm-cb.play:hover { background: linear-gradient(145deg, var(--teal-light) 0%, var(--teal) 100%); transform: scale(1.06); }
+.pm-cb.play svg { width: 26px; height: 26px; position: relative; z-index: 1; }
+
+/* ══ EPISODE LIST ══ */
+.ep-list-card {
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: .5px solid var(--border);
+  border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: 0 8px 32px rgba(15,31,61,.1), 0 2px 8px rgba(15,31,61,.06);
+  margin-bottom: 1.25rem; position: relative;
+}
+.ep-list-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.25rem .75rem;
+  border-bottom: .5px solid var(--border);
+  position: relative; z-index: 1;
+}
+.ep-list-hdr h2 { font-family: var(--font-serif); font-size: 16px; color: var(--navy); }
+.ep-list-hdr span { font-family: var(--font-mono); font-size: 10px; color: var(--text-light); }
+
+.ep-row {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: .9rem 1.25rem; cursor: pointer;
+  border-bottom: .5px solid var(--border); transition: background .1s;
+  position: relative;
+}
+.ep-row:last-child { border-bottom: none; }
+.ep-row:hover { background: rgba(255,255,255,.5); }
+.ep-row.on { background: linear-gradient(90deg, var(--teal-pale) 0%, rgba(255,255,255,.3) 100%); }
+.ep-row.on::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--teal-light) 0%, var(--teal) 100%);
+  box-shadow: 0 0 8px rgba(13,115,119,.5);
+}
+.ep-thumb {
+  width: 52px; height: 52px; border-radius: var(--radius-sm); font-size: 22px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  background: linear-gradient(145deg, var(--navy-light) 0%, var(--navy) 60%, #050d18 100%);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 4px 12px rgba(15,31,61,.25), inset 0 1px 0 rgba(255,255,255,.14);
+  position: relative; overflow: hidden;
+}
+.ep-thumb::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 45%;
+  background: linear-gradient(180deg, rgba(255,255,255,.1) 0%, transparent 100%);
+}
+.ep-row.on .ep-thumb { box-shadow: 0 4px 12px rgba(15,31,61,.25), 0 0 0 2px rgba(13,115,119,.35), inset 0 1px 0 rgba(255,255,255,.14); }
+.ep-body { flex: 1; min-width: 0; }
+.ep-num-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.ep-num { font-family: var(--font-mono); font-size: 10px; color: var(--text-light); min-width: 14px; }
+.ep-row.on .ep-num { color: var(--teal); }
+.sys-bs { display: flex; gap: 4px; flex-wrap: wrap; }
+.sys-b {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+  padding: 1px 6px; border-radius: 3px;
+  background: #fff; color: var(--text-muted); border: 1px solid var(--gray-200);
+}
+.ep-row.on .sys-b { background: var(--teal-pale); color: var(--teal); border-color: rgba(13,115,119,.3); }
+.ep-title { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ep-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.ep-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; padding-top: 2px; }
+.ep-dur { font-family: var(--font-mono); font-size: 10px; color: var(--text-light); }
+.ep-pbar { width: 52px; height: 3px; background: var(--gray-200); border-radius: 2px; overflow: hidden; }
+.ep-pfill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-light)); border-radius: 2px; transition: width .4s; box-shadow: 0 0 4px rgba(13,115,119,.3); }
+.ep-done {
+  font-family: var(--font-mono); font-size: 9px; color: var(--green);
+  letter-spacing: .05em; text-transform: uppercase;
+  background: var(--green-pale);
+  border: 1px solid rgba(46,125,82,.3); padding: 2px 7px; border-radius: 4px;
+}
+.eq { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
+.eq-b { width: 3px; background: var(--teal); border-radius: 1px; }
+.eq-b:nth-child(1){height:7px; animation:eq .7s ease infinite alternate;}
+.eq-b:nth-child(2){height:13px;animation:eq .7s .2s ease infinite alternate;}
+.eq-b:nth-child(3){height:9px; animation:eq .7s .4s ease infinite alternate;}
+.eq-b:nth-child(4){height:11px;animation:eq .7s .1s ease infinite alternate;}
+@keyframes eq{0%{transform:scaleY(.25)}100%{transform:scaleY(1)}}
+
+/* Status badges */
+.ep-status-badge {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+  letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px;
+}
+.ep-coming { background: var(--gray-100); color: var(--text-light); border: 1px solid var(--gray-200); }
+.ep-draft { background: var(--amber-pale); color: var(--amber); border: 1px solid rgba(232,160,32,.3); }
+.ep-row-dim { opacity: .65; }
+.ep-row-dim:hover { opacity: .85; }
+.ep-thumb-dim { filter: grayscale(.4); }
+
+/* ══ STICKY MINI PLAYER ══ */
+.mini {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(15,31,61,.92);
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border-top: 1px solid rgba(255,255,255,.07);
+  box-shadow: 0 -6px 32px rgba(15,31,61,.4), inset 0 1px 0 rgba(255,255,255,.06);
+  padding: 0 1.25rem; height: 70px;
+  display: flex; align-items: center; gap: 14px;
+  transform: translateY(100%); transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.mini::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(13,115,119,.4) 30%, rgba(13,115,119,.4) 70%, transparent 100%);
+}
+.mini.show { transform: translateY(0); }
+.mini-art {
+  width: 40px; height: 40px; border-radius: var(--radius-sm); font-size: 18px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  background: linear-gradient(145deg, var(--navy-light), var(--navy));
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12);
+  cursor: pointer;
+}
+.mini-txt { flex: 1; min-width: 0; cursor: pointer; }
+.mini-title { font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.mini-sub { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,.38); }
+.mini-c {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,.65); padding: 8px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; transition: all .12s;
+}
+.mini-c:hover { color: #fff; background: rgba(255,255,255,.08); }
+.mini-c svg { width: 18px; height: 18px; }
+.mini-c.play {
+  width: 40px; height: 40px;
+  background: linear-gradient(145deg, var(--teal), #0a6a60);
+  color: #fff; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.15);
+  box-shadow: 0 4px 14px rgba(13,115,119,.45), inset 0 1px 0 rgba(255,255,255,.18);
+  position: relative; overflow: hidden;
+}
+.mini-c.play::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 48%;
+  background: linear-gradient(180deg, rgba(255,255,255,.16) 0%, transparent 100%);
+}
+.mini-c.play:hover { background: linear-gradient(145deg, var(--teal-light), var(--teal)); }
+.mini-prog { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: rgba(255,255,255,.06); }
+.mini-prog-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--teal-light)); transition: width .1s linear; box-shadow: 0 0 6px rgba(13,115,119,.5); }
+.mini-expand { background: none; border: none; cursor: pointer; color: rgba(255,255,255,.3); font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 6px; transition: color .12s; flex-shrink: 0; }
+.mini-expand:hover { color: var(--teal-light); }
+
+/* ══ RESUME BANNER ══ */
+.resume-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+  border: 1px solid rgba(13,115,119,.25);
+  border-radius: var(--radius-md); padding: 10px 14px;
+  margin-bottom: 1rem; display: none; align-items: center; gap: 10px;
+  cursor: pointer; transition: transform .15s;
+}
+.resume-banner:hover { transform: translateY(-1px); }
+.resume-banner.show { display: flex; }
+.resume-icon { font-size: 20px; flex-shrink: 0; }
+.resume-txt { flex: 1; min-width: 0; }
+.resume-title { font-size: 12px; font-weight: 600; color: #fff; }
+.resume-sub { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,.4); }
+.resume-btn {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  background: var(--teal); color: #fff; border: none; border-radius: 20px;
+  padding: 5px 14px; cursor: pointer; white-space: nowrap;
+  transition: background .15s;
+}
+.resume-btn:hover { background: var(--teal-light); }
+
+/* ══ SLEEP TIMER TOAST ══ */
+.sleep-toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--navy); color: #fff; border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--radius-md); padding: 8px 16px;
+  font-family: var(--font-mono); font-size: 11px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  opacity: 0; transition: all .3s; pointer-events: none; z-index: 300;
+  display: flex; align-items: center; gap: 8px;
+}
+.sleep-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.sleep-toast-close {
+  background: none; border: none; color: rgba(255,255,255,.4); cursor: pointer;
+  font-size: 14px; padding: 0 2px; transition: color .15s;
+}
+.sleep-toast-close:hover { color: #fff; }
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(15,31,61,.12);border-radius:3px;}
+
+/* Mobile */
+@media(max-width:520px){
+  .pod-page { padding: 0 .75rem 150px; }
+  .ctrl-pill { padding: 8px 12px; gap: 2px; }
+  .cb.play { width: 48px; height: 48px; }
+  .ep-desc { display: none; }
+  .sp-eta { display: none; }
+  .sleep-btn { display: none; }
+}
+</style>
+</head>
+<body data-system="0">
+
+<audio id="audio" crossorigin="anonymous" preload="metadata"></audio>
+
+<div class="pod-page">
+
+  <div class="pod-head">
+    <div>
+      <h1>Podcast Episodes</h1>
+      <p>3 episodes · 7 systems · listen anywhere</p>
+    </div>
+    <div class="kbd-row">
+      <span class="kbd">space</span> play &nbsp;
+      <span class="kbd">&larr; &rarr;</span> &plusmn;10s &nbsp;
+      <span class="kbd">&uarr; &darr;</span> speed
+    </div>
+  </div>
+
+  <!-- RESUME BANNER -->
+  <div class="resume-banner" id="resume-banner">
+    <div class="resume-icon" id="resume-icon">🫀</div>
+    <div class="resume-txt">
+      <div class="resume-title" id="resume-title">Resume: Systems 1 &amp; 2</div>
+      <div class="resume-sub" id="resume-sub">Left off at 12:34</div>
+    </div>
+    <button class="resume-btn" id="resume-btn">Resume</button>
+  </div>
+
+  <!-- EPISODE HERO BANNER -->
+  <div class="ep-hero" id="ep-hero" onclick="openPlayerMode()" role="button" aria-label="Open full-screen player">
+    <div class="ep-hero-bg" id="hero-bg"></div>
+    <div class="ep-hero-glow"></div>
+    <div class="ep-hero-sheen"></div>
+    <div class="ep-hero-emoji" id="hero-emoji">🫀</div>
+    <div class="ep-hero-content">
+      <div class="ep-hero-eye">
+        <div class="live-pulse" id="hero-pulse"></div>
+        <span id="hero-eye">Now Playing — Episode 1 of 3</span>
+      </div>
+      <div class="ep-hero-title" id="hero-title">Systems 1 &amp; 2 — Abdominal &amp; Musculoskeletal</div>
+      <div class="ep-hero-meta">
+        <span class="ep-hero-sys" id="hero-sys">Systems 1–2</span>
+        <div class="ep-hero-tags" id="hero-tags"></div>
+      </div>
+    </div>
+    <div class="ep-hero-expand-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+      tap to expand
+    </div>
+  </div>
+
+  <!-- PLAYER CARD -->
+  <div class="player-card" id="player-card">
+
+    <div class="speed-row">
+      <span class="speed-lbl">Speed</span>
+      <button class="sp" onclick="setSpeed(0.75)">0.75&times;</button>
+      <button class="sp on" onclick="setSpeed(1.0)">1&times;</button>
+      <button class="sp" onclick="setSpeed(1.25)">1.25&times;</button>
+      <button class="sp" onclick="setSpeed(1.5)">1.5&times;</button>
+      <button class="sp" onclick="setSpeed(2.0)">2&times;</button>
+      <span class="sp-eta" id="sp-eta">remaining: <strong>&mdash;</strong></span>
+      <button class="sleep-btn" id="sleep-btn" onclick="cycleSleep()" title="Sleep timer">Sleep</button>
+    </div>
+
+    <!-- Real waveform scrubber -->
+    <div class="waveform-section">
+      <div class="waveform-wrap" id="wf-wrap">
+        <img class="waveform-img" id="wf-img" src="" alt="" onerror="this.style.display='none'">
+        <div class="waveform-played" id="wf-played" style="width:0%"></div>
+        <div class="waveform-unplayed" id="wf-unplayed" style="width:100%"></div>
+        <div class="waveform-ticks" id="wf-ticks"></div>
+        <div class="waveform-cursor" id="wf-cursor" style="left:0%"></div>
+      </div>
+      <div class="wf-time-row">
+        <div class="wf-time-combined">
+          <span class="wf-time-cur" id="t-cur">0:00</span>
+          <span class="wf-time-sep">/</span>
+          <span class="wf-time-dur" id="t-dur">&mdash;</span>
+        </div>
+        <span class="wf-chap-lbl" id="cur-chap">&#9654; Intro</span>
+      </div>
+    </div>
+
+    <!-- EQ bars -->
+    <div class="eq-canvas-wrap" id="eq-wrap"></div>
+
+    <div class="controls-wrap">
+      <div class="ctrl-pill">
+        <button class="cb" onclick="seek(-10)" title="Back 10s" aria-label="Rewind 10 seconds">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 20.94A9 9 0 1 0 3 12"/><polyline points="1 8 3 12 7 8"/>
+            <text x="8.5" y="15.5" font-size="6" fill="currentColor" stroke="none" font-family="monospace" font-weight="700">10</text>
+          </svg>
+        </button>
+        <button class="cb play" id="btn-play" onclick="togglePlay()" aria-label="Play or pause">
+          <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </button>
+        <button class="cb" onclick="seek(10)" title="Forward 10s" aria-label="Forward 10 seconds">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 3.06A9 9 0 1 1 3 12"/><polyline points="17 8 21 12 17 16"/>
+            <text x="8.5" y="15.5" font-size="6" fill="currentColor" stroke="none" font-family="monospace" font-weight="700">10</text>
+          </svg>
+        </button>
+        <button class="cb lg" onclick="nextEp()" title="Next episode" aria-label="Next episode">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><rect x="19" y="4" width="2" height="16" rx="1"/></svg>
+        </button>
+      </div>
+      <div class="btm-row">
+        <div class="vol-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
+          <input type="range" class="vol" min="0" max="100" value="85" oninput="setVolume(this.value)" aria-label="Volume">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </div>
+        <button class="expand-btn" onclick="openPlayerMode()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Player mode
+        </button>
+      </div>
+    </div>
+
+    <button class="chap-btn" id="chap-btn" onclick="toggleChapters()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      <span id="chap-lbl">Show chapters (8)</span>
+    </button>
+    <div class="chap-section" id="chap-section">
+      <div id="chap-list"></div>
+    </div>
+
+  </div>
+
+  <!-- EPISODE LIST -->
+  <div class="ep-list-card">
+    <div class="ep-list-hdr">
+      <h2>All Episodes</h2>
+      <span>3 episodes · 7 systems</span>
+    </div>
+    <div id="ep-list"></div>
+  </div>
+
+</div>
+
+<!-- FULL-SCREEN PLAYER MODE -->
+<div class="player-modal" id="player-modal">
+  <div class="player-modal-bg" id="pm-bg"></div>
+  <div class="pm-inner">
+
+    <div class="pm-topbar">
+      <button class="pm-close" onclick="closePlayerMode()" aria-label="Close player">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
+      <div class="pm-ep-label" id="pm-ep-label">Episode 1 of 3</div>
+      <div class="pm-placeholder"></div>
+    </div>
+
+    <div class="pm-art-wrap">
+      <div class="pm-art" id="pm-art">🫀</div>
+    </div>
+
+    <div class="pm-eq" id="pm-eq"></div>
+
+    <div class="pm-title" id="pm-title">Systems 1 &amp; 2</div>
+    <div class="pm-sub" id="pm-sub">Episode 01</div>
+
+    <div class="pm-tags" id="pm-tags"></div>
+
+    <div class="pm-prog-wrap">
+      <div class="pm-prog-track" id="pm-prog-track">
+        <div class="pm-prog-fill" id="pm-prog-fill" style="width:0%"></div>
+        <div class="pm-prog-thumb" id="pm-prog-thumb" style="left:0%"></div>
+      </div>
+    </div>
+    <div class="pm-times"><span id="pm-t-cur">0:00</span><span id="pm-t-rem">-0:00</span></div>
+
+    <div class="pm-speed">
+      <button class="pm-sp" onclick="setSpeed(0.75)">0.75&times;</button>
+      <button class="pm-sp on" onclick="setSpeed(1.0)">1&times;</button>
+      <button class="pm-sp" onclick="setSpeed(1.25)">1.25&times;</button>
+      <button class="pm-sp" onclick="setSpeed(1.5)">1.5&times;</button>
+      <button class="pm-sp" onclick="setSpeed(2.0)">2&times;</button>
+    </div>
+    <div class="pm-eta" id="pm-eta">remaining: <strong>&mdash;</strong></div>
+
+    <div class="pm-ctrl-pill">
+      <button class="pm-cb" onclick="prevEp()" aria-label="Previous episode">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"/><rect x="5" y="4" width="2" height="16" rx="1"/></svg>
+      </button>
+      <button class="pm-cb" onclick="seek(-10)" aria-label="Rewind 10 seconds">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 20.94A9 9 0 1 0 3 12"/><polyline points="1 8 3 12 7 8"/>
+          <text x="8.5" y="15.5" font-size="6" fill="currentColor" stroke="none" font-family="monospace">10</text>
+        </svg>
+      </button>
+      <button class="pm-cb play" id="pm-play-btn" onclick="togglePlay()" aria-label="Play or pause">
+        <svg id="pm-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </button>
+      <button class="pm-cb" onclick="seek(10)" aria-label="Forward 10 seconds">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 3.06A9 9 0 1 1 3 12"/><polyline points="17 8 21 12 17 16"/>
+          <text x="8.5" y="15.5" font-size="6" fill="currentColor" stroke="none" font-family="monospace">10</text>
+        </svg>
+      </button>
+      <button class="pm-cb" onclick="nextEp()" aria-label="Next episode">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><rect x="19" y="4" width="2" height="16" rx="1"/></svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- STICKY MINI PLAYER -->
+<div class="mini" id="mini">
+  <div class="mini-art" id="mini-art" onclick="openPlayerMode()">🫀</div>
+  <div class="mini-txt" onclick="openPlayerMode()">
+    <div class="mini-title" id="mini-title">Systems 1 &amp; 2 — Abdominal &amp; Musculoskeletal</div>
+    <div class="mini-sub" id="mini-sub">Episode 1 · 0:00</div>
+  </div>
+  <button class="mini-c" onclick="seek(-10)" aria-label="Rewind 10 seconds">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M12 20.94A9 9 0 1 0 3 12"/><polyline points="1 8 3 12 7 8"/>
+      <text x="8.5" y="15.5" font-size="6" fill="currentColor" stroke="none" font-family="monospace">10</text>
+    </svg>
+  </button>
+  <button class="mini-c play" id="mini-play" onclick="togglePlay()" aria-label="Play or pause">
+    <svg id="mini-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+  </button>
+  <button class="mini-c" onclick="seek(10)" aria-label="Forward 10 seconds">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M12 3.06A9 9 0 1 1 3 12"/><polyline points="17 8 21 12 17 16"/>
+      <text x="8.5" y="15.5" font-size="6" fill="currentColor" stroke="none" font-family="monospace">10</text>
+    </svg>
+  </button>
+  <button class="mini-expand" onclick="scrollToTop()">&#8593; top</button>
+  <div class="mini-prog"><div class="mini-prog-fill" id="mini-prog" style="width:0%"></div></div>
+</div>
+
+<!-- SLEEP TIMER TOAST -->
+<div class="sleep-toast" id="sleep-toast">
+  <span id="sleep-toast-txt">Sleep in 30:00</span>
+  <button class="sleep-toast-close" onclick="clearSleep()">&times;</button>
+</div>
+
+<script src="js/core.js"></script>
+<script src="components/nav.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+//  NR509 PODCAST V5 — Configurable Episode Player
+//  Integrated with project design system + localStorage persistence
+// ══════════════════════════════════════════════════════════════
+
+// ── EPISODE CONFIG ────────────────────────────────────────────
+const EPISODE_CONFIG = [
+  {
+    id: 0,
+    status: "ready",
+    src: "https://archive.org/download/nr-509-abdominal-and-musculoskeletal-assessment-review/NR_509_Abdominal_and_Musculoskeletal_Assessment_Review.m4a",
+  },
+  {
+    id: 1,
+    status: "ready",
+    src: "https://archive.org/download/tanner-stage-iv-and-2024-screening-updates-1/NR_509_Neuro_and_GU_Final_Walkthrough.m4a",
+  },
+  {
+    id: 2,
+    status: "ready",
+    src: "https://archive.org/download/tanner-stage-iv-and-2024-screening-updates-1/Tanner_Stage_IV_and_2024_Screening_Updates%20%281%29.m4a",
+  },
+];
+
+const EPISODE_META = [
+  {
+    id:0, num:1, icon:'\u{1FAC0}',
+    title:'Systems 1 & 2 \u2014 Abdominal & Musculoskeletal',
+    desc:"Murphy\u2019s sign, IAPP order, all 5 appendicitis signs, RA vs OA vs Gout vs AS, anterior drawer test.",
+    sys:'Systems 1\u20132', sysList:['Sys 1','Sys 2'],
+    tags:["Murphy\u2019s Sign","IAPP order","RA vs OA vs Gout","Anterior drawer"],
+    accent:'#0D7377', accent2:'#14A085',
+    hero:'linear-gradient(135deg, #0a2a28 0%, #0F1F3D 100%)',
+    chapters:[
+      {pct:0.00,label:'Intro \u2014 what to expect'},
+      {pct:0.08,label:'IAPP assessment order'},
+      {pct:0.18,label:"Murphy\u2019s sign technique"},
+      {pct:0.30,label:'All 5 appendicitis signs'},
+      {pct:0.44,label:'Peritoneal irritation signs'},
+      {pct:0.58,label:'RA vs OA vs Gout comparison'},
+      {pct:0.74,label:'Anterior drawer & spine tests'},
+      {pct:0.90,label:'High-yield summary'},
+    ]
+  },
+  {
+    id:1, num:2, icon:'\u{1F9E0}',
+    title:'Systems 3 & 4 \u2014 Neurological & Genitourinary',
+    desc:"All 12 cranial nerves, Kernig\u2019s & Brudzinski\u2019s, Naegele\u2019s Rule, ectopic pregnancy signs, BPH.",
+    sys:'Systems 3\u20134', sysList:['Sys 3','Sys 4'],
+    tags:["12 Cranial Nerves","Kernig\u2019s","Naegele\u2019s Rule","Ectopic Pregnancy"],
+    accent:'#5B4FCF', accent2:'#8B7CF6',
+    hero:'linear-gradient(135deg, #1a0a3a 0%, #0F1F3D 100%)',
+    chapters:[
+      {pct:0.00,label:'Intro'},
+      {pct:0.10,label:'12 cranial nerves fast drill'},
+      {pct:0.26,label:"Kernig\u2019s & Brudzinski\u2019s mnemonics"},
+      {pct:0.42,label:'ICP signs & subarachnoid hemorrhage'},
+      {pct:0.57,label:"Naegele\u2019s Rule step-by-step"},
+      {pct:0.71,label:'Pregnancy emergencies comparison'},
+      {pct:0.86,label:'BPH vs prostatitis vs prostate cancer'},
+    ]
+  },
+  {
+    id:2, num:3, icon:'\u2B50',
+    title:'Systems 5\u20137 \u2014 Special Populations, Breast & Cross-System',
+    desc:'Tanner stages I\u2013V, USPSTF 2024 mammography, cotton-wool spots, PPV calculations.',
+    sys:'Systems 5\u20137', sysList:['Sys 5','Sys 6','Sys 7'],
+    tags:["Tanner Stages","USPSTF 2024","Cotton-wool spots","PPV Calc"],
+    accent:'#B45309', accent2:'#E8A020',
+    hero:'linear-gradient(135deg, #2a1500 0%, #0F1F3D 100%)',
+    chapters:[
+      {pct:0.00,label:'Intro'},
+      {pct:0.09,label:'Tanner stages I\u2013V'},
+      {pct:0.23,label:'Infant vs adult diffs'},
+      {pct:0.38,label:'Normal aging changes'},
+      {pct:0.52,label:'USPSTF 2024 mammography'},
+      {pct:0.64,label:'Vertical strip technique'},
+      {pct:0.76,label:'Cotton-wool spots \u00D7 13'},
+      {pct:0.88,label:'PPV formula & exam trap'},
+    ]
+  }
+];
+
+// ── MERGE + WAVEFORMS ─────────────────────────────────────────
+const ARCHIVE_WAVEFORM_URLS = {
+  0: 'https://archive.org/services/img/nr-509-abdominal-and-musculoskeletal-assessment-review',
+  1: 'https://archive.org/services/img/tanner-stage-iv-and-2024-screening-updates-1',
+  2: 'https://archive.org/services/img/tanner-stage-iv-and-2024-screening-updates-1',
+};
+
+const EPISODES = EPISODE_META.map(meta => {
+  const cfg = EPISODE_CONFIG.find(c => c.id === meta.id) || { status: 'coming', src: '' };
+  return {
+    ...meta,
+    status: cfg.status,
+    src: cfg.status === 'ready' && cfg.src ? cfg.src : '',
+    isReady: cfg.status === 'ready' && !!cfg.src,
+    waveformUrl: ARCHIVE_WAVEFORM_URLS[meta.id] || '',
+  };
+});
+
+// ── STATE ─────────────────────────────────────────────────────
+const audio = document.getElementById('audio');
+let curEp = 0, playing = false, chapOpen = false, curSpeed = 1.0, playerModeOpen = false;
+const progress = {};
+
+// ── LOCALSTORAGE PERSISTENCE ──────────────────────────────────
+const STORAGE_KEY = 'nr509podcast';
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+function saveState() {
+  const state = {
+    curEp,
+    speed: curSpeed,
+    volume: audio.volume,
+    progress: {},
+  };
+  EPISODES.forEach(e => {
+    const dur = (e.id === curEp && !isNaN(audio.duration)) ? audio.duration : 0;
+    state.progress[e.id] = {
+      pct: progress[e.id].pct,
+      done: progress[e.id].done,
+      time: progress[e.id].time || 0,
+      dur: dur || progress[e.id].dur || 0,
+    };
+  });
+  // Save current time for active episode
+  if (!isNaN(audio.currentTime) && audio.currentTime > 0) {
+    state.progress[curEp].time = audio.currentTime;
+    if (!isNaN(audio.duration)) state.progress[curEp].dur = audio.duration;
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function initState() {
+  EPISODES.forEach(e => { progress[e.id] = { pct: 0, done: false, time: 0, dur: 0 }; });
+  const saved = loadState();
+  if (saved) {
+    curSpeed = saved.speed || 1.0;
+    audio.volume = typeof saved.volume === 'number' ? saved.volume : 0.85;
+    document.querySelector('.vol').value = Math.round(audio.volume * 100);
+    if (saved.progress) {
+      EPISODES.forEach(e => {
+        if (saved.progress[e.id]) {
+          progress[e.id] = { ...progress[e.id], ...saved.progress[e.id] };
+        }
+      });
+    }
+    curEp = typeof saved.curEp === 'number' ? saved.curEp : 0;
+    showResumeBanner(saved);
+  } else {
+    audio.volume = 0.85;
+  }
+}
+
+function showResumeBanner(saved) {
+  if (!saved || !saved.progress) return;
+  const ep = EPISODES[curEp];
+  const p = saved.progress[curEp];
+  if (p && p.time > 10 && !p.done) {
+    const banner = document.getElementById('resume-banner');
+    document.getElementById('resume-icon').textContent = ep.icon;
+    document.getElementById('resume-title').textContent = 'Resume: ' + ep.title;
+    document.getElementById('resume-sub').textContent = 'Left off at ' + fmt(p.time);
+    banner.classList.add('show');
+    document.getElementById('resume-btn').onclick = function() {
+      banner.classList.remove('show');
+      audio.src = ep.src; audio.load(); audio.playbackRate = curSpeed;
+      audio.addEventListener('loadedmetadata', function onMeta() {
+        audio.removeEventListener('loadedmetadata', onMeta);
+        audio.currentTime = p.time;
+        audio.play().catch(function(){});
+      });
+      applyAccent(ep);
+    };
+  }
+}
+
+// Save state periodically and on key events
+setInterval(saveState, 5000);
+window.addEventListener('beforeunload', saveState);
+
+// ── SLEEP TIMER ───────────────────────────────────────────────
+const SLEEP_OPTIONS = [0, 15, 30, 45, 60]; // minutes, 0 = off
+let sleepIdx = 0, sleepEnd = 0, sleepInterval = null;
+
+function cycleSleep() {
+  sleepIdx = (sleepIdx + 1) % SLEEP_OPTIONS.length;
+  const mins = SLEEP_OPTIONS[sleepIdx];
+  const btn = document.getElementById('sleep-btn');
+  const toast = document.getElementById('sleep-toast');
+
+  if (mins === 0) {
+    clearSleep();
+    return;
+  }
+
+  sleepEnd = Date.now() + mins * 60000;
+  btn.textContent = mins + 'm';
+  btn.classList.add('on');
+
+  document.getElementById('sleep-toast-txt').textContent = 'Sleep in ' + mins + ':00';
+  toast.classList.add('show');
+
+  if (sleepInterval) clearInterval(sleepInterval);
+  sleepInterval = setInterval(updateSleepTimer, 1000);
+}
+
+function updateSleepTimer() {
+  const rem = Math.max(0, sleepEnd - Date.now());
+  if (rem <= 0) {
+    audio.pause();
+    clearSleep();
+    return;
+  }
+  const m = Math.floor(rem / 60000);
+  const s = Math.floor((rem % 60000) / 1000);
+  document.getElementById('sleep-toast-txt').textContent = 'Sleep in ' + m + ':' + String(s).padStart(2,'0');
+}
+
+function clearSleep() {
+  sleepIdx = 0; sleepEnd = 0;
+  if (sleepInterval) { clearInterval(sleepInterval); sleepInterval = null; }
+  document.getElementById('sleep-btn').textContent = 'Sleep';
+  document.getElementById('sleep-btn').classList.remove('on');
+  document.getElementById('sleep-toast').classList.remove('show');
+}
+
+// ── EQ BAR ANIMATION ──────────────────────────────────────────
+const EQ_N = 28;
+const eqHeights = Array.from({length:EQ_N}, (_, i) => 15 + Math.abs(Math.sin(i*.7))*18 + Math.abs(Math.sin(i*1.3))*10);
+let eqFrame, eqPhase = 0;
+
+function buildEqBars() {
+  const w = document.getElementById('eq-wrap');
+  w.innerHTML = '';
+  for (let i = 0; i < EQ_N; i++) { const b = document.createElement('div'); b.className = 'eq-bar'; b.style.height = '3px'; w.appendChild(b); }
+}
+function buildPmEqBars() {
+  const w = document.getElementById('pm-eq');
+  w.innerHTML = '';
+  for (let i = 0; i < 16; i++) { const b = document.createElement('div'); b.className = 'pm-eq-b'; b.style.width = '5px'; b.style.height = '4px'; w.appendChild(b); }
+}
+function animateEq() {
+  if (!playing) { eqFrame = null; return; }
+  eqPhase += .12;
+  document.querySelectorAll('.eq-bar').forEach((b, i) => {
+    b.style.height = Math.round(Math.max(3, eqHeights[i]*.4 + eqHeights[i]*.6 * Math.abs(Math.sin(eqPhase + i*.4)))) + 'px';
+  });
+  document.querySelectorAll('.pm-eq-b').forEach((b, i) => {
+    b.style.height = Math.round(Math.max(4, 10 + 12 * Math.abs(Math.sin(eqPhase + i*.5)))) + 'px';
+  });
+  eqFrame = requestAnimationFrame(animateEq);
+}
+function startEq() { if (!eqFrame) eqFrame = requestAnimationFrame(animateEq); }
+function stopEq() { if (eqFrame) { cancelAnimationFrame(eqFrame); eqFrame = null; } }
+
+// ── ACCENT THEMING + WAVEFORM ─────────────────────────────────
+function applyAccent(ep) {
+  const r = document.documentElement.style;
+  r.setProperty('--ep-accent', ep.accent);
+  r.setProperty('--ep-accent2', ep.accent2);
+  r.setProperty('--ep-hero', ep.hero);
+  document.getElementById('hero-bg').style.background = ep.hero;
+  document.getElementById('pm-bg').style.background = ep.hero;
+  const img = document.getElementById('wf-img');
+  if (ep.waveformUrl) { img.style.display = 'block'; img.src = ep.waveformUrl; }
+  else { img.style.display = 'none'; }
+  document.getElementById('wf-played').style.background =
+    'linear-gradient(90deg, ' + ep.accent + '88 0%, ' + ep.accent2 + '77 100%)';
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+function fmt(s) { if (isNaN(s) || s < 0) s = 0; const m = Math.floor(s/60), sec = Math.floor(s%60); return m + ':' + String(sec).padStart(2,'0'); }
+function fmtMin(s) { if (isNaN(s) || s <= 0) return '\u2014'; return Math.round(s/60) + ' min'; }
+function getPct() { return audio.duration ? audio.currentTime / audio.duration : 0; }
+function getCurChap(ep, pct) { let c = ep.chapters[0]; for (const x of ep.chapters) { if (pct >= x.pct) c = x; else break; } return c; }
+
+// ── RENDER ────────────────────────────────────────────────────
+function render(pct) {
+  pct = Math.max(0, Math.min(1, isNaN(pct) ? 0 : pct));
+  const ep = EPISODES[curEp];
+  const dur = isNaN(audio.duration) ? 0 : audio.duration;
+  const cur = pct * dur;
+  const pp = (pct*100).toFixed(2) + '%';
+
+  // Hero
+  document.getElementById('hero-eye').textContent = 'Now Playing \u2014 Episode ' + ep.num + ' of 3';
+  document.getElementById('hero-title').textContent = ep.title;
+  document.getElementById('hero-sys').textContent = ep.sys;
+  document.getElementById('hero-emoji').textContent = ep.icon;
+  document.getElementById('hero-tags').innerHTML = ep.tags.slice(0,2).map(t => '<span class="ep-hero-tag">' + t + '</span>').join('');
+  document.getElementById('hero-pulse').style.display = playing ? 'block' : 'none';
+
+  // Waveform
+  document.getElementById('wf-played').style.width = pp;
+  document.getElementById('wf-unplayed').style.width = (100 - pct*100).toFixed(2) + '%';
+  document.getElementById('wf-cursor').style.left = pp;
+  document.getElementById('t-cur').textContent = fmt(cur);
+  document.getElementById('t-dur').textContent = dur > 0 ? fmt(dur) : '\u2014';
+
+  const cc = getCurChap(ep, pct);
+  document.getElementById('cur-chap').textContent = cc ? '\u25B6 ' + cc.label : '';
+  const tk = document.getElementById('wf-ticks');
+  tk.innerHTML = '';
+  ep.chapters.forEach(c => {
+    if (c.pct === 0) return;
+    const d = document.createElement('div');
+    d.className = 'wf-tick' + (pct >= c.pct ? ' past' : '');
+    d.style.left = (c.pct*100) + '%';
+    tk.appendChild(d);
+  });
+
+  // Speed ETA
+  const rem = dur > 0 ? (dur - cur) / curSpeed : 0;
+  document.getElementById('sp-eta').innerHTML = 'remaining: <strong>' + fmtMin(rem) + '</strong>';
+  document.getElementById('chap-lbl').textContent = (chapOpen ? 'Hide' : 'Show') + ' chapters (' + ep.chapters.length + ')';
+  if (chapOpen) buildChapList(ep, pct, dur);
+
+  // Player mode
+  document.getElementById('pm-art').textContent = ep.icon;
+  document.getElementById('pm-ep-label').textContent = 'Episode ' + ep.num + ' of 3';
+  document.getElementById('pm-title').textContent = ep.title;
+  document.getElementById('pm-sub').textContent = 'Episode 0' + ep.num;
+  document.getElementById('pm-tags').innerHTML = ep.tags.map(t => '<span class="pm-tag">' + t + '</span>').join('');
+  document.getElementById('pm-prog-fill').style.width = pp;
+  document.getElementById('pm-prog-thumb').style.left = pp;
+  document.getElementById('pm-t-cur').textContent = fmt(cur);
+  document.getElementById('pm-t-rem').textContent = dur > 0 ? '-' + fmt(dur - cur) : '-0:00';
+  document.getElementById('pm-eta').innerHTML = 'remaining: <strong>' + fmtMin(rem) + '</strong>';
+
+  // Mini
+  document.getElementById('mini-art').textContent = ep.icon;
+  document.getElementById('mini-title').textContent = ep.title;
+  document.getElementById('mini-sub').textContent = 'Episode ' + ep.num + ' \u00B7 ' + fmt(cur);
+  document.getElementById('mini-prog').style.width = pp;
+
+  renderEpList();
+}
+
+function buildChapList(ep, pct, dur) {
+  document.getElementById('chap-list').innerHTML = ep.chapters.map((c, i) => {
+    const np = ep.chapters[i+1] ? ep.chapters[i+1].pct : 1;
+    const a = pct >= c.pct && pct < np;
+    return '<div class="chap-item' + (a ? ' on' : '') + '" onclick="jumpTo(' + c.pct + ')">' +
+      '<span class="chap-ts">' + fmt(c.pct * dur) + '</span>' +
+      '<div class="chap-dot"></div>' +
+      '<span class="chap-name">' + c.label + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function renderEpList() {
+  document.getElementById('ep-list').innerHTML = EPISODES.map(ep => {
+    const p = progress[ep.id], act = ep.id === curEp;
+    let right = '';
+    if (!ep.isReady) {
+      right = ep.status === 'draft'
+        ? '<div class="ep-status-badge ep-draft">Draft</div>'
+        : '<div class="ep-status-badge ep-coming">Soon</div>';
+    } else if (p.done) {
+      right = '<div class="ep-done">\u2713 done</div>';
+    } else if (p.pct > 0.02) {
+      right = '<div class="ep-pbar" style="width:52px"><div class="ep-pfill" style="width:' + Math.round(p.pct*100) + '%"></div></div>';
+    } else {
+      const d = (ep.id === curEp && !isNaN(audio.duration)) ? Math.round(audio.duration/60) + ' min' : '\u2014';
+      right = '<div class="ep-dur">' + d + '</div>';
+    }
+    const nh = act && playing
+      ? '<div class="eq"><div class="eq-b"></div><div class="eq-b"></div><div class="eq-b"></div><div class="eq-b"></div></div>'
+      : 'Ep 0' + ep.num;
+    const dimmed = !ep.isReady ? ' ep-row-dim' : '';
+    return '<div class="ep-row' + (act ? ' on' : '') + dimmed + '" onclick="selectEp(' + ep.id + ')">' +
+      '<div class="ep-thumb' + (!ep.isReady ? ' ep-thumb-dim' : '') + '">' + ep.icon + '</div>' +
+      '<div class="ep-body">' +
+        '<div class="ep-num-row"><span class="ep-num">' + nh + '</span><div class="sys-bs">' + ep.sysList.map(s => '<span class="sys-b">' + s + '</span>').join('') + '</div></div>' +
+        '<div class="ep-title">' + ep.title + '</div>' +
+        '<div class="ep-desc">' + ep.desc + '</div>' +
+      '</div>' +
+      '<div class="ep-right">' + right + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────
+function togglePlay() { if (audio.paused) audio.play().catch(function(){}); else audio.pause(); }
+function seek(d) { audio.currentTime = Math.max(0, Math.min(audio.duration || 0, audio.currentTime + d)); }
+function jumpTo(pct) { if (!isNaN(audio.duration)) { audio.currentTime = pct * audio.duration; if (!playing) audio.play().catch(function(){}); } }
+function nextEp() { const n = curEp + 1; if (n < EPISODES.length) selectEp(n); }
+function prevEp() { const n = curEp - 1; if (n >= 0) selectEp(n); }
+
+function setSpeed(s) {
+  curSpeed = s; audio.playbackRate = s;
+  document.querySelectorAll('.sp').forEach(b => b.classList.toggle('on', parseFloat(b.textContent) === s));
+  document.querySelectorAll('.pm-sp').forEach(b => b.classList.toggle('on', parseFloat(b.textContent) === s));
+  render(getPct());
+  saveState();
+}
+
+function setVolume(v) {
+  audio.volume = v / 100;
+  saveState();
+}
+
+function selectEp(id) {
+  if (id !== curEp) {
+    if (!isNaN(audio.duration)) {
+      progress[curEp].pct = getPct();
+      progress[curEp].done = getPct() > 0.92;
+      progress[curEp].time = audio.currentTime;
+      progress[curEp].dur = audio.duration;
+    }
+    curEp = id;
+    const ep = EPISODES[id];
+    audio.src = ep.src; audio.load(); audio.playbackRate = curSpeed;
+    // Resume from saved position if available
+    const savedTime = progress[id].time || 0;
+    if (savedTime > 0 && !progress[id].done) {
+      audio.addEventListener('loadedmetadata', function onMeta() {
+        audio.removeEventListener('loadedmetadata', onMeta);
+        audio.currentTime = savedTime;
+        audio.play().catch(function(){});
+      });
+    } else {
+      audio.play().catch(function(){});
+    }
+    applyAccent(ep);
+    saveState();
+  }
+  render(progress[id].pct);
+}
+
+function toggleChapters() {
+  chapOpen = !chapOpen;
+  document.getElementById('chap-section').classList.toggle('open', chapOpen);
+  document.getElementById('chap-btn').classList.toggle('open', chapOpen);
+  const ep = EPISODES[curEp], dur = isNaN(audio.duration) ? 0 : audio.duration;
+  if (chapOpen) buildChapList(ep, getPct(), dur);
+  document.getElementById('chap-lbl').textContent = (chapOpen ? 'Hide' : 'Show') + ' chapters (' + ep.chapters.length + ')';
+}
+
+// ── PLAYER MODE ───────────────────────────────────────────────
+function openPlayerMode() {
+  playerModeOpen = true;
+  document.getElementById('player-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePlayerMode() {
+  playerModeOpen = false;
+  document.getElementById('player-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── WAVEFORM SCRUB ────────────────────────────────────────────
+document.getElementById('wf-wrap').addEventListener('click', e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+  if (!isNaN(audio.duration)) audio.currentTime = pct * audio.duration;
+});
+document.getElementById('pm-prog-track').addEventListener('click', e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+  if (!isNaN(audio.duration)) audio.currentTime = pct * audio.duration;
+});
+
+// ── PLAY/PAUSE ICONS ──────────────────────────────────────────
+function setIcons(p) {
+  const pause = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+  const play = '<polygon points="5 3 19 12 5 21 5 3"/>';
+  ['play-icon','pm-play-icon','mini-icon'].forEach(id => document.getElementById(id).innerHTML = p ? pause : play);
+}
+
+// ── AUDIO EVENTS ──────────────────────────────────────────────
+audio.addEventListener('play', () => { playing = true; setIcons(true); startEq(); render(getPct()); });
+audio.addEventListener('pause', () => { playing = false; setIcons(false); stopEq(); render(getPct()); saveState(); });
+audio.addEventListener('timeupdate', () => {
+  if (!audio.duration) return;
+  const pct = getPct();
+  progress[curEp].pct = pct;
+  progress[curEp].done = pct > 0.92;
+  progress[curEp].time = audio.currentTime;
+  progress[curEp].dur = audio.duration;
+  render(pct);
+});
+audio.addEventListener('loadedmetadata', () => { render(progress[curEp].pct); });
+audio.addEventListener('ended', () => {
+  progress[curEp].done = true;
+  saveState();
+  const n = curEp + 1;
+  if (n < EPISODES.length) selectEp(n);
+  else { playing = false; setIcons(false); stopEq(); render(1); }
+});
+
+// ── MINI PLAYER VISIBILITY ────────────────────────────────────
+const miniObs = new IntersectionObserver(entries => {
+  entries.forEach(e => document.getElementById('mini').classList.toggle('show', !e.isIntersecting));
+}, { threshold: 0.1 });
+miniObs.observe(document.getElementById('player-card'));
+
+function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+// ── KEYBOARD ──────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.code === 'Escape' && playerModeOpen) closePlayerMode();
+  if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+  if (e.code === 'ArrowLeft') seek(-10);
+  if (e.code === 'ArrowRight') seek(10);
+  if (e.code === 'ArrowUp') { e.preventDefault(); setSpeed(Math.min(2.0, +(curSpeed + 0.25).toFixed(2))); }
+  if (e.code === 'ArrowDown') { e.preventDefault(); setSpeed(Math.max(0.75, +(curSpeed - 0.25).toFixed(2))); }
+});
+
+// ── INIT ──────────────────────────────────────────────────────
+initState();
+audio.src = EPISODES[curEp].src;
+audio.playbackRate = curSpeed;
+applyAccent(EPISODES[curEp]);
+buildEqBars();
+buildPmEqBars();
+
+// Apply saved speed to UI
+document.querySelectorAll('.sp').forEach(b => b.classList.toggle('on', parseFloat(b.textContent) === curSpeed));
+document.querySelectorAll('.pm-sp').forEach(b => b.classList.toggle('on', parseFloat(b.textContent) === curSpeed));
+
+render(0);
+</script>
+</body>
+</html>
