@@ -911,30 +911,13 @@ input[type=range].vol::-webkit-slider-thumb {
 
 <script src="js/core.js"></script>
 <script src="components/nav.js"></script>
+<script src="js/episodes.config.js"></script>
 <script>
 // ══════════════════════════════════════════════════════════════
 //  NR509 PODCAST V5 — Configurable Episode Player
 //  Integrated with project design system + localStorage persistence
+//  Episode links live in js/episodes.config.js — edit only that file.
 // ══════════════════════════════════════════════════════════════
-
-// ── EPISODE CONFIG ────────────────────────────────────────────
-const EPISODE_CONFIG = [
-  {
-    id: 0,
-    status: "ready",
-    src: "https://archive.org/download/nr-509-abdominal-and-musculoskeletal-assessment-review/NR_509_Abdominal_and_Musculoskeletal_Assessment_Review.m4a",
-  },
-  {
-    id: 1,
-    status: "ready",
-    src: "https://archive.org/download/tanner-stage-iv-and-2024-screening-updates-1/NR_509_Neuro_and_GU_Final_Walkthrough.m4a",
-  },
-  {
-    id: 2,
-    status: "ready",
-    src: "https://archive.org/download/tanner-stage-iv-and-2024-screening-updates-1/Tanner_Stage_IV_and_2024_Screening_Updates%20%281%29.m4a",
-  },
-];
 
 const EPISODE_META = [
   {
@@ -1007,7 +990,7 @@ const EPISODES = EPISODE_META.map(meta => {
   return {
     ...meta,
     status: cfg.status,
-    src: cfg.status === 'ready' && cfg.src ? cfg.src : '',
+    src: cfg.status === 'ready' && cfg.src ? cfg.src : (typeof FALLBACK_AUDIO_URL !== 'undefined' ? FALLBACK_AUDIO_URL : ''),
     isReady: cfg.status === 'ready' && !!cfg.src,
     waveformUrl: ARCHIVE_WAVEFORM_URLS[meta.id] || '',
   };
