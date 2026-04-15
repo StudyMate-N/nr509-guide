@@ -1413,10 +1413,12 @@ audio.addEventListener('ended', () => {
 });
 
 // ── MINI PLAYER VISIBILITY ────────────────────────────────────
+// Observe the controls pill (not the whole card) so the mini player
+// appears as soon as the play button scrolls out of view.
 const miniObs = new IntersectionObserver(entries => {
   entries.forEach(e => document.getElementById('mini').classList.toggle('show', !e.isIntersecting));
-}, { threshold: 0.1 });
-miniObs.observe(document.getElementById('player-card'));
+}, { threshold: 0 });
+miniObs.observe(document.querySelector('.ctrl-pill'));
 
 function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
