@@ -8,7 +8,7 @@ const NR509 = {
   // Call on every system page to block unauthenticated access
   guard() {
     if (localStorage.getItem('nr509unlocked') !== 'true') {
-      window.location.replace('landing.html');
+      window.location.replace('/landing');
       return false;
     }
     return true;
@@ -114,7 +114,7 @@ const NR509 = {
     // Auth guard on system pages only (not on landing/index)
     const sys = parseInt(document.body.dataset.system || '0');
     if (sys > 0 && localStorage.getItem('nr509unlocked') !== 'true') {
-      window.location.replace('landing.html');
+      window.location.replace('/landing');
       return;
     }
 
