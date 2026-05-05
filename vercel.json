@@ -1,8 +1,15 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/exam", "destination": "/nr509/exam", "permanent": false }
+  ],
   "rewrites": [
-    { "source": "/", "destination": "/landing.html" }
+    { "source": "/", "destination": "/hub.html" },
+    { "source": "/nr509/exam", "destination": "/exam.html" },
+    { "source": "/nr509/podcast", "destination": "/podcast.html" },
+    { "source": "/nr509/flashcards", "destination": "/flashcards.html" },
+    { "source": "/nr509/system-:num", "destination": "/system-:num.html" }
   ],
   "headers": [
     {

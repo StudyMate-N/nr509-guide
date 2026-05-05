@@ -4,13 +4,13 @@
 
 (function() {
   const SYSTEMS = [
-    { num: 1, label: 'Abdominal',       href: 'system-1.html' },
-    { num: 2, label: 'Musculoskeletal', href: 'system-2.html' },
-    { num: 3, label: 'Neurological',    href: 'system-3.html' },
-    { num: 4, label: 'Genitourinary',   href: 'system-4.html' },
-    { num: 5, label: 'Special Pops',    href: 'system-5.html' },
-    { num: 6, label: 'Breast',          href: 'system-6.html' },
-    { num: 7, label: 'Cross-System',    href: 'system-7.html' },
+    { num: 1, label: 'Abdominal',       href: '/system-1' },
+    { num: 2, label: 'Musculoskeletal', href: '/system-2' },
+    { num: 3, label: 'Neurological',    href: '/system-3' },
+    { num: 4, label: 'Genitourinary',   href: '/system-4' },
+    { num: 5, label: 'Special Pops',    href: '/system-5' },
+    { num: 6, label: 'Breast',          href: '/system-6' },
+    { num: 7, label: 'Cross-System',    href: '/system-7' },
   ];
 
   function getDone() {
@@ -37,7 +37,7 @@
     const nav = document.createElement('nav');
     nav.className = 'nav';
     nav.innerHTML =
-      '<a href="index.html" class="nav-brand">NR509 <span>Final Exam Guide</span></a>' +
+      '<a href="/nr509" class="nav-brand">NR509 <span>Final Exam Guide</span></a>' +
       '<div class="nav-systems">' + dots + '</div>' +
       '<div class="nav-right">' +
         '<div class="cd-pill" onclick="NR509.openDateModal()">' +

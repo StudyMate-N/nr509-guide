@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NR509 Final Exam Guide — Dashboard</title>
+<link rel="stylesheet" href="/css/guide.css">
+<style>
+/* ── DASHBOARD EXTRAS ── */
+.dash-welcome {
+  background: var(--navy);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.75rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.dash-welcome::before {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(13,115,119,.15);
+  pointer-events: none;
+}
+.dash-welcome::after {
+  content: '';
+  position: absolute;
+  left: -40px; bottom: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(232,160,32,.07);
+  pointer-events: none;
+}
+.dash-left { position: relative; z-index: 1; }
+.dash-greeting {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--teal-light); margin-bottom: 3px;
+}
+.dash-name {
+  font-family: var(--font-serif);
+  font-size: 28px; color: #fff; margin-bottom: 4px;
+}
+.dash-sub { font-size: 13px; color: rgba(255,255,255,.4); }
+.dash-cd {
+  background: rgba(232,160,32,.18);
+  border: 1.5px solid rgba(232,160,32,.5);
+  border-radius: 12px;
+  padding: .75rem 1.5rem;
+  text-align: center;
+  flex-shrink: 0;
+  position: relative; z-index: 1;
+  min-width: 110px;
+}
+.dash-cd-num {
+  font-family: var(--font-serif);
+  font-size: 38px; color: #FFD97D; line-height: 1;
+  text-shadow: 0 1px 8px rgba(0,0,0,.3);
+}
+.dash-cd-lbl {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,220,120,.85); margin-top: 4px;
+}
+
+/* ── KEY FEATURES ROW ── */
+.features-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.feat-card {
+  border-radius: var(--radius-lg);
+  padding: 1.4rem;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  transition: all .15s;
+  cursor: pointer;
+}
+.feat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.12); }
+
+.feat-card.podcast {
+  background: linear-gradient(135deg, #1B3A5C 0%, #0D2137 100%);
+  border: 1px solid rgba(13,115,119,.3);
+}
+.feat-card.flashcard {
+  background: linear-gradient(135deg, #1A3A2A 0%, #0D2117 100%);
+  border: 1px solid rgba(46,125,82,.3);
+}
+.feat-card.simulator {
+  background: linear-gradient(135deg, #3A1B3A 0%, #210D21 100%);
+  border: 1px solid rgba(91,79,207,.35);
+}
+
+.feat-card::before {
+  content: '';
+  position: absolute;
+  right: -30px; top: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  opacity: .12;
+  pointer-events: none;
+}
+.feat-card.podcast::before  { background: var(--teal); }
+.feat-card.flashcard::before{ background: var(--green); }
+.feat-card.simulator::before{ background: var(--purple); }
+
+.feat-icon {
+  font-size: 28px; margin-bottom: .6rem;
+  display: block; position: relative; z-index: 1;
+}
+.feat-title {
+  font-family: var(--font-serif);
+  font-size: 18px; color: #fff; margin-bottom: .25rem;
+  position: relative; z-index: 1;
+}
+.feat-sub {
+  font-size: 12px; color: rgba(255,255,255,.45);
+  line-height: 1.5; margin-bottom: .75rem;
+  position: relative; z-index: 1;
+}
+.feat-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 700;
+  padding: 5px 14px; border-radius: 20px;
+  position: relative; z-index: 1;
+  text-decoration: none;
+}
+.feat-card.podcast  .feat-cta { background: rgba(13,115,119,.3);  color: #7ADCC8; }
+.feat-card.flashcard .feat-cta{ background: rgba(46,125,82,.3);   color: #A3E4C0; }
+.feat-card.simulator .feat-cta{ background: rgba(91,79,207,.3);   color: #C4BBFF; }
+.feat-badge {
+  position: absolute; top: .9rem; right: .9rem;
+  font-size: 9px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; padding: 3px 8px;
+  border-radius: 20px; z-index: 1;
+}
+.feat-card.podcast  .feat-badge { background: rgba(13,115,119,.25); color: rgba(122,220,200,.8); }
+.feat-card.flashcard .feat-badge{ background: rgba(46,125,82,.25);  color: rgba(163,228,192,.8); }
+.feat-card.simulator .feat-badge{ background: rgba(91,79,207,.25);  color: rgba(196,187,255,.8); }
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 20px; color: var(--navy);
+  margin: 0 0 .75rem;
+}
+.section-title-row {
+  display: flex; align-items: baseline;
+  justify-content: space-between; margin-bottom: .75rem;
+}
+.section-link {
+  font-size: 12px; font-weight: 600;
+  color: var(--teal); text-decoration: none;
+}
+.section-link:hover { color: var(--teal-light); }
+
+/* ── SYSTEMS GRID ── */
+.systems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.systems-grid .sys-card:last-child:nth-child(3n + 1) {
+  grid-column: 2;
+}
+
+/* ── AUDIO PLACEHOLDER ── */
+.audio-coming {
+  background: #fff;
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.audio-coming-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.audio-coming-text h4 {
+  font-family: var(--font-serif);
+  font-size: 16px; color: var(--navy); margin-bottom: 2px;
+}
+.audio-coming-text p { font-size: 13px; color: var(--text-muted); }
+
+/* ── LOGOUT ── */
+.logout-link {
+  background: none; border: none;
+  color: var(--text-light); font-size: 12px;
+  cursor: pointer; font-family: var(--font-sans);
+  text-decoration: underline;
+}
+.logout-link:hover { color: var(--coral); }
+
+@media (max-width: 700px) {
+  .features-row     { grid-template-columns: 1fr; }
+  .systems-grid     { grid-template-columns: 1fr; }
+  .systems-grid .sys-card:last-child:nth-child(3n + 1) { grid-column: 1; }
+  .dash-welcome     { flex-direction: column; align-items: flex-start; }
+  .dash-cd          { width: 100%; display: flex; align-items: center; gap: .75rem; }
+  .dash-cd-num      { font-size: 28px; }
+}
+</style>
+</head>
+<body data-system="0">
+
+<div class="page">
+
+  <!-- WELCOME BANNER -->
+  <div class="dash-welcome">
+    <div class="dash-left">
+      <div class="dash-greeting">Welcome back</div>
+      <div class="dash-name" id="dashName">Student</div>
+      <div class="dash-sub">NR509 Advanced Physical Assessment · FNP Track</div>
+    </div>
+    <div class="dash-cd">
+      <div class="dash-cd-num" id="dashCdNum">—</div>
+      <div class="dash-cd-lbl" id="dashCdLbl">days to exam</div>
+    </div>
+  </div>
+
+  <!-- ── KEY FEATURES — PRIMARY ACTIONS ── -->
+  <div class="section-title">Your Study Tools</div>
+  <div class="features-row">
+
+    <a href="/nr509/podcast" class="feat-card podcast">
+      <span class="feat-badge">3 Episodes</span>
+      <span class="feat-icon">🎧</span>
+      <div class="feat-title">Podcast</div>
+      <div class="feat-sub">Listen while commuting. 3 episodes covering all 7 systems.</div>
+      <span class="feat-cta">Listen now →</span>
+    </a>
+
+    <a href="/nr509/flashcards" class="feat-card flashcard">
+      <span class="feat-badge">70 Cards</span>
+      <span class="feat-icon">🃏</span>
+      <div class="feat-title">Flashcards</div>
+      <div class="feat-sub">Spaced repetition deck. Mark known, flag for review, track mastery.</div>
+      <span class="feat-cta">Study cards →</span>
+    </a>
+
+    <a href="/nr509/exam" class="feat-card simulator">
+      <span class="feat-badge">35 Questions</span>
+      <span class="feat-icon">📝</span>
+      <div class="feat-title">Exam Simulator</div>
+      <div class="feat-sub">Timed mock exam. All 7 systems. Full performance report.</div>
+      <span class="feat-cta">Start exam →</span>
+    </a>
+
+  </div>
+
+  <!-- ── STUDY SYSTEMS ── -->
+  <div class="section-title-row">
+    <div class="section-title">Study Systems</div>
+    <span class="section-link">7 systems · 42 concepts · 84 questions</span>
+  </div>
+  <div class="systems-grid">
+
+    <a href="/system-1" class="sys-card">
+      <div class="sys-card-num">System 1</div>
+      <div class="sys-card-title">Abdominal Assessment</div>
+      <div class="sys-card-sub">Murphy's Sign · IAPP order · Appendicitis all 5 signs · Peritoneal signs · IBD vs. IBS · Biliary obstruction</div>
+      <div class="sys-card-meta">
+        <span class="sys-card-stars">★★★★★</span>
+        <span class="sys-card-badge week5">Weeks 5–6</span>
+      </div>
+    </a>
+
+    <a href="/system-2" class="sys-card">
+      <div class="sys-card-num">System 2</div>
+      <div class="sys-card-title">Musculoskeletal Assessment</div>
+      <div class="sys-card-sub">RA vs. Gout vs. OA vs. AS · Torticollis & scapular winging · Anterior drawer test · Spine assessment · Cauda equina</div>
+      <div class="sys-card-meta">
+        <span class="sys-card-stars">★★★★★</span>
+        <span class="sys-card-badge week6">Week 6</span>
+      </div>
+    </a>
+
+    <a href="/system-3" class="sys-card">
+      <div class="sys-card-num">System 3</div>
+      <div class="sys-card-title">Neurological Assessment</div>
+      <div class="sys-card-sub">Kernig's & Brudzinski's · All 12 cranial nerves · Subarachnoid hemorrhage · ICP signs · Romberg · Pain pathways</div>
+      <div class="sys-card-meta">
+        <span class="sys-card-stars">★★★★★</span>
+        <span class="sys-card-badge week6">Week 6</span>
+      </div>
+    </a>
+
+    <a href="/system-4" class="sys-card">
+      <div class="sys-card-num">System 4</div>
+      <div class="sys-card-title">Genitourinary &amp; Obstetric</div>
+      <div class="sys-card-sub">Naegele's Rule · Pap smear when/where · Pregnancy emergencies · Ectopic pregnancy · BPH · Bacterial vaginosis</div>
+      <div class="sys-card-meta">
+        <span class="sys-card-stars">★★★★★</span>
+        <span class="sys-card-badge week7">Week 7</span>
+      </div>
+    </a>
+
+    <a href="/system-5" class="sys-card">
+      <div class="sys-card-num">System 5</div>
+      <div class="sys-card-title">Special Populations</div>
+      <div class="sys-card-sub">Tanner Stages I–V · Infant assessment · Normal aging changes · USPSTF 2024 mammography · Actinic purpura</div>
+      <div class="sys-card-meta">
+        <span class="sys-card-stars">★★★★★</span>
+        <span class="sys-card-badge week7">Weeks 7–8</span>
+      </div>
+    </a>
+
+    <a href="/system-6" class="sys-card">
+      <div class="sys-card-num">System 6</div>
+      <div class="sys-card-title">Breast Assessment</div>
+      <div class="sys-card-sub">Vertical strip technique · Benign vs. malignant mass · Lymph node drainage · USPSTF screening · Pectoral fascia test</div>
+      <div class="sys-card-meta">
+        <span class="sys-card-stars">★★★★☆</span>
+        <span class="sys-card-badge week8">Weeks 4 &amp; 8</span>
+      </div>
+    </a>
+
+    <a href="/system-7" class="sys-card">
+      <div class="sys-card-num">System 7</div>
+      <div class="sys-card-title">High-Yield Cross-System</div>
+      <div class="sys-card-sub">Cotton-wool spots all 13 conditions · USPSTF screening table · Colon cancer risk · 5 As model · PPV calculation</div>
+      <div class="sys-card-meta">
+        <span class="sys-card-stars">★★★★★</span>
+        <span class="sys-card-badge week8">Final Exam</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ── AUDIO SECTION ── -->
+  <div class="section-title" id="audio">🎧 Podcast Episodes</div>
+  <a href="/nr509/podcast" class="audio-coming" style="text-decoration:none; cursor:pointer; transition:transform .15s;">
+    <div class="audio-coming-icon">🎧</div>
+    <div class="audio-coming-text">
+      <h4>NR509 Exam Prep Podcast — 3 Episodes Live</h4>
+      <p>All 7 systems covered. Listen while commuting, saves your progress automatically.</p>
+    </div>
+  </a>
+
+  <div class="guide-footer" style="margin-top:2rem">
+    <div class="footer-brand">NR509 Final Exam Guide</div>
+    <button class="logout-link" onclick="logout()">Sign out</button>
+  </div>
+
+</div>
+
+<script src="/js/core.js"></script>
+<script src="/components/nav.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('nr509unlocked') !== 'true') {
+    window.location.replace('/landing');
+    return;
+  }
+  var first = localStorage.getItem('nr509first') || '';
+  var last  = localStorage.getItem('nr509last')  || '';
+  document.getElementById('dashName').textContent =
+    first ? (first + (last ? ' ' + last : '')) : 'Student';
+
+  var exam   = localStorage.getItem('nr509exam');
+  var cdNum  = document.getElementById('dashCdNum');
+  var cdLbl  = document.getElementById('dashCdLbl');
+  if (exam) {
+    var diff = Math.round(
+      (new Date(exam + 'T00:00:00') - new Date().setHours(0,0,0,0)) / 864e5
+    );
+    if      (diff > 1)   { cdNum.textContent = diff; }
+    else if (diff === 1) { cdNum.textContent = '1';  cdLbl.textContent = 'day to exam'; }
+    else if (diff === 0) { cdNum.textContent = '🎯'; cdLbl.textContent = 'Exam today!'; }
+    else                 { cdNum.textContent = '✓';  cdLbl.textContent = 'Exam done'; }
+  }
+});
+
+function logout() {
+  if (!confirm('Sign out? Your progress will be saved.')) return;
+  localStorage.removeItem('nr509unlocked');
+  window.location.replace('/landing');
+}
+</script>
+</body>
+</html>

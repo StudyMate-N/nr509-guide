@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NR511 Differential Diagnosis — The Greenwich School</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0F1F3D;--navy-mid:#1B2A5A;
+  --teal:#0D7377;--teal-light:#14A085;
+  --purple:#5B4FCF;--purple-light:#7B6FDF;--purple-pale:#EFEDFE;
+  --amber:#E8A020;--coral:#C9432A;
+  --gray-50:#F9F8F6;--gray-100:#F1EFE9;
+  --text:#1A1917;--text-muted:#5F5D57;--text-light:#9B9890;
+  --border:rgba(0,0,0,.08);
+  --font-serif:'DM Serif Display',serif;
+  --font-sans:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;
+}
+
+/* ── LANDING MODE (dark) ── */
+html,body{
+  min-height:100vh;
+  font-family:var(--font-sans);
+  background:var(--navy);
+  color:#fff;
+  font-size:15px;
+  line-height:1.7;
+}
+
+/* ── LANDING WRAPPER ── */
+.landing{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1.25rem;
+  position:relative;
+  overflow:hidden;
+}
+.landing::before{
+  content:'';position:absolute;right:-120px;top:-120px;
+  width:500px;height:500px;border-radius:50%;
+  background:rgba(91,79,207,.10);pointer-events:none;
+}
+.landing::after{
+  content:'';position:absolute;left:-100px;bottom:-100px;
+  width:400px;height:400px;border-radius:50%;
+  background:rgba(232,160,32,.06);pointer-events:none;
+}
+
+/* ── SCREENS ── */
+.screen{display:none;width:100%;max-width:520px;animation:fadeUp .35s ease both;position:relative;z-index:1;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO ── */
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(196,187,255,.9);text-align:center;margin-bottom:.75rem;}
+.hero-title{font-family:var(--font-serif);font-size:clamp(34px,6vw,54px);color:#fff;text-align:center;line-height:1.1;margin-bottom:.75rem;}
+.hero-title span{color:rgba(196,187,255,.9);}
+.hero-desc{font-size:15px;color:rgba(255,255,255,.5);text-align:center;max-width:420px;margin:0 auto 2rem;line-height:1.7;}
+.features{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;margin-bottom:2.5rem;max-width:440px;margin-left:auto;margin-right:auto;}
+.feat{background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);border-radius:12px;padding:.8rem .7rem;text-align:center;}
+.feat-icon{font-size:20px;margin-bottom:.3rem;}
+.feat-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);line-height:1.3;}
+.feat-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;}
+.hero-cta{display:flex;flex-direction:column;align-items:center;gap:.75rem;}
+.btn-primary{background:var(--purple);color:#fff;border:none;border-radius:12px;padding:14px 36px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all .15s;width:100%;max-width:320px;box-shadow:0 4px 20px rgba(91,79,207,.35);}
+.btn-primary:hover{background:var(--purple-light);transform:translateY(-1px);}
+.hero-note{font-size:12px;color:rgba(255,255,255,.3);text-align:center;}
+
+/* ── FORM CARD ── */
+.form-card{background:rgba(255,255,255,.04);border:0.5px solid rgba(255,255,255,.1);border-radius:20px;padding:2rem;backdrop-filter:blur(8px);}
+.form-title{font-family:var(--font-serif);font-size:24px;color:#fff;margin-bottom:.35rem;}
+.form-sub{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:1.5rem;line-height:1.5;}
+.form-group{margin-bottom:1rem;}
+.form-group label{display:block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.4rem;}
+.form-group input{width:100%;padding:11px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;font-size:14px;font-family:var(--font-sans);color:#fff;outline:none;transition:border-color .15s,background .15s;}
+.form-group input::placeholder{color:rgba(255,255,255,.3);}
+.form-group input:focus{border-color:var(--purple);background:rgba(255,255,255,.1);}
+.form-group input.error{border-color:var(--coral);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.form-error{font-size:12px;color:#F5B7B1;margin-top:.4rem;display:none;}
+.form-error.show{display:block;}
+.access-code-wrap{position:relative;}
+.access-code-wrap input{letter-spacing:.15em;font-family:var(--font-mono);font-size:16px;text-align:center;text-transform:uppercase;}
+.code-status{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;display:none;}
+.code-status.ok{display:block;color:#A3E4C0;}
+.code-status.no{display:block;color:#F5B7B1;}
+.btn-submit{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all .15s;width:100%;margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-submit:hover{background:var(--purple-light);}
+.btn-submit:disabled{opacity:.45;cursor:not-allowed;}
+.btn-submit .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none;}
+.btn-submit.loading .spinner{display:block;}
+.btn-submit.loading .btn-txt{opacity:.5;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.form-back{background:transparent;border:none;color:rgba(255,255,255,.35);font-size:13px;cursor:pointer;font-family:var(--font-sans);margin-top:.75rem;display:block;width:100%;text-align:center;transition:color .15s;}
+.form-back:hover{color:rgba(255,255,255,.65);}
+.lock-icon{width:60px;height:60px;background:rgba(91,79,207,.15);border:1px solid rgba(91,79,207,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 1.25rem;}
+.code-screen .form-title{text-align:center;}
+.code-screen .form-sub{text-align:center;}
+.step-dots{display:flex;justify-content:center;gap:6px;margin-bottom:2rem;position:relative;z-index:1;}
+.sdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .25s;}
+.sdot.active{background:rgba(196,187,255,.9);width:20px;border-radius:3px;}
+.sdot.done{background:rgba(91,79,207,.5);}
+
+/* ── WELCOME ── */
+.welcome-screen{text-align:center;}
+.welcome-icon{width:72px;height:72px;background:rgba(91,79,207,.2);border:1.5px solid rgba(91,79,207,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 1.25rem;animation:popIn .4s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.welcome-title{font-family:var(--font-serif);font-size:28px;color:#fff;margin-bottom:.5rem;}
+.welcome-name{color:rgba(196,187,255,.9);}
+.welcome-sub{font-size:14px;color:rgba(255,255,255,.5);margin-bottom:2rem;line-height:1.6;max-width:380px;margin-left:auto;margin-right:auto;}
+.btn-enter{background:var(--purple);color:#fff;border:none;border-radius:12px;padding:14px 36px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all .15s;width:100%;max-width:320px;box-shadow:0 4px 20px rgba(91,79,207,.35);}
+.btn-enter:hover{background:var(--purple-light);transform:translateY(-1px);}
+
+/* ── DASHBOARD MODE (light) ── */
+body.dashboard{background:var(--gray-50);color:var(--text);}
+body.dashboard .landing{display:none;}
+
+.page{max-width:960px;margin:0 auto;padding:1.5rem 1.25rem 3rem;}
+
+/* nav */
+.nav{background:var(--navy);padding:0 1.5rem;display:flex;align-items:center;gap:1rem;height:52px;position:sticky;top:0;z-index:100;}
+.nav-brand{font-family:var(--font-serif);font-size:17px;color:#fff;text-decoration:none;margin-right:auto;}
+.nav-brand span{color:rgba(196,187,255,.8);}
+.nav-home{font-size:12px;color:rgba(255,255,255,.4);text-decoration:none;padding:4px 10px;border-radius:6px;border:0.5px solid rgba(255,255,255,.1);}
+.nav-home:hover{color:#fff;border-color:rgba(255,255,255,.25);}
+
+/* dashboard welcome banner */
+.dash-welcome{background:var(--navy);border-radius:var(--radius-lg);padding:1.5rem 1.75rem;margin-bottom:1.75rem;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.dash-welcome::before{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(91,79,207,.15);pointer-events:none;}
+.dash-welcome::after{content:'';position:absolute;left:-40px;bottom:-40px;width:160px;height:160px;border-radius:50%;background:rgba(232,160,32,.07);pointer-events:none;}
+.dash-left{position:relative;z-index:1;}
+.dash-greeting{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(196,187,255,.9);margin-bottom:3px;}
+.dash-name{font-family:var(--font-serif);font-size:28px;color:#fff;margin-bottom:4px;}
+.dash-sub{font-size:13px;color:rgba(255,255,255,.4);}
+
+/* coming-soon content */
+.coming-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.coming-card{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;opacity:.6;}
+.coming-icon{font-size:32px;margin-bottom:.6rem;}
+.coming-title{font-family:var(--font-serif);font-size:16px;color:var(--navy);margin-bottom:.25rem;}
+.coming-sub{font-size:12px;color:var(--text-muted);}
+.coming-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:var(--purple-pale);color:var(--purple);margin-top:.75rem;}
+
+.section-title{font-family:var(--font-serif);font-size:20px;color:var(--navy);margin:0 0 .75rem;}
+.notify-card{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:2rem;}
+.notify-icon{font-size:28px;flex-shrink:0;}
+.notify-text h4{font-family:var(--font-serif);font-size:16px;color:var(--navy);margin-bottom:3px;}
+.notify-text p{font-size:13px;color:var(--text-muted);}
+
+.logout-link{background:none;border:none;color:var(--text-light);font-size:12px;cursor:pointer;font-family:var(--font-sans);text-decoration:underline;}
+.logout-link:hover{color:var(--coral);}
+
+@media(max-width:700px){
+  .coming-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .form-card{padding:1.5rem 1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LANDING / ACCESS CODE (shown when locked)
+══════════════════════════════════════════════ -->
+<div class="landing" id="landingWrapper">
+
+  <div class="step-dots" id="stepDots">
+    <div class="sdot active" id="dot1"></div>
+    <div class="sdot"        id="dot2"></div>
+    <div class="sdot"        id="dot3"></div>
+  </div>
+
+  <!-- Screen 1: Hero -->
+  <div class="screen active" id="screenHero">
+    <div class="hero-eyebrow">Chamberlain University · FNP Track · NR511</div>
+    <h1 class="hero-title">NR511 <span>Differential Diagnosis</span> Guide</h1>
+    <p class="hero-desc">Exam prep built for NR511 Differential Diagnosis in Primary Care — clinical reasoning frameworks, DDx drills, and case-based review.</p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">🔬</div>
+        <div class="feat-label">DDx Frameworks</div>
+        <div class="feat-sub">Systems-based</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">❓</div>
+        <div class="feat-label">Reasoning Drills</div>
+        <div class="feat-sub">Clinical cases</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🎧</div>
+        <div class="feat-label">Audio Review</div>
+        <div class="feat-sub">Case walkthroughs</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🃏</div>
+        <div class="feat-label">DDx Flashcards</div>
+        <div class="feat-sub">Key differentials</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📋</div>
+        <div class="feat-label">SOAP Notes</div>
+        <div class="feat-sub">Documentation</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📊</div>
+        <div class="feat-label">Progress</div>
+        <div class="feat-sub">Track mastery</div>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="goToScreen('screenInfo')">Get access →</button>
+      <div class="hero-note">Access code required · One-time setup</div>
+    </div>
+  </div>
+
+  <!-- Screen 2: Info Form -->
+  <div class="screen" id="screenInfo">
+    <div class="form-card">
+      <div class="form-title">Set up your guide</div>
+      <div class="form-sub">We'll personalize your study pace based on your exam date.</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inputFirst">First name</label>
+          <input type="text" id="inputFirst" placeholder="Sarah" autocomplete="given-name">
+          <div class="form-error" id="errFirst">Please enter your first name</div>
+        </div>
+        <div class="form-group">
+          <label for="inputLast">Last name</label>
+          <input type="text" id="inputLast" placeholder="Mitchell" autocomplete="family-name">
+          <div class="form-error" id="errLast">Please enter your last name</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inputEmail">Email address</label>
+        <input type="email" id="inputEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="form-error" id="errEmail">Please enter a valid email address</div>
+      </div>
+
+      <div class="form-group">
+        <label for="inputExam">NR511 final exam date</label>
+        <input type="date" id="inputExam">
+        <div class="form-error" id="errExam">Please select your exam date</div>
+      </div>
+
+      <button class="btn-submit" onclick="submitInfo()" id="btnInfo">
+        <span class="spinner"></span>
+        <span class="btn-txt">Continue to access code →</span>
+      </button>
+      <button class="form-back" onclick="goToScreen('screenHero')">← Back</button>
+    </div>
+  </div>
+
+  <!-- Screen 3: Access Code -->
+  <div class="screen code-screen" id="screenCode">
+    <div class="form-card">
+      <div class="lock-icon">🔐</div>
+      <div class="form-title">Enter your access code</div>
+      <div class="form-sub">Your access code was included with your purchase. Check your email or order confirmation.</div>
+
+      <div class="form-group">
+        <label for="inputCode">Access code</label>
+        <div class="access-code-wrap">
+          <input type="text" id="inputCode" placeholder="NR511-XXXX" maxlength="14"
+            oninput="onCodeInput(this)" autocomplete="off" spellcheck="false">
+          <span class="code-status" id="codeStatus"></span>
+        </div>
+        <div class="form-error" id="errCode">Invalid access code. Please check and try again.</div>
+      </div>
+
+      <button class="btn-submit" onclick="submitCode()" id="btnCode" disabled>
+        <span class="spinner"></span>
+        <span class="btn-txt">Unlock guide →</span>
+      </button>
+      <button class="form-back" onclick="goToScreen('screenInfo')">← Back</button>
+    </div>
+  </div>
+
+  <!-- Screen 4: Welcome -->
+  <div class="screen welcome-screen" id="screenWelcome">
+    <div class="welcome-icon">✓</div>
+    <div class="welcome-title">Welcome, <span class="welcome-name" id="welcomeName"></span></div>
+    <div class="welcome-sub">Your NR511 guide is unlocked. Content is being added — check back as new modules go live.</div>
+    <button class="btn-enter" onclick="enterDashboard()">Enter the guide →</button>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     DASHBOARD (shown when unlocked)
+══════════════════════════════════════════════ -->
+<nav class="nav" id="dashNav" style="display:none">
+  <a href="/nr511" class="nav-brand">NR511 <span>Differential Diagnosis</span></a>
+  <a href="/" class="nav-home">← All Courses</a>
+</nav>
+
+<div class="page" id="dashPage" style="display:none">
+
+  <div class="dash-welcome">
+    <div class="dash-left">
+      <div class="dash-greeting">Welcome back</div>
+      <div class="dash-name" id="dashName">Student</div>
+      <div class="dash-sub">NR511 Differential Diagnosis in Primary Care · FNP Track</div>
+    </div>
+  </div>
+
+  <div class="section-title">Your Study Tools</div>
+  <div class="coming-grid">
+    <div class="coming-card">
+      <div class="coming-icon">🔬</div>
+      <div class="coming-title">DDx Frameworks</div>
+      <div class="coming-sub">Systems-based differential diagnosis guides</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+    <div class="coming-card">
+      <div class="coming-icon">🃏</div>
+      <div class="coming-title">Flashcards</div>
+      <div class="coming-sub">Key differentials and clinical pearls</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+    <div class="coming-card">
+      <div class="coming-icon">📝</div>
+      <div class="coming-title">Case Drills</div>
+      <div class="coming-sub">Clinical reasoning practice cases</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+    <div class="coming-card">
+      <div class="coming-icon">🎧</div>
+      <div class="coming-title">Podcast</div>
+      <div class="coming-sub">Audio walkthroughs of common presentations</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+    <div class="coming-card">
+      <div class="coming-icon">📋</div>
+      <div class="coming-title">SOAP Templates</div>
+      <div class="coming-sub">Documentation frameworks for clinical practice</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+    <div class="coming-card">
+      <div class="coming-icon">📊</div>
+      <div class="coming-title">Exam Simulator</div>
+      <div class="coming-sub">Timed mock exam with performance report</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+  </div>
+
+  <div class="section-title">Stay Updated</div>
+  <div class="notify-card">
+    <div class="notify-icon">📬</div>
+    <div class="notify-text">
+      <h4>Content drops weekly</h4>
+      <p>NR511 modules are being added. Your access code is already active — just reload when new content goes live.</p>
+    </div>
+  </div>
+
+  <div class="guide-footer" style="margin-top:2rem;display:flex;align-items:center;justify-content:space-between;padding-top:1rem;border-top:0.5px solid var(--border);">
+    <div style="font-size:13px;color:var(--text-muted)">NR511 · The Greenwich School</div>
+    <button class="logout-link" onclick="logout511()">Sign out</button>
+  </div>
+
+</div>
+
+<script>
+const VALID_CODES_511 = [
+  'NR511-2025',
+  'NR511-FNP1',
+  'NR511-FNP2',
+  'GS-BUNDLE-01',
+  'GS-BUNDLE-02',
+];
+
+let attempts = 3;
+const SCREEN_ORDER = ['screenHero','screenInfo','screenCode','screenWelcome'];
+
+function goToScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) {
+    target.style.animation = 'none';
+    requestAnimationFrame(() => { target.style.animation = ''; target.classList.add('active'); });
+  }
+  updateDots(id);
+}
+
+function updateDots(screenId) {
+  const idx = SCREEN_ORDER.indexOf(screenId);
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot' + i);
+    if (!dot) continue;
+    dot.className = 'sdot';
+    if ((i-1) === idx)      dot.classList.add('active');
+    else if ((i-1) < idx)  dot.classList.add('done');
+  }
+  document.getElementById('stepDots').style.display = screenId === 'screenWelcome' ? 'none' : 'flex';
+}
+
+function submitInfo() {
+  const first = document.getElementById('inputFirst').value.trim();
+  const last  = document.getElementById('inputLast').value.trim();
+  const email = document.getElementById('inputEmail').value.trim();
+  const exam  = document.getElementById('inputExam').value;
+  let valid = true;
+  clearErrors();
+  if (!first) { showError('errFirst'); valid = false; }
+  if (!last)  { showError('errLast');  valid = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('errEmail'); valid = false; }
+  if (!exam)  { showError('errExam');  valid = false; }
+  if (!valid) return;
+  sessionStorage.setItem('nr511_first', first);
+  sessionStorage.setItem('nr511_last',  last);
+  sessionStorage.setItem('nr511_email', email);
+  sessionStorage.setItem('nr511_exam',  exam);
+  goToScreen('screenCode');
+}
+
+function onCodeInput(input) {
+  const val = input.value.toUpperCase().replace(/[^A-Z0-9\-]/g,'');
+  input.value = val;
+  const statusEl = document.getElementById('codeStatus');
+  const btnCode  = document.getElementById('btnCode');
+  const isValid  = VALID_CODES_511.includes(val);
+  statusEl.textContent = isValid ? '✓' : (val.length >= 6 ? '✗' : '');
+  statusEl.className = 'code-status ' + (isValid ? 'ok' : val.length >= 6 ? 'no' : '');
+  btnCode.disabled = !isValid;
+  hideError('errCode');
+}
+
+function submitCode() {
+  const code = document.getElementById('inputCode').value.toUpperCase().trim();
+  const btn  = document.getElementById('btnCode');
+  if (!VALID_CODES_511.includes(code)) {
+    attempts--;
+    showError('errCode');
+    if (attempts <= 0) {
+      btn.disabled = true;
+      document.getElementById('errCode').textContent = 'Too many attempts. Please contact support.';
+    }
+    return;
+  }
+  btn.classList.add('loading');
+  btn.disabled = true;
+  setTimeout(() => { activateSession(); goToScreen('screenWelcome'); }, 800);
+}
+
+function activateSession() {
+  const first = sessionStorage.getItem('nr511_first') || '';
+  const last  = sessionStorage.getItem('nr511_last')  || '';
+  const email = sessionStorage.getItem('nr511_email') || '';
+  const exam  = sessionStorage.getItem('nr511_exam')  || '';
+  const code  = document.getElementById('inputCode').value.toUpperCase().trim();
+  localStorage.setItem('nr511exam',     exam);
+  localStorage.setItem('nr511first',    first);
+  localStorage.setItem('nr511last',     last);
+  localStorage.setItem('nr511email',    email);
+  localStorage.setItem('nr511code',     code);
+  localStorage.setItem('nr511unlocked', 'true');
+  document.getElementById('welcomeName').textContent = first || 'there';
+}
+
+function enterDashboard() {
+  showDashboard();
+}
+
+function showDashboard() {
+  document.getElementById('landingWrapper').style.display = 'none';
+  document.getElementById('dashNav').style.display = 'flex';
+  document.getElementById('dashPage').style.display = 'block';
+  document.body.classList.add('dashboard');
+  var first = localStorage.getItem('nr511first') || '';
+  var last  = localStorage.getItem('nr511last')  || '';
+  document.getElementById('dashName').textContent = first ? (first + (last ? ' ' + last : '')) : 'Student';
+}
+
+function logout511() {
+  if (!confirm('Sign out? Your access will be saved.')) return;
+  localStorage.removeItem('nr511unlocked');
+  window.location.reload();
+}
+
+function showError(id) { const el = document.getElementById(id); if (el) el.classList.add('show'); }
+function hideError(id) { const el = document.getElementById(id); if (el) el.classList.remove('show'); }
+function clearErrors() {
+  document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('input').forEach(e => e.classList.remove('error'));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('nr511unlocked') === 'true') {
+    showDashboard();
+    return;
+  }
+  var storedExam  = localStorage.getItem('nr511exam');
+  var storedFirst = localStorage.getItem('nr511first');
+  var storedEmail = localStorage.getItem('nr511email');
+  if (storedExam)  document.getElementById('inputExam').value  = storedExam;
+  if (storedFirst) document.getElementById('inputFirst').value = storedFirst;
+  if (storedEmail) document.getElementById('inputEmail').value = storedEmail;
+});
+</script>
+</body>
+</html>

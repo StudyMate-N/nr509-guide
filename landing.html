@@ -569,7 +569,7 @@ function showWelcome() {
 }
 
 function enterGuide() {
-  window.location.href = 'index.html';
+  window.location.href = '/nr509';
 }
 
 // ── HELPERS ─────────────────────────────────────────────────
@@ -592,7 +592,7 @@ function clearErrors() {
 document.addEventListener('DOMContentLoaded', function() {
   // If already unlocked, skip straight to dashboard
   if (localStorage.getItem('nr509unlocked') === 'true') {
-    window.location.replace('index.html');
+    window.location.replace('/nr509');
     return;
   }
 
