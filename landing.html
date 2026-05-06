@@ -493,6 +493,11 @@ function submitInfo() {
   sessionStorage.setItem('nr509_email', email);
   sessionStorage.setItem('nr509_exam',  exam);
 
+  // Save shared global keys so other courses skip this form
+  localStorage.setItem('gs_first', first);
+  localStorage.setItem('gs_last',  last);
+  localStorage.setItem('gs_email', email);
+
   goToScreen('screenCode');
 }
 
@@ -540,9 +545,9 @@ function submitCode() {
 }
 
 function activateSession() {
-  const first   = sessionStorage.getItem('nr509_first') || '';
-  const last    = sessionStorage.getItem('nr509_last')  || '';
-  const email   = sessionStorage.getItem('nr509_email') || '';
+  const first   = sessionStorage.getItem('nr509_first') || localStorage.getItem('gs_first') || '';
+  const last    = sessionStorage.getItem('nr509_last')  || localStorage.getItem('gs_last')  || '';
+  const email   = sessionStorage.getItem('nr509_email') || localStorage.getItem('gs_email') || '';
   const exam    = sessionStorage.getItem('nr509_exam')  || '';
   const code    = document.getElementById('inputCode').value.toUpperCase().trim();
 
@@ -556,7 +561,7 @@ function activateSession() {
 }
 
 function showWelcome() {
-  const first  = sessionStorage.getItem('nr509_first') || 'there';
+  const first  = sessionStorage.getItem('nr509_first') || localStorage.getItem('gs_first') || 'there';
   const exam   = sessionStorage.getItem('nr509_exam');
   const diff   = exam ? Math.round((new Date(exam + 'T00:00:00') - new Date().setHours(0,0,0,0)) / 864e5) : null;
   const days   = diff !== null
@@ -593,6 +598,19 @@ document.addEventListener('DOMContentLoaded', function() {
   // If already unlocked, skip straight to dashboard
   if (localStorage.getItem('nr509unlocked') === 'true') {
     window.location.replace('/nr509');
+    return;
+  }
+
+  // Returning user: already registered on another course — skip info form
+  const gsFirst = localStorage.getItem('gs_first');
+  if (gsFirst) {
+    const formSub = document.querySelector('#screenCode .form-sub');
+    if (formSub) formSub.textContent = 'Welcome back, ' + gsFirst + '! Just enter your NR509 access code below.';
+    const backBtn = document.querySelector('#screenCode .form-back');
+    if (backBtn) backBtn.setAttribute('onclick', "goToScreen('screenHero')");
+    document.querySelector('#screenHero .btn-primary').setAttribute('onclick', "goToScreen('screenCode')");
+    document.getElementById('stepDots').style.display = 'none';
+    goToScreen('screenCode');
     return;
   }
 

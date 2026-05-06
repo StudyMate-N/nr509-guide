@@ -437,6 +437,12 @@ function submitInfo() {
   sessionStorage.setItem('nr511_last',  last);
   sessionStorage.setItem('nr511_email', email);
   sessionStorage.setItem('nr511_exam',  exam);
+
+  // Save shared global keys so other courses skip this form
+  localStorage.setItem('gs_first', first);
+  localStorage.setItem('gs_last',  last);
+  localStorage.setItem('gs_email', email);
+
   goToScreen('screenCode');
 }
 
@@ -470,9 +476,9 @@ function submitCode() {
 }
 
 function activateSession() {
-  const first = sessionStorage.getItem('nr511_first') || '';
-  const last  = sessionStorage.getItem('nr511_last')  || '';
-  const email = sessionStorage.getItem('nr511_email') || '';
+  const first = sessionStorage.getItem('nr511_first') || localStorage.getItem('gs_first') || '';
+  const last  = sessionStorage.getItem('nr511_last')  || localStorage.getItem('gs_last')  || '';
+  const email = sessionStorage.getItem('nr511_email') || localStorage.getItem('gs_email') || '';
   const exam  = sessionStorage.getItem('nr511_exam')  || '';
   const code  = document.getElementById('inputCode').value.toUpperCase().trim();
   localStorage.setItem('nr511exam',     exam);
@@ -516,6 +522,20 @@ document.addEventListener('DOMContentLoaded', function() {
     showDashboard();
     return;
   }
+
+  // Returning user: already registered on another course — skip info form
+  var gsFirst = localStorage.getItem('gs_first');
+  if (gsFirst) {
+    var formSub = document.querySelector('#screenCode .form-sub');
+    if (formSub) formSub.textContent = 'Welcome back, ' + gsFirst + '! Just enter your NR511 access code below.';
+    var backBtn = document.querySelector('#screenCode .form-back');
+    if (backBtn) backBtn.setAttribute('onclick', "goToScreen('screenHero')");
+    document.querySelector('#screenHero .btn-primary').setAttribute('onclick', "goToScreen('screenCode')");
+    document.getElementById('stepDots').style.display = 'none';
+    goToScreen('screenCode');
+    return;
+  }
+
   var storedExam  = localStorage.getItem('nr511exam');
   var storedFirst = localStorage.getItem('nr511first');
   var storedEmail = localStorage.getItem('nr511email');
