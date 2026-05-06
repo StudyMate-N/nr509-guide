@@ -157,6 +157,15 @@ body.dashboard .landing{display:none;}
 .logout-link{background:none;border:none;color:var(--text-light);font-size:12px;cursor:pointer;font-family:var(--font-sans);text-decoration:underline;}
 .logout-link:hover{color:var(--coral);}
 
+/* active card */
+.active-card{background:#fff;border:1.5px solid var(--purple);border-radius:var(--radius-lg);padding:1.5rem;text-decoration:none;display:block;margin-bottom:1rem;transition:all .15s;position:relative;overflow:hidden;}
+.active-card::before{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(91,79,207,.07);pointer-events:none;}
+.active-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(91,79,207,.18);}
+.ac-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:var(--purple);color:#fff;margin-bottom:.6rem;}
+.ac-title{font-family:var(--font-serif);font-size:20px;color:var(--navy);margin-bottom:.3rem;}
+.ac-sub{font-size:12px;color:var(--text-muted);margin-bottom:.85rem;line-height:1.5;}
+.ac-arrow{font-size:13px;font-weight:700;color:var(--purple);}
+
 @media(max-width:700px){
   .coming-grid{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
@@ -314,23 +323,31 @@ body.dashboard .landing{display:none;}
     </div>
   </div>
 
-  <div class="section-title">Your Study Tools</div>
+  <div class="section-title">Week 1</div>
+  <a href="/nr511/cea" class="active-card">
+    <div class="ac-badge">Available Now</div>
+    <div class="ac-title">CEA Diagnostic Exam Prep</div>
+    <div class="ac-sub">150 questions · 3 components · 13 domains · 25 practice questions with rationales</div>
+    <div class="ac-arrow">Start studying →</div>
+  </a>
+
+  <div class="section-title">Coming next</div>
   <div class="coming-grid">
     <div class="coming-card">
+      <div class="coming-icon">📖</div>
+      <div class="coming-title">Midterm Guide</div>
+      <div class="coming-sub">Comprehensive midterm exam prep</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+    <div class="coming-card">
+      <div class="coming-icon">⚡</div>
+      <div class="coming-title">Exam Simulator</div>
+      <div class="coming-sub">Timed mock exam with performance report</div>
+      <div class="coming-badge">Coming Soon</div>
+    </div>
+    <div class="coming-card">
       <div class="coming-icon">🔬</div>
-      <div class="coming-title">DDx Frameworks</div>
-      <div class="coming-sub">Systems-based differential diagnosis guides</div>
-      <div class="coming-badge">Coming Soon</div>
-    </div>
-    <div class="coming-card">
-      <div class="coming-icon">🃏</div>
-      <div class="coming-title">Flashcards</div>
-      <div class="coming-sub">Key differentials and clinical pearls</div>
-      <div class="coming-badge">Coming Soon</div>
-    </div>
-    <div class="coming-card">
-      <div class="coming-icon">📝</div>
-      <div class="coming-title">Case Drills</div>
+      <div class="coming-title">Differential Drill</div>
       <div class="coming-sub">Clinical reasoning practice cases</div>
       <div class="coming-badge">Coming Soon</div>
     </div>
@@ -341,15 +358,15 @@ body.dashboard .landing{display:none;}
       <div class="coming-badge">Coming Soon</div>
     </div>
     <div class="coming-card">
-      <div class="coming-icon">📋</div>
-      <div class="coming-title">SOAP Templates</div>
-      <div class="coming-sub">Documentation frameworks for clinical practice</div>
+      <div class="coming-icon">📝</div>
+      <div class="coming-title">SNAPPS Builder</div>
+      <div class="coming-sub">Structured clinical reasoning framework</div>
       <div class="coming-badge">Coming Soon</div>
     </div>
     <div class="coming-card">
-      <div class="coming-icon">📊</div>
-      <div class="coming-title">Exam Simulator</div>
-      <div class="coming-sub">Timed mock exam with performance report</div>
+      <div class="coming-icon">📚</div>
+      <div class="coming-title">Final Exam Guide</div>
+      <div class="coming-sub">Final exam prep and comprehensive review</div>
       <div class="coming-badge">Coming Soon</div>
     </div>
   </div>
