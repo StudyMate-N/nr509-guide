@@ -5,7 +5,6 @@
     { "source": "/exam", "destination": "/nr509/exam", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/nr509/system-:num", "destination": "/system-:num.html" },
     { "source": "/nr511/cea", "destination": "/nr511/cea.html" }
   ],
   "headers": [
