@@ -864,11 +864,11 @@ async function checkStep() {
 
   try {
     var prompt = step.aiPrompt(state.caseText, input);
-    var response = await fetch('https://api.anthropic.com/v1/messages', {
+    var response = await fetch('/api/claude', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1000,
         messages: [{ role: 'user', content: prompt }]
       })
