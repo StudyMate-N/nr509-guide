@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midterm Exam Simulator — NR511 · Greenwich School</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F1F3D;--navy-mid:#1B2A5A;--navy-light:#2C3E6B;
+  --purple:#5B4FCF;--purple-light:#7B6FDF;--purple-pale:#EFEDFE;
+  --teal:#0D7377;--teal-light:#14A085;--teal-pale:#E0F5F1;
+  --amber:#E8A020;--amber-pale:#FFF3DC;
+  --coral:#C9432A;--coral-pale:#FBEAE7;
+  --green:#2E7D52;--green-pale:#E6F5EC;
+  --red:#C0392B;--red-pale:#FDECEA;
+  --gray-50:#F9F8F6;--gray-100:#F1EFE9;--gray-200:#E0DED6;
+  --text:#1A1917;--text-muted:#5F5D57;--text-light:#9B9890;
+  --border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.14);
+  --font-serif:'DM Serif Display',serif;
+  --font-sans:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--gray-50);color:var(--text);min-height:100vh}
+
+/* ── NAV ── */
+.nav{background:var(--navy);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200;gap:1rem}
+.nav-brand{font-family:var(--font-serif);color:#fff;font-size:16px;text-decoration:none;white-space:nowrap}
+.nav-brand span{color:#7B6FDF}
+.nav-right{display:flex;align-items:center;gap:10px}
+.timer-pill{background:rgba(255,255,255,.08);border:0.5px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;color:#fff;font-family:var(--font-mono);display:none;align-items:center;gap:6px}
+.timer-dot{width:7px;height:7px;border-radius:50%;background:#A3E4C0}
+.timer-dot.warn{background:var(--amber);animation:pulse 1s infinite}
+.timer-dot.danger{background:#F5B7B1;animation:pulse .5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.nav-back{background:rgba(255,255,255,.08);border:0.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:var(--radius-sm);padding:6px 14px;font-size:12px;cursor:pointer;font-family:var(--font-sans);text-decoration:none;transition:background .15s}
+.nav-back:hover{background:rgba(255,255,255,.14)}
+
+/* ── PAGE ── */
+.page{max-width:780px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* ── INTRO ── */
+.intro-screen{display:block}
+.intro-hero{background:var(--navy);border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.intro-hero::after{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(91,79,207,.2);pointer-events:none}
+.intro-hero::before{content:'';position:absolute;left:-50px;bottom:-50px;width:180px;height:180px;border-radius:50%;background:rgba(13,115,119,.1);pointer-events:none}
+.intro-eye{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7B6FDF;margin-bottom:.5rem;position:relative;z-index:1}
+.intro-title{font-family:var(--font-serif);font-size:34px;color:#fff;margin-bottom:.5rem;position:relative;z-index:1}
+.intro-sub{font-size:13.5px;color:rgba(255,255,255,.5);max-width:480px;margin:0 auto 1.75rem;line-height:1.6;position:relative;z-index:1}
+.intro-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem;max-width:480px;margin:0 auto 2rem;position:relative;z-index:1}
+.istat{background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.1);border-radius:var(--radius-md);padding:.9rem .75rem;text-align:center}
+.istat-num{font-family:var(--font-serif);font-size:28px;color:#fff;margin-bottom:2px;line-height:1}
+.istat-lbl{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em}
+.intro-rules{background:rgba(255,255,255,.04);border-radius:var(--radius-md);padding:.9rem 1.25rem;max-width:460px;margin:0 auto 1.75rem;text-align:left;position:relative;z-index:1}
+.intro-rule{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:.35rem;padding-left:1.25rem;position:relative;line-height:1.5}
+.intro-rule::before{content:'·';position:absolute;left:0;color:#7B6FDF}
+.intro-rule:last-child{margin-bottom:0}
+.btn-start{background:var(--purple);color:#fff;border:none;border-radius:var(--radius-md);padding:14px 48px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:all .15s;box-shadow:0 4px 20px rgba(91,79,207,.4);position:relative;z-index:1}
+.btn-start:hover{background:var(--purple-light);transform:translateY(-1px)}
+
+/* Coverage breakdown */
+.intro-coverage{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem}
+.ic-hdr{background:var(--gray-50);border-bottom:0.5px solid var(--border);padding:.6rem 1.25rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-light)}
+.ic-grid{display:grid;grid-template-columns:repeat(2,1fr)}
+.ic-item{padding:.85rem 1.25rem;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);display:flex;align-items:center;gap:.75rem}
+.ic-item:nth-child(2n){border-right:none}
+.ic-item:nth-last-child(-n+2){border-bottom:none}
+.ic-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.ic-badge.w1{background:rgba(13,115,119,.1);color:var(--teal)}
+.ic-badge.w2{background:rgba(201,67,42,.1);color:var(--coral)}
+.ic-badge.w3{background:rgba(91,79,207,.1);color:var(--purple)}
+.ic-badge.w4{background:rgba(232,160,32,.1);color:#9c6a0a}
+.ic-info{}
+.ic-topic{font-size:13.5px;font-weight:600;color:var(--text)}
+.ic-count{font-size:12px;color:var(--text-light);margin-top:1px}
+
+/* ── EXAM UI ── */
+.exam-screen{display:none}
+.exam-progress{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-md);padding:.7rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:12px}
+.ep-label{font-size:12px;color:var(--text-muted);white-space:nowrap}
+.ep-track{flex:1;height:5px;background:var(--gray-100);border-radius:3px}
+.ep-fill{height:100%;border-radius:3px;background:var(--purple);transition:width .3s}
+.ep-count{font-size:12px;font-weight:700;color:var(--purple);white-space:nowrap;font-family:var(--font-mono)}
+
+/* Question map */
+.q-map{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:1rem;background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-md);padding:.65rem .8rem}
+.qm-dot{width:26px;height:26px;border-radius:5px;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;font-family:var(--font-mono);border:1.5px solid transparent;transition:all .1s}
+.qm-dot.answered{background:var(--purple-pale);color:var(--purple);border-color:rgba(91,79,207,.2)}
+.qm-dot.current{background:var(--navy);color:#fff}
+.qm-dot.unanswered{background:var(--gray-100);color:var(--text-light)}
+.qm-dot:hover{transform:scale(1.1)}
+
+/* Question card */
+.q-card{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.85rem}
+.q-card-hdr{background:var(--gray-50);border-bottom:0.5px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.q-card-num{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-light)}
+.q-card-wk{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px}
+.wk1{background:rgba(13,115,119,.1);color:var(--teal)}
+.wk2{background:rgba(201,67,42,.1);color:var(--coral)}
+.wk3{background:rgba(91,79,207,.1);color:var(--purple)}
+.wk4{background:rgba(232,160,32,.12);color:#9c6a0a}
+.q-card-body{padding:1.1rem 1.1rem .7rem}
+.q-stem{font-size:14px;line-height:1.75;color:var(--text);margin-bottom:.9rem}
+.q-stem strong{color:var(--navy)}
+.opts{display:flex;flex-direction:column;gap:.3rem;padding-bottom:.5rem}
+.opt{display:flex;align-items:flex-start;gap:9px;padding:.45rem .65rem;border-radius:var(--radius-sm);cursor:pointer;border:0.5px solid var(--border);font-size:13px;color:var(--text);background:#fff;transition:all .12s;line-height:1.5;text-align:left;width:100%;font-family:var(--font-sans)}
+.opt:hover{background:var(--gray-50);border-color:var(--border-strong)}
+.opt.selected{border-color:var(--purple);background:var(--purple-pale);border-width:1.5px}
+.opt.selected .opt-lt{background:var(--purple);color:#fff}
+.opt-lt{font-weight:700;font-size:10px;min-width:19px;height:19px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;color:var(--text-muted);font-family:var(--font-mono);transition:all .12s}
+
+/* Nav buttons */
+.exam-nav{display:flex;align-items:center;justify-content:space-between}
+.btn-prev{background:#fff;border:0.5px solid var(--border-strong);border-radius:var(--radius-sm);padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);color:var(--text);transition:all .12s}
+.btn-prev:hover:not(:disabled){border-color:var(--navy)}
+.btn-prev:disabled{opacity:.3;cursor:not-allowed}
+.btn-next{background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);padding:8px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:background .15s}
+.btn-next:hover{background:var(--purple-light)}
+.btn-submit{background:var(--navy);color:#fff;border:none;border-radius:var(--radius-sm);padding:8px 24px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:background .15s}
+.btn-submit:hover{background:var(--navy-mid)}
+
+/* ── RESULTS ── */
+.results-screen{display:none}
+.results-hero{background:var(--navy);border-radius:var(--radius-lg);padding:2.5rem 2rem;text-align:center;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.results-hero::after{content:'';position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:rgba(91,79,207,.2);pointer-events:none}
+.res-pct{font-family:var(--font-serif);font-size:80px;color:#fff;line-height:1;position:relative;z-index:1}
+.res-grade{font-size:14px;font-weight:600;padding:5px 18px;border-radius:20px;display:inline-block;margin-top:.65rem;position:relative;z-index:1}
+.rg-pass{background:rgba(46,125,82,.3);color:#A3E4C0}
+.rg-close{background:rgba(232,160,32,.25);color:#F5D18A}
+.rg-fail{background:rgba(192,57,43,.25);color:#F5B7B1}
+.res-meta{font-size:13px;color:rgba(255,255,255,.4);margin-top:.45rem;position:relative;z-index:1}
+.results-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1.25rem}
+.rs{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-md);padding:.9rem;text-align:center}
+.rs-num{font-family:var(--font-serif);font-size:26px;font-weight:700;line-height:1.1}
+.rs-lbl{font-size:10px;color:var(--text-light);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+
+/* Domain breakdown */
+.domain-card{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem}
+.domain-hdr{background:var(--gray-50);border-bottom:0.5px solid var(--border);padding:.6rem 1.25rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-light)}
+.domain-row{padding:.7rem 1.25rem;border-bottom:0.5px solid var(--border);display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:1rem}
+.domain-row:last-child{border-bottom:none}
+.domain-name{font-size:13.5px;font-weight:600}
+.domain-score{font-size:13px;font-family:var(--font-mono);color:var(--text-muted)}
+.domain-bar-wrap{width:120px;height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden}
+.domain-bar{height:100%;border-radius:3px;transition:width .5s}
+.bar-pass{background:var(--green)}
+.bar-close{background:var(--amber)}
+.bar-fail{background:var(--coral)}
+
+/* Question breakdown */
+.breakdown-card{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.25rem}
+.bk-hdr{background:var(--gray-50);border-bottom:0.5px solid var(--border);padding:.6rem 1.25rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-light);display:flex;align-items:center;justify-content:space-between}
+.bk-filter{display:flex;gap:5px}
+.bk-btn{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;cursor:pointer;border:0.5px solid var(--border);background:#fff;color:var(--text-muted);font-family:var(--font-sans);transition:all .12s}
+.bk-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.rb-row{border-bottom:0.5px solid var(--border);padding:.75rem 1.25rem}
+.rb-row:last-child{border-bottom:none}
+.rb-row.hidden{display:none}
+.rb-top{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.3rem}
+.rb-tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;flex-shrink:0;margin-top:2px}
+.rb-tag.correct{background:var(--green-pale);color:var(--green)}
+.rb-tag.wrong{background:var(--red-pale);color:var(--red)}
+.rb-tag.skip{background:var(--gray-100);color:var(--text-muted)}
+.rb-q{font-size:13px;color:var(--text);line-height:1.55;flex:1}
+.rb-meta{font-size:12px;color:var(--text-light);margin-top:.25rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.rb-wk{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:20px}
+.rb-rat{font-size:12.5px;color:var(--text-muted);margin-top:.45rem;line-height:1.6;padding:.5rem .75rem;background:var(--gray-50);border-radius:var(--radius-sm);border-left:2px solid var(--purple)}
+
+/* Results actions */
+.results-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.ra-btn{flex:1;min-width:140px;border:none;border-radius:var(--radius-md);padding:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-sans);text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;transition:all .15s}
+.ra-primary{background:var(--purple);color:#fff}
+.ra-primary:hover{background:var(--purple-light)}
+.ra-secondary{background:var(--gray-100);color:var(--text)}
+.ra-secondary:hover{background:var(--gray-200)}
+
+@media(max-width:600px){
+  .intro-stats{grid-template-columns:1fr 1fr}
+  .ic-grid{grid-template-columns:1fr}
+  .ic-item:nth-child(2n){border-right:0.5px solid var(--border)}
+  .ic-item{border-right:none!important}
+  .ic-item:last-child{border-bottom:none}
+  .results-stats{grid-template-columns:1fr 1fr}
+  .domain-row{grid-template-columns:1fr auto;gap:.5rem}
+  .domain-bar-wrap{display:none}
+  .page{padding:1.25rem 1rem 4rem}
+  .q-card-body{padding:.85rem .85rem .6rem}
+  .bk-filter{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/nr511">Greenwich <span>School</span></a>
+  <div class="nav-right">
+    <div class="timer-pill" id="timerPill">
+      <div class="timer-dot" id="timerDot"></div>
+      <span id="timerText">90:00</span>
+    </div>
+    <a class="nav-back" href="/nr511">← Dashboard</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ══ INTRO SCREEN ══════════════════════════════════════ -->
+<div class="intro-screen" id="introScreen">
+
+  <div class="intro-hero">
+    <div class="intro-eye">NR511 · Midterm Simulation · Weeks 1–4</div>
+    <div class="intro-title">Midterm Exam</div>
+    <div class="intro-sub">75 questions across HIV, Dermatology, HEENT, and GI — same format, difficulty, and NOT/EXCEPT style as the actual Chamberlain midterm.</div>
+    <div class="intro-stats">
+      <div class="istat"><div class="istat-num">75</div><div class="istat-lbl">Questions</div></div>
+      <div class="istat"><div class="istat-num">90</div><div class="istat-lbl">Minutes</div></div>
+      <div class="istat"><div class="istat-num">84%</div><div class="istat-lbl">Pass mark</div></div>
+      <div class="istat"><div class="istat-num">4</div><div class="istat-lbl">Weeks</div></div>
+    </div>
+    <div class="intro-rules">
+      <div class="intro-rule">Questions shuffle every attempt — no two exams are identical</div>
+      <div class="intro-rule">You can go back and change answers before submitting</div>
+      <div class="intro-rule">Timer starts when you click Begin — 90 minutes</div>
+      <div class="intro-rule">NOT/EXCEPT questions are marked — read the stem carefully</div>
+      <div class="intro-rule">Full domain breakdown and rationales shown after submitting</div>
+    </div>
+    <button class="btn-start" onclick="startExam()">Begin Exam →</button>
+  </div>
+
+  <div class="intro-coverage">
+    <div class="ic-hdr">Exam coverage by week</div>
+    <div class="ic-grid">
+      <div class="ic-item">
+        <span class="ic-badge w1">Week 1</span>
+        <div class="ic-info">
+          <div class="ic-topic">HIV Epidemiology</div>
+          <div class="ic-count">15 questions · Staging, screening, PrEP, transmission</div>
+        </div>
+      </div>
+      <div class="ic-item">
+        <span class="ic-badge w2">Week 2</span>
+        <div class="ic-info">
+          <div class="ic-topic">Dermatology</div>
+          <div class="ic-count">22 questions · Lesions, zoster, acne, psoriasis, melanoma</div>
+        </div>
+      </div>
+      <div class="ic-item">
+        <span class="ic-badge w3">Week 3</span>
+        <div class="ic-info">
+          <div class="ic-topic">HEENT</div>
+          <div class="ic-count">22 questions · Eyes, ears, nose, throat, hearing tests</div>
+        </div>
+      </div>
+      <div class="ic-item">
+        <span class="ic-badge w4">Week 4</span>
+        <div class="ic-info">
+          <div class="ic-topic">Gastrointestinal</div>
+          <div class="ic-count">16 questions · IBD, appendicitis, GERD, colon screening</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /intro-screen -->
+
+<!-- ══ EXAM SCREEN ═══════════════════════════════════════ -->
+<div class="exam-screen" id="examScreen">
+  <div class="exam-progress">
+    <span class="ep-label">Progress</span>
+    <div class="ep-track"><div class="ep-fill" id="epFill" style="width:0%"></div></div>
+    <span class="ep-count" id="epCount">0 / 75</span>
+  </div>
+  <div class="q-map" id="qMap"></div>
+  <div id="qCardContainer"></div>
+  <div class="exam-nav" id="examNav">
+    <button class="btn-prev" id="btnPrev" onclick="goQ(state.cur-1)" disabled>← Previous</button>
+    <button class="btn-next" id="btnNext" onclick="goQ(state.cur+1)">Next →</button>
+  </div>
+</div>
+
+<!-- ══ RESULTS SCREEN ════════════════════════════════════ -->
+<div class="results-screen" id="resultsScreen">
+  <div class="results-hero">
+    <div class="res-pct" id="resPct"></div>
+    <div class="res-grade" id="resGrade"></div>
+    <div class="res-meta" id="resMeta"></div>
+  </div>
+  <div class="results-stats">
+    <div class="rs"><div class="rs-num" id="rsCorr" style="color:var(--green)"></div><div class="rs-lbl">Correct</div></div>
+    <div class="rs"><div class="rs-num" id="rsWrong" style="color:var(--red)"></div><div class="rs-lbl">Wrong</div></div>
+    <div class="rs"><div class="rs-num" id="rsSkip" style="color:var(--amber)"></div><div class="rs-lbl">Skipped</div></div>
+    <div class="rs"><div class="rs-num" id="rsTime" style="color:var(--navy)"></div><div class="rs-lbl">Time used</div></div>
+  </div>
+  <div class="domain-card">
+    <div class="domain-hdr">Performance by week</div>
+    <div id="domainBreakdown"></div>
+  </div>
+  <div class="breakdown-card">
+    <div class="bk-hdr">
+      Question breakdown
+      <div class="bk-filter">
+        <button class="bk-btn active" onclick="filterBk('all',this)">All</button>
+        <button class="bk-btn" onclick="filterBk('wrong',this)">Wrong only</button>
+        <button class="bk-btn" onclick="filterBk('correct',this)">Correct only</button>
+      </div>
+    </div>
+    <div id="bkContent"></div>
+  </div>
+  <div class="results-actions">
+    <button class="ra-btn ra-primary" onclick="retakeExam()">↺ Retake Exam</button>
+    <a class="ra-btn ra-secondary" href="/nr511/midterm">← Study Guide</a>
+    <a class="ra-btn ra-secondary" href="/nr511">Dashboard</a>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ── AUTH ──────────────────────────────────────────────────
+(function(){
+  var unlocked = typeof localStorage !== 'undefined' && (
+    localStorage.getItem('nr511unlocked') === 'true' ||
+    localStorage.getItem('nr509unlocked') === 'true'
+  );
+  var isPreview = !window.location.hostname ||
+    window.location.hostname === 'localhost' ||
+    window.location.protocol === 'blob:' ||
+    window.location.hostname.includes('claude.ai');
+  if (!unlocked && !isPreview) {
+    var deployed = window.location.hostname.includes('vercel.app') ||
+      window.location.hostname.includes('greenwich');
+    if (deployed) window.location.replace('/nr511');
+  }
+})();
+
+// ── QUESTION BANK — 75 questions ─────────────────────────
+// Format: // w = week tag | ne = NOT/EXCEPT question | ans = 0-indexed correct option
+
+var EXAM_Q = [
+
+// ═══════════ WEEK 1 — HIV (15 questions) ═════════════════
+
+{w:'W1',topic:'HIV',
+ stem:'A 34-year-old man presents with 5 days of fever, sore throat, diffuse lymphadenopathy, and a maculopapular rash over his trunk. He reports an unprotected sexual encounter 3 weeks ago. He is very concerned about HIV. A 4th-generation HIV ELISA returns negative. What is the most appropriate next step?',
+ opts:['Reassure — the negative ELISA rules out HIV infection',
+       'Order a Western blot for confirmation of the negative result',
+       'Order HIV RNA PCR — the patient may be in the window period',
+       'Repeat the ELISA in 6 months to confirm the result'],
+ ans:2,ne:false,
+ rat:'This is classic acute HIV syndrome: fever + diffuse lymphadenopathy + maculopapular rash, 2–4 weeks after potential exposure. ELISA may be NEGATIVE during the window period because antibodies have not yet formed. HIV RNA PCR detects the virus directly and is the appropriate test. Reassurance based on a negative ELISA in this scenario is dangerous.'},
+
+{w:'W1',topic:'HIV',
+ stem:'A patient with HIV has a CD4 count of 185 cells/μL. He is not yet on ART. Which of the following opportunistic infection prophylaxes should be initiated?',
+ opts:['Azithromycin for MAC prophylaxis',
+       'TMP-SMX for PCP and Toxoplasma prophylaxis',
+       'Fluconazole for cryptococcal prophylaxis',
+       'Ganciclovir for CMV prophylaxis'],
+ ans:1,ne:false,
+ rat:'PCP prophylaxis starts at CD4 <200. This patient at 185 is below the threshold. TMP-SMX covers both PCP AND Toxoplasma (threshold <100). MAC prophylaxis (azithromycin) starts at CD4 <50. Fluconazole for cryptococcus is for CD4 <50. CMV prophylaxis is generally not used in the HAART era.'},
+
+{w:'W1',topic:'HIV',
+ stem:'Which of the following statements about CD4 count thresholds for opportunistic infection prophylaxis is NOT true?',
+ opts:['PCP prophylaxis with TMP-SMX begins when CD4 falls below 200 cells/μL',
+       'MAC prophylaxis with azithromycin begins when CD4 falls below 50 cells/μL',
+       'Toxoplasma prophylaxis with TMP-SMX begins when CD4 falls below 100 cells/μL',
+       'Cryptococcal prophylaxis with fluconazole begins when CD4 falls below 200 cells/μL'],
+ ans:3,ne:true,
+ rat:'NOT TRUE: Cryptococcal prophylaxis begins at CD4 <50 (not <200). The thresholds: PCP = <200, Toxo = <100, MAC = <50, CMV = <50, Cryptococcus = <50. Cryptococcal meningitis is a very late AIDS complication. PCP at <200 is the earliest and most commonly tested threshold.'},
+
+{w:'W1',topic:'HIV',
+ stem:'Per USPSTF recommendations, which patient does NOT require routine HIV screening?',
+ opts:['A 22-year-old woman at her annual well-woman visit with no known risk factors',
+       'A 58-year-old man with hypertension presenting for a medication refill',
+       'A 72-year-old woman at a routine physical with no prior HIV testing and no risk factors',
+       'A 35-year-old pregnant woman at her first prenatal visit'],
+ ans:2,ne:true,
+ rat:'USPSTF recommends screening all adults aged 15–65 at least once, regardless of risk. The 72-year-old exceeds the upper age limit (65) and has no identified risk factors — she falls outside the universal screening recommendation. All other patients qualify: A (age 22 — within range), B (age 58 — within range), D (all pregnant women screened at first prenatal visit regardless of age).'},
+
+{w:'W1',topic:'HIV',
+ stem:'A 28-year-old man who is HIV-negative and reports receptive anal intercourse with multiple male partners is interested in HIV pre-exposure prophylaxis. Which of the following is the most accurate statement about PrEP?',
+ opts:['PrEP is only effective if taken within 72 hours of potential exposure',
+       'PrEP monitoring requires HIV testing and renal function evaluation every 3 months',
+       'PrEP eliminates the need for condoms because it provides complete HIV protection',
+       'PrEP is contraindicated in patients with more than one sexual partner'],
+ ans:1,ne:false,
+ rat:'PrEP (tenofovir/emtricitabine) monitoring: HIV test + STI screening + renal function (creatinine, eGFR) every 3 months. Tenofovir is nephrotoxic — renal monitoring is mandatory. PrEP is >99% effective with daily adherence, not 100%. It does not protect against other STIs — condoms are still recommended. PrEP is indicated precisely for people with multiple partners or other risk factors.'},
+
+{w:'W1',topic:'HIV',
+ stem:'A 26-year-old HIV-positive man has been on effective ART for 2 years with an undetectable viral load and CD4 count of 620. His partner is HIV-negative. Which statement about transmission risk is most accurate?',
+ opts:['He still poses significant transmission risk and should always use condoms',
+       'Transmission risk is reduced but not eliminated with an undetectable viral load',
+       'U=U: with a sustained undetectable viral load, he cannot sexually transmit HIV to his partner',
+       'The risk depends primarily on the route of exposure, not viral load'],
+ ans:2,ne:false,
+ rat:'U=U (Undetectable = Untransmittable): a person with HIV on effective ART who maintains an undetectable viral load cannot sexually transmit HIV to partners. This is supported by PARTNER, PARTNER2, and Opposites Attract studies. This is now a clinical standard and patient counseling point.'},
+
+{w:'W1',topic:'HIV',
+ stem:'A patient\'s HIV ELISA returns positive. Which of the following is the correct next step?',
+ opts:['Immediately start antiretroviral therapy based on the positive ELISA alone',
+       'Perform Western blot or HIV-1/HIV-2 differentiation immunoassay for confirmation',
+       'Repeat the ELISA in 2 weeks to confirm the result',
+       'Order CD4 count and viral load — these are the confirmatory tests'],
+ ans:1,ne:false,
+ rat:'A reactive ELISA requires confirmation. Current CDC algorithm: reactive ELISA → HIV-1/HIV-2 differentiation immunoassay. If that is indeterminate, order HIV RNA PCR. Western blot is an older confirmatory test still in use. ELISA is highly sensitive but not 100% specific — confirmation is mandatory before diagnosis and treatment.'},
+
+{w:'W1',topic:'HIV',
+ stem:'The CDC\'s 90-90-90 goals describe a cascade of care for HIV. Which of the following correctly describes these targets?',
+ opts:['90% of HIV-positive persons on ART, 90% achieving viral suppression, 90% without resistance mutations',
+       '90% of HIV-positive persons diagnosed, 90% of diagnosed persons on ART, 90% of those on ART achieving viral suppression',
+       '90% reduction in new HIV infections globally, 90% reduction in HIV-related deaths, 90% reduction in HIV stigma',
+       '90% of HIV-positive persons screened, 90% linked to care, 90% retained in care at 12 months'],
+ ans:1,ne:false,
+ rat:'The 90-90-90 cascade: (1) 90% of all HIV+ persons diagnosed, (2) 90% of all diagnosed persons on ART, (3) 90% of all ART patients achieving viral suppression. Each step represents a gap where people fall out of care. The updated target for 2030 is 95-95-95.'},
+
+{w:'W1',topic:'HIV',
+ stem:'A 30-year-old HIV-positive woman with a CD4 count of 42 cells/μL presents with a new-onset severe headache, fever, and neck stiffness. CSF India ink stain is positive. What is the causative organism and first-line treatment?',
+ opts:['Toxoplasma gondii — pyrimethamine + sulfadiazine + leucovorin',
+       'Cryptococcus neoformans — amphotericin B + flucytosine induction, then fluconazole',
+       'Mycobacterium avium complex — azithromycin + ethambutol',
+       'Cytomegalovirus — ganciclovir IV induction'],
+ ans:1,ne:false,
+ rat:'India ink stain positive = Cryptococcus neoformans. Cryptococcal meningitis is an AIDS-defining illness occurring at CD4 <50. Treatment: amphotericin B liposomal + flucytosine (induction for 2 weeks) → fluconazole (consolidation 8 weeks) → fluconazole maintenance. Toxo causes ring-enhancing CNS lesions, treated with pyrimethamine + sulfadiazine.'},
+
+{w:'W1',topic:'HIV',
+ stem:'A 24-year-old man presents to the emergency department after a needlestick injury from a patient known to be HIV-positive. The patient\'s current viral load is undetectable. What is the most appropriate next step?',
+ opts:['No treatment needed — undetectable viral load means no transmission risk from needlestick',
+       'Start HIV post-exposure prophylaxis within 72 hours for 28 days',
+       'Wait for the exposed patient\'s own HIV test result before deciding treatment',
+       'Prescribe a 3-day course of PEP — this is sufficient for needlestick exposure'],
+ ans:1,ne:false,
+ rat:'Occupational HIV exposure: start PEP within 72 hours — ideally within 2 hours. Duration: 28 days with a 3-drug regimen. Although undetectable viral load greatly reduces (but doesn\'t eliminate) transmission risk from needlestick, PEP is still recommended per CDC guidelines. U=U applies to sexual transmission; the evidence is less definitive for needlestick.'},
+
+{w:'W1',topic:'HIV',
+ stem:'An HIV-positive patient on a stable ART regimen has a viral load that rises from undetectable to 850 copies/mL. The most likely explanation is:',
+ opts:['A common viral illness causing transient viral load elevation ("blip") — no action needed',
+       'Treatment failure from drug resistance — switch regimen immediately without further testing',
+       'Suboptimal medication adherence or possible drug resistance — evaluate adherence and consider genotypic resistance testing',
+       'The viral load assay is unreliable at this level — repeat in 12 months'],
+ ans:2,ne:false,
+ rat:'A rising viral load on ART should be evaluated for adherence problems first (most common cause), then drug interactions, then resistance. Genotypic resistance testing should be performed while the patient is on the failing regimen. A "blip" (transient low-level viremia <200 copies/mL) is different — this level of 850 copies/mL requires investigation.'},
+
+{w:'W1',topic:'HIV',
+ stem:'Which of the following patients requires the MOST frequent HIV rescreening?',
+ opts:['A 45-year-old married monogamous heterosexual with no risk factors',
+       'A 30-year-old man who has sex with men (MSM) with multiple partners',
+       'A 60-year-old woman in a long-term relationship who was screened last year',
+       'A 20-year-old college student with no known sexual activity'],
+ ans:1,ne:false,
+ rat:'USPSTF recommends HIV screening at least once for adults 15–65. For high-risk individuals — including MSM with multiple partners — rescreening at least annually (or every 3–6 months per CDC for very high-risk MSM) is recommended. Annual rescreening is the most frequent of these options.'},
+
+{w:'W1',topic:'HIV',
+ stem:'A patient\'s CD4 count is 65 cells/μL. He presents with several months of progressive vision loss in the right eye that began as floaters and flashing lights. Fundoscopic exam shows white fluffy retinal infiltrates with associated hemorrhages. Which diagnosis is most likely?',
+ opts:['Toxoplasma retinitis — treat with pyrimethamine and sulfadiazine',
+       'CMV retinitis — treat with ganciclovir or valganciclovir',
+       'Cryptococcal chorioretinitis — treat with amphotericin B',
+       'Progressive outer retinal necrosis — treat with acyclovir IV'],
+ ans:1,ne:false,
+ rat:'CMV retinitis: occurs at CD4 <50. Classic "pizza pie" fundoscopic appearance — white fluffy retinal infiltrates with hemorrhages in a perivascular distribution. Progressive monocular vision loss is the hallmark. Treatment: valganciclovir orally or IV ganciclovir. Without treatment: complete blindness within weeks.'},
+
+{w:'W1',topic:'HIV',
+ stem:'A 32-year-old HIV-positive woman with a CD4 of 55 develops fever, night sweats, weight loss, and diarrhea over 3 months. Blood culture grows Mycobacterium avium complex (MAC). Which of the following is the first-line treatment?',
+ opts:['Isoniazid + rifampin + pyrazinamide + ethambutol (standard TB regimen)',
+       'Azithromycin + ethambutol (with or without rifabutin)',
+       'TMP-SMX at double strength twice daily',
+       'Fluconazole 400mg daily for 12 months'],
+ ans:1,ne:false,
+ rat:'Disseminated MAC: treat with clarithromycin (preferred) OR azithromycin + ethambutol ± rifabutin. MAC is not the same as TB — standard TB regimen is not used. MAC prophylaxis (azithromycin alone) starts at CD4 <50, but treatment requires combination therapy. TMP-SMX treats PCP; fluconazole treats cryptococcal disease.'},
+
+{w:'W1',topic:'HIV',
+ stem:'Which HIV test is the MOST appropriate for diagnosing acute HIV infection during the window period before antibodies form?',
+ opts:['4th-generation HIV ELISA',
+       'HIV p24 antigen alone',
+       'HIV RNA PCR (viral load)',
+       'Western blot'],
+ ans:2,ne:false,
+ rat:'HIV RNA PCR directly detects viral RNA — it is the most sensitive test during acute infection before antibodies or even p24 antigen reach detectable levels. The window period for HIV RNA PCR is approximately 10–12 days. 4th gen ELISA detects p24 antigen + antibody (window ~18–45 days). Western blot only detects antibodies and cannot diagnose acute infection. p24 antigen alone is less sensitive than RNA PCR.'},
+
+// ═══════════ WEEK 2 — DERMATOLOGY (22 questions) ══════════
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 7-year-old boy has intensely itchy skin that is worst at night. On exam you find erythematous, dry, lichenified patches in the antecubital and popliteal fossae bilaterally. His mother reports he also has asthma and seasonal allergies. Which statement is NOT true about his condition?',
+ opts:['The rash characteristically involves flexural surfaces such as the antecubital and popliteal fossae',
+       'This condition is associated with asthma and allergic rhinitis as part of the atopic triad',
+       'The rash characteristically involves the extensor surfaces of the elbows and knees',
+       'First-line treatment includes topical corticosteroids and emollient moisturizers'],
+ ans:2,ne:true,
+ rat:'NOT TRUE: Atopic dermatitis in children affects FLEXURAL (flexor) surfaces — antecubital fossae (inner elbow) and popliteal fossae (behind the knee). EXTENSOR surfaces (outer elbows, outer knees) are the location of PSORIASIS. All other options are true: flexural distribution, atopic triad, and topical corticosteroids + emollients are first-line.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A patient presents with a rash on the scalp with scaling and hair loss. KOH preparation shows branching hyphae. Which treatment is most appropriate?',
+ opts:['Topical clotrimazole cream applied daily for 4 weeks',
+       'Topical ketoconazole shampoo used three times weekly',
+       'Oral griseofulvin for 6–8 weeks',
+       'Topical terbinafine gel applied twice daily'],
+ ans:2,ne:false,
+ rat:'Tinea capitis requires ORAL treatment — topical antifungals cannot penetrate the hair follicle to eradicate the infection. Oral griseofulvin is first-line. Alternative: oral terbinafine or itraconazole. Topical antifungals alone (clotrimazole, ketoconazole, terbinafine) are insufficient for tinea capitis regardless of formulation.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 68-year-old woman presents with 5 days of burning pain along her right flank, followed by a rash of grouped vesicles on an erythematous base that follows a dermatomal pattern on her right side only. She first noticed the pain 4 days before the skin lesions appeared. Which statement about her condition is NOT true?',
+ opts:['Antiviral treatment with valacyclovir should be started within 72 hours of rash onset',
+       'The rash may cross the midline to affect both sides of the body',
+       'The prodromal burning pain typically precedes the rash by 3–5 days',
+       'Postherpetic neuralgia can persist for months after the rash resolves'],
+ ans:1,ne:true,
+ rat:'NOT TRUE: Herpes zoster NEVER crosses the midline. The virus reactivates from a single dorsal root ganglion and follows a single dermatome unilaterally. All other statements are true: treat within 72 hours, prodrome precedes rash 3–5 days, postherpetic neuralgia is a real complication treated with gabapentin or TCAs.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 42-year-old man with well-controlled psoriasis is started on lithium carbonate for bipolar disorder. Three weeks later he presents with a significant psoriasis flare. Which is the most appropriate action?',
+ opts:['Increase topical corticosteroid potency and continue lithium unchanged',
+       'Lithium is the likely culprit — discuss mood stabilizer alternatives with psychiatry',
+       'Add methotrexate — this is a normal psoriasis progression unrelated to lithium',
+       'Apply topical corticosteroids to the face for the new facial lesions'],
+ ans:1,ne:false,
+ rat:'Lithium is a well-documented trigger for psoriasis exacerbation. Other drugs that worsen psoriasis: beta-blockers, NSAIDs, antimalarials (hydroxychloroquine), ACE inhibitors. The psychiatry team should evaluate alternative mood stabilizers. Topical corticosteroids should never be applied to facial skin in high potency forms — this is also incorrect as a separate issue.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'Which of the following correctly describes the primary skin lesion in psoriasis?',
+ opts:['Vesicle — fluid-filled, less than 1cm, on flexor surfaces',
+       'Macule — flat, non-palpable, hypopigmented, on sun-exposed skin',
+       'Plaque — raised, flat-topped, with silver-white scale on extensor surfaces',
+       'Pustule — pus-filled, less than 1cm, with central hair follicle involvement'],
+ ans:2,ne:false,
+ rat:'Psoriasis: erythematous PLAQUE (raised, flat-topped, >1cm) with silver-white scale on EXTENSOR surfaces (elbows, knees, scalp, sacrum). Auspitz sign: pinpoint bleeding when scale is removed. Vesicles are herpes/varicella. Macules are flat. Pustules are folliculitis or acne.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 35-year-old woman has persistent facial redness, flushing, and papules on her cheeks, nose, and chin without comedones. She reports that alcohol, sun exposure, and spicy food trigger flares. Which treatment is specifically CONTRAINDICATED for this condition?',
+ opts:['Topical metronidazole 0.75% applied twice daily',
+       'Oral doxycycline 100mg daily for moderate disease',
+       'Topical corticosteroids applied to the affected areas',
+       'Azelaic acid 15% gel applied twice daily'],
+ ans:2,ne:false,
+ rat:'Topical corticosteroids are CONTRAINDICATED in rosacea. They cause steroid-induced rosacea, worsen flushing, and produce rebound flares when discontinued. No comedones + facial erythema + triggers = rosacea. First-line: topical metronidazole or azelaic acid. Moderate-severe: oral doxycycline.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A patient has a 9mm pigmented lesion on his upper back with the following features: asymmetric shape, notched irregular border, multiple shades of brown and tan within the lesion, and his wife reports it has doubled in size over the past 4 months. What is the most appropriate next action?',
+ opts:['Reassure — the lesion meets benign criteria based on its size being under 1cm',
+       'Apply topical retinoid cream and reassess in 3 months',
+       'Photograph the lesion and monitor with annual skin checks',
+       'Refer for dermatologic evaluation and excisional biopsy'],
+ ans:3,ne:false,
+ rat:'ABCDE criteria: Asymmetry + Border irregularity + Color variation + Evolution (doubling in 4 months). This lesion meets 4 of 5 ABCDE criteria — referral for biopsy is mandatory. Size of 9mm is above the 6mm threshold. Do not reassure, monitor, or apply topical treatment to a lesion with multiple ABCDE features. Excisional biopsy is diagnostic.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 55-year-old farmer presents with a rough, sandpaper-textured, pink-red, scaly lesion on the dorsum of his right hand after decades of sun exposure. Which statement most accurately describes this lesion?',
+ opts:['This is a seborrheic keratosis — a benign finding requiring no treatment',
+       'This is an actinic keratosis — a precancerous lesion that can progress to squamous cell carcinoma',
+       'This is tinea corporis — treat with topical antifungal for 4 weeks',
+       'This is a basal cell carcinoma — refer for Mohs surgery'],
+ ans:1,ne:false,
+ rat:'Actinic keratosis (AK): rough sandpaper texture + pink-red + sun-exposed areas (face, scalp, dorsal hands) = precancerous lesion with risk of progression to SCC. Treatment: cryotherapy, topical 5-FU, imiquimod. Seborrheic keratosis is waxy and "stuck-on" — benign. AK must be treated to prevent malignant transformation.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 55-year-old man has patchy hair loss on his scalp with "exclamation point" hairs (hairs that narrow at the base near the scalp). The hair loss is non-scarring. KOH preparation is negative. Dermoscopy shows yellow dots. Which diagnosis is most likely?',
+ opts:['Tinea capitis — start oral griseofulvin',
+       'Alopecia areata — autoimmune patchy hair loss',
+       'Androgenetic alopecia — use minoxidil topically',
+       'Lichen planopilaris — scarring alopecia requiring biopsy'],
+ ans:1,ne:false,
+ rat:'Alopecia areata: patchy non-scarring hair loss + exclamation point hairs (characteristic) + negative KOH (rules out tinea) + yellow dots on dermoscopy. Autoimmune destruction of hair follicles. Treatment: intralesional or topical corticosteroids. Tinea capitis has positive KOH and scale. Androgenetic alopecia is diffuse and patterned, not patchy.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 16-year-old girl has moderate-to-severe inflammatory acne with numerous papules, pustules, and a few nodules. She has tried benzoyl peroxide and topical adapalene for 3 months without adequate response. Which treatment step is most appropriate?',
+ opts:['Add topical clindamycin alone to her current regimen',
+       'Start oral doxycycline combined with topical retinoid and benzoyl peroxide',
+       'Prescribe isotretinoin immediately — she has failed first-line therapy',
+       'Switch to topical benzoyl peroxide at a higher concentration only'],
+ ans:1,ne:false,
+ rat:'Moderate-severe inflammatory acne that fails topical therapy: next step is oral antibiotic (doxycycline or minocycline) combined with topical retinoid AND benzoyl peroxide (BPO prevents antibiotic resistance). Topical antibiotic alone is not recommended — always combine with BPO. Isotretinoin is for severe nodulocystic or scarring acne after failure of oral antibiotics.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A mother brings her 9-year-old son in because multiple family members are intensely itchy, especially at night. On exam you find linear burrows in the web spaces of his fingers bilaterally. Which is the most important management principle for this condition?',
+ opts:['Treat only the symptomatic family members to conserve medication',
+       'Treat all household contacts and sexual partners simultaneously, even if asymptomatic',
+       'Topical steroids are first-line to relieve the pruritus before starting antiparasitic treatment',
+       'The itch resolving within 24 hours confirms successful treatment'],
+ ans:1,ne:false,
+ rat:'Scabies management: ALL household contacts and sexual partners must be treated simultaneously — even if they have no symptoms. Treating only symptomatic members leads to reinfestation. First-line: permethrin 5% cream applied neck-to-toes for 8–10 hours, repeat in 1 week. Itch can persist 2–4 weeks after successful treatment from immune reaction to dead mites.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'Which of the following correctly distinguishes a vesicle from a bulla?',
+ opts:['Vesicle contains pus; bulla contains clear fluid',
+       'Vesicle is raised; bulla is flat',
+       'Vesicle is less than 1cm; bulla is greater than 1cm — both contain clear fluid',
+       'Vesicle occurs on mucous membranes; bulla occurs on skin only'],
+ ans:2,ne:false,
+ rat:'Vesicle: raised, fluid-filled (clear), <1cm. Bulla: raised, fluid-filled (clear), >1cm. The only difference is size. Both contain clear fluid — not pus (that\'s a pustule). Both are raised — not flat (flat = macule or patch). Examples: vesicle = HSV, early varicella; bulla = bullous pemphigoid, second-degree burn.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 22-year-old woman has a single oval pink patch with fine scale that appeared on her right flank 2 weeks ago. Now she has numerous smaller oval patches on her trunk following skin cleavage lines in a "Christmas tree" pattern. She denies any pruritus. Which diagnosis is most likely?',
+ opts:['Tinea corporis — treat with topical antifungal for 4 weeks',
+       'Pityriasis rosea — self-limiting, supportive treatment only',
+       'Psoriasis guttata — systemic treatment required',
+       'Secondary syphilis — test RPR and treat with benzathine penicillin'],
+ ans:1,ne:false,
+ rat:'Pityriasis rosea: herald patch (single oval patch with fine scale) appearing 1–2 weeks before the generalized rash of smaller oval patches following skin cleavage lines ("Christmas tree pattern") on the trunk. Associated with HHV-6/7 reactivation. Self-limiting in 6–12 weeks. Note: secondary syphilis can mimic this — check RPR if sexually active, especially if palms/soles involved.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A patient presents with yellow, thickened, brittle toenails that appear to be separating from the nail bed at the distal edge. KOH preparation of nail scrapings shows branching hyphae. Which is the most appropriate treatment?',
+ opts:['Topical ciclopirox lacquer applied daily — first-line for all onychomycosis',
+       'Oral terbinafine for 12 weeks — most effective for toenail onychomycosis',
+       'Topical clotrimazole cream applied to the nail plate daily',
+       'No treatment — toenail onychomycosis does not require treatment'],
+ ans:1,ne:false,
+ rat:'Onychomycosis (tinea unguium): oral terbinafine is the most effective treatment. Duration: 6 weeks for fingernails, 12 weeks for toenails. Topical ciclopirox is second-line and less effective for established nail disease. Topical azoles do not penetrate the nail plate effectively. Treatment is warranted — untreated, it spreads to other nails and causes permanent nail damage.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A flat, non-palpable, uniformly tan lesion less than 1cm on the dorsal forearm of an 80-year-old woman. It has been present for decades and has not changed. Which term correctly describes this lesion type?',
+ opts:['Papule',
+       'Macule',
+       'Plaque',
+       'Patch'],
+ ans:1,ne:false,
+ rat:'Macule: flat (non-palpable), distinct color change, less than 1cm. This is a classic freckle or simple flat mole. Papule = raised + solid + <1cm. Plaque = raised + flat-topped + >1cm. Patch = flat + non-palpable + >1cm. The size (<1cm) and flat/non-palpable quality = macule.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 32-year-old woman with severe nodulocystic acne scarring is started on isotretinoin under the iPLEDGE program. Which of the following is NOT required as part of the iPLEDGE monitoring program for patients who can become pregnant?',
+ opts:['Two negative pregnancy tests obtained at least 30 days apart before starting treatment',
+       'Two forms of effective contraception used simultaneously throughout treatment',
+       'Monthly serum pregnancy tests during the treatment course',
+       'Monthly ophthalmologic examinations to monitor for retinal toxicity'],
+ ans:3,ne:true,
+ rat:'NOT required: monthly ophthalmologic exams. Isotretinoin iPLEDGE requires: two negative pregnancy tests (30+ days apart), two simultaneous contraceptive methods, monthly pregnancy testing, and monthly laboratory monitoring (fasting lipids + LFTs). Ophthalmologic exams are not part of the routine iPLEDGE protocol. Dry eyes and night vision changes can occur but are not monitored with formal exams.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A patient with psoriasis asks which sign refers to the appearance of new psoriatic lesions at sites of skin trauma such as a scratch or surgical incision. Which term describes this phenomenon?',
+ opts:['Auspitz sign',
+       'Nikolsky sign',
+       'Koebner phenomenon',
+       'Darier sign'],
+ ans:2,ne:false,
+ rat:'Koebner phenomenon: psoriatic lesions appearing at sites of trauma or injury (scratches, tattoos, surgical scars, sunburns). Auspitz sign = pinpoint bleeding when psoriasis scale is removed. Nikolsky sign = shearing of skin with lateral pressure = seen in pemphigus/TEN. Darier sign = urtication of mastocytoma when stroked.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'Which of the following skin findings most reliably distinguishes seborrheic keratosis from melanoma?',
+ opts:['Seborrheic keratosis is always smaller than 6mm; melanoma is always larger',
+       'Seborrheic keratosis has a waxy, "stuck-on" verrucous appearance with keratin plugs; melanoma has an irregular asymmetric border with color variation',
+       'Seborrheic keratosis always occurs on the face; melanoma never occurs on the face',
+       'Seborrheic keratosis is always hypopigmented; melanoma is always hyperpigmented'],
+ ans:1,ne:false,
+ rat:'Seborrheic keratosis: waxy, "stuck-on" verrucous surface, well-defined borders, uniform tan-dark brown color, may have horn cysts (keratin plugs on dermoscopy) — benign with no malignant potential. Melanoma: asymmetric, irregular notched border, color variation (multiple shades), evolving. Size alone does not distinguish them — seborrheic keratoses can be large.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 55-year-old man with hypertension on metoprolol and chronic low back pain on ibuprofen presents with a new significant psoriasis flare. Which of the following is the MOST appropriate medication change to consider?',
+ opts:['Switch metoprolol to amlodipine AND switch ibuprofen to acetaminophen',
+       'Continue all current medications — the psoriasis flare is unrelated',
+       'Switch only metoprolol to amlodipine, as beta-blockers are the primary psoriasis trigger',
+       'Switch only ibuprofen to naproxen, as naproxen does not trigger psoriasis'],
+ ans:0,ne:false,
+ rat:'BOTH metoprolol (beta-blocker) AND ibuprofen (NSAID) are documented triggers for psoriasis exacerbation. Switching both medications is the most appropriate approach. Amlodipine (CCB) does not worsen psoriasis. Acetaminophen does not worsen psoriasis. Switching only one leaves a known trigger in place. Naproxen is also an NSAID and would still trigger psoriasis.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A 15-year-old boy presents with pruritic erythematous annular lesions with central clearing on his trunk. KOH preparation shows branching hyphae. Which condition does he have and what is the appropriate treatment?',
+ opts:['Tinea corporis — topical azole antifungal for 2–4 weeks',
+       'Pityriasis rosea — supportive treatment only',
+       'Erythema migrans — doxycycline for Lyme disease',
+       'Nummular eczema — topical corticosteroids and moisturizers'],
+ ans:0,ne:false,
+ rat:'Tinea corporis (ringworm): ring-shaped plaque with central clearing and raised scaly border + positive KOH (branching hyphae) = dermatophyte infection. Treatment: topical azole (clotrimazole, miconazole) for 2–4 weeks. Pityriasis rosea is KOH-negative. Erythema migrans (Lyme) is a large expanding rash without central scale and KOH is negative.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'Which of the following drug classes is NOT associated with triggering or worsening psoriasis?',
+ opts:['Beta-blockers (metoprolol, propranolol)',
+       'Lithium carbonate',
+       'Selective serotonin reuptake inhibitors (SSRIs)',
+       'Non-steroidal anti-inflammatory drugs (NSAIDs)'],
+ ans:2,ne:true,
+ rat:'SSRIs are NOT associated with worsening psoriasis. The confirmed psoriasis triggers are: beta-blockers, lithium, NSAIDs, antimalarials (hydroxychloroquine), ACE inhibitors. Alcohol and smoking also worsen psoriasis. SSRIs can be safely used in patients with psoriasis without worsening the skin disease.'},
+
+{w:'W2',topic:'Dermatology',
+ stem:'A patient has intensely pruritic small vesicles in the web spaces of his fingers, on his wrists, and on his genitalia. The itch is worst at night and has been present for 3 weeks. Two family members developed similar symptoms last week. Which finding on physical exam would be pathognomonic for the most likely diagnosis?',
+ opts:['Honey-colored crusting on an erythematous base',
+       'Linear burrows in the skin of the web spaces',
+       'Satellite lesions surrounding a central plaque',
+       'Dermatomal distribution of vesicles'],
+ ans:1,ne:false,
+ rat:'Scabies: linear burrows in the web spaces = pathognomonic. The burrow is the tunnel the Sarcoptes scabiei mite creates in the stratum corneum. Nocturnal pruritus + family cluster + web space burrows = scabies. Honey crusting = impetigo (Staph/Strep). Satellite lesions = candidiasis. Dermatomal = herpes zoster.'},
+
+// ═══════════ WEEK 3 — HEENT (22 questions) ════════════════
+
+{w:'W3',topic:'HEENT',
+ stem:'A 65-year-old woman presents with sudden severe right eye pain, nausea, halos around lights, and blurred vision. On exam the right pupil is fixed and mid-dilated. The eye feels firm on palpation. Which is the most appropriate next action?',
+ opts:['Prescribe topical antibiotic drops and follow up in 48 hours',
+       'Dilate the pupil to obtain a funduscopic examination',
+       'Arrange same-day emergency ophthalmology referral without dilating the eye',
+       'Order a CT of the orbits to rule out retrobulbar pathology'],
+ ans:2,ne:false,
+ rat:'Acute angle-closure glaucoma: fixed mid-dilated pupil + severe eye pain + halos + firm eye = ophthalmologic emergency. NEVER dilate — dilation closes the drainage angle further and catastrophically worsens the attack. Same-day ophthalmology referral for definitive management (pilocarpine, acetazolamide, laser iridotomy). Antibiotics are for bacterial conjunctivitis.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 55-year-old man with noise-induced hearing loss has a Weber test that lateralizes to his left ear. Rinne testing in his right ear shows air conduction greater than bone conduction, but both are reduced. Which type of hearing loss does this describe?',
+ opts:['Bilateral conductive hearing loss',
+       'Right sensorineural hearing loss',
+       'Left conductive hearing loss',
+       'Right conductive hearing loss'],
+ ans:1,ne:false,
+ rat:'Weber lateralizes to the LEFT (good ear) = sensorineural loss on the RIGHT (opposite side). Rinne shows AC > BC in the right ear (positive Rinne) but both reduced = sensorineural pattern (not conductive, which would show BC ≥ AC = negative Rinne). Noise exposure causes sensorineural loss. Rule: Weber to GOOD ear = sensorineural on the other side; Weber to BAD ear = conductive on that side.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 20-year-old college student presents with severe sore throat, fever, posterior cervical lymphadenopathy, splenomegaly, and a positive monospot test. His roommate was treated for strep throat last week. Which treatment is most appropriate?',
+ opts:['Amoxicillin 500mg TID × 10 days to cover possible concurrent Group A Strep',
+       'Penicillin V 500mg QID × 10 days — standard strep treatment is safe in mono',
+       'Azithromycin if antibiotic coverage is needed, and activity restriction with no contact sports',
+       'Acyclovir — first-line antiviral for EBV mononucleosis'],
+ ans:2,ne:false,
+ rat:'Mononucleosis treatment is supportive. If concurrent GAS coverage is needed, azithromycin is safe. NEVER give amoxicillin or ampicillin in mono — causes diffuse maculopapular rash in up to 90% of patients. Penicillin V is also a beta-lactam and carries this risk. Splenomegaly = no contact sports for 3–4 weeks to prevent splenic rupture. Acyclovir is not effective for EBV mono in immunocompetent patients.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'On funduscopic examination of a hypertensive patient, you observe that at arteriovenous crossing points the vein appears to be compressed or "nicked" by the overlying arteriole. Which condition does this finding indicate?',
+ opts:['Diabetic retinopathy — order HbA1c',
+       'Papilledema from elevated intracranial pressure',
+       'Hypertensive retinopathy with arteriolar sclerosis',
+       'Central retinal vein occlusion — urgent ophthalmology referral'],
+ ans:2,ne:false,
+ rat:'AV nicking (arteriovenous nicking): sclerotic arterioles compress the underlying vein at AV crossings = hypertensive retinopathy. Hypertensive retinopathy progression: AV nicking → copper/silver wiring → flame hemorrhages → cotton-wool spots → papilledema. Papilledema = blurred disc margins + disc elevation = elevated ICP.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 52-year-old man presents with sudden painless vision loss in his right eye that he describes as a "curtain pulled across" his field of vision. On funduscopy, the right retina appears pale and whitish except for a bright red spot at the fovea. Which diagnosis does this describe?',
+ opts:['Acute angle-closure glaucoma — same-day ophthalmology referral',
+       'Central retinal artery occlusion — emergency referral within 90–120 minutes',
+       'Vitreous hemorrhage — ophthalmology referral within 24 hours',
+       'Retinal detachment — same-day surgical ophthalmology referral'],
+ ans:1,ne:false,
+ rat:'Central retinal artery occlusion (CRAO): sudden PAINLESS monocular vision loss + cherry red spot at the fovea (fovea receives choroidal blood supply, retina is pale from ischemia) = eye stroke. Treatment window is 90–120 minutes. Angle-closure is PAINFUL with fixed pupil. Retinal detachment = floaters + flashing lights + shadow moving across vision. Vitreous hemorrhage = sudden vision loss with floaters.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A child\'s Rinne test shows bone conduction greater than air conduction in the right ear (negative Rinne). The Weber test lateralizes to the right ear. What type of hearing loss does this indicate?',
+ opts:['Right sensorineural hearing loss',
+       'Left sensorineural hearing loss',
+       'Right conductive hearing loss',
+       'Normal hearing — these findings are expected'],
+ ans:2,ne:false,
+ rat:'Negative Rinne (BC ≥ AC) = conductive hearing loss on THAT side (right ear). Weber lateralizes to the BAD ear in conductive loss = confirms right ear involvement. Together: Weber to right + negative Rinne on right = RIGHT CONDUCTIVE hearing loss. Causes: cerumen impaction, otitis media with effusion, otosclerosis, TM perforation.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 5-year-old girl presents with acute ear pain, fever, and a bulging, opacified, and erythematous tympanic membrane with decreased mobility on pneumatic otoscopy. Which organism is the most common cause of this condition?',
+ opts:['Pseudomonas aeruginosa',
+       'Streptococcus pneumoniae',
+       'Moraxella catarrhalis',
+       'Group A Streptococcus'],
+ ans:1,ne:false,
+ rat:'Acute otitis media (AOM): the three most common organisms are S. pneumoniae (most common), non-typeable H. influenzae, and M. catarrhalis. S. pneumoniae is the most virulent and least likely to resolve spontaneously. Pseudomonas causes OTITIS EXTERNA (swimmer\'s ear), not AOM. First-line treatment: amoxicillin 80–90 mg/kg/day.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'Which physical exam finding most reliably distinguishes otitis externa from acute otitis media?',
+ opts:['The presence of fever — only AOM causes fever',
+       'The color of the tympanic membrane — red TM = AOM, normal TM = OE',
+       'Pain that is WORSENED by pulling on the pinna or pressing the tragus = otitis externa',
+       'The age of the patient — OE only affects adults, AOM only affects children'],
+ ans:2,ne:false,
+ rat:'The pinna pull/tragus press test: pain worsened by pulling the pinna or pressing the tragus = otitis externa (outer ear canal involved). Pain NOT changed by these maneuvers = otitis media (middle ear, behind the TM — inaccessible to this test). Both can cause fever. Both can cause a red or abnormal-appearing TM in some cases. Both affect all age groups.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 25-year-old woman presents with a sore throat, fever, tonsillar exudates, and tender anterior cervical lymphadenopathy. She has no cough. Centor score is 4. Which of the following is the most appropriate management?',
+ opts:['Treat empirically with amoxicillin 500mg TID × 10 days or perform RADT first',
+       'Prescribe azithromycin Z-pack — macrolides are first-line for strep pharyngitis',
+       'Order monospot test before prescribing any antibiotic',
+       'No antibiotic — Centor criteria have low specificity and she likely has viral pharyngitis'],
+ ans:0,ne:false,
+ rat:'Centor score 4 (exudates + anterior cervical LAD + fever + no cough = 4 points): treat empirically OR perform RADT first — both are acceptable per guidelines. First-line antibiotic: amoxicillin (or penicillin V) × 10 days. Azithromycin is for penicillin-allergic patients. Monospot is for EBV workup — this presentation fits GAS (Centor 4). Score ≥3: RADT or treat empirically.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 55-year-old patient reports brief episodes of vertigo lasting 20–40 seconds that occur when she rolls over in bed. The Dix-Hallpike maneuver reproduces her vertigo with brief rotatory nystagmus that appears after a 5–10 second latency and resolves within 30 seconds. The nystagmus does not occur when the test is immediately repeated. Which treatment is most appropriate?',
+ opts:['Low-sodium diet and oral hydrochlorothiazide',
+       'Urgent MRI of the brain to rule out posterior fossa lesion',
+       'Epley canalith repositioning maneuver',
+       'Prescribe meclizine for chronic vertigo suppression'],
+ ans:2,ne:false,
+ rat:'BPPV: brief positional vertigo + positive Dix-Hallpike (rotatory nystagmus with latency that FATIGUES = disappears with repetition) = posterior canal BPPV. Treat with Epley maneuver — 80–90% effective in a single session. Low-sodium + diuretic = Ménière disease treatment (episodes last 20 min–hours + hearing loss + tinnitus). Meclizine treats nausea but does not reposition the otolith. MRI is for central vertigo red flags.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 35-year-old college student presents with bilateral red eyes with clear watery discharge and intense itching that began during spring allergy season. She also has nasal congestion and sneezing. Visual acuity is normal. Which of the following correctly identifies the diagnosis and first-line treatment?',
+ opts:['Viral conjunctivitis — supportive care with artificial tears',
+       'Bacterial conjunctivitis — topical tobramycin drops',
+       'Allergic conjunctivitis — topical olopatadine (antihistamine/mast cell stabilizer)',
+       'Subconjunctival hemorrhage — reassure and monitor'],
+ ans:2,ne:false,
+ rat:'Allergic conjunctivitis: bilateral red eyes + INTENSE ITCHING + clear watery discharge + seasonal pattern + associated allergic rhinitis. Itch is the hallmark — no other form of conjunctivitis causes significant itch. First-line: topical antihistamine/mast cell stabilizer (olopatadine, ketotifen). Bacterial conjunctivitis = mucopurulent discharge + morning matting, minimal itch.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A patient presents with a sore throat, high fever, right-sided tonsillar fullness, deviation of the uvula to the left, "hot potato" voice, and difficulty opening his mouth fully. Which is the most appropriate next step?',
+ opts:['Prescribe amoxicillin-clavulanate and follow up in 48 hours',
+       'Perform in-office needle aspiration and prescribe antibiotics',
+       'Refer to the emergency department for evaluation and drainage',
+       'Prescribe penicillin V and analgesics only'],
+ ans:2,ne:false,
+ rat:'Peritonsillar abscess: uvula deviates AWAY from the abscess (to the LEFT = abscess is on the RIGHT) + hot potato voice + trismus (difficulty opening mouth) = peritonsillar abscess. This requires ED referral for needle aspiration or I&D. Amoxicillin alone without drainage is insufficient. The hallmark: uvula deviates away from the side of the abscess.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'Which of the following is NOT a feature of Ménière disease?',
+ opts:['Episodes lasting 20 minutes to several hours',
+       'Unilateral sensorineural hearing loss that fluctuates',
+       'Tinnitus and aural fullness in the affected ear',
+       'Positive Dix-Hallpike test with fatigable nystagmus'],
+ ans:3,ne:true,
+ rat:'NOT a feature of Ménière: positive Dix-Hallpike with fatigable nystagmus = BPPV, not Ménière. Ménière disease features: prolonged episodes (20 min–hours), unilateral SNHL (fluctuating early on), tinnitus, and aural fullness. Dix-Hallpike is NEGATIVE in Ménière disease. The endolymphatic hydrops mechanism is not positional. BPPV = brief (<1 min), positional, no hearing loss, positive fatiguing Dix-Hallpike.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 12-year-old boy presents with 8 days of nasal congestion, purulent nasal discharge, facial pressure, and fever that seemed to be improving after day 4 but then worsened again over the past 3 days. Which is the most appropriate treatment?',
+ opts:['Symptomatic treatment with saline irrigation and decongestants — still within 10 days',
+       'Amoxicillin-clavulanate — this patient meets criteria for bacterial sinusitis',
+       'Azithromycin Z-pack — first-line for bacterial sinusitis',
+       'CT sinuses — imaging required before antibiotic treatment'],
+ ans:1,ne:false,
+ rat:'Bacterial sinusitis criteria: symptoms >10 days OR "double worsening" (symptoms improve then worsen). This patient has DOUBLE WORSENING — improving then relapsing on day 5. This meets criteria for bacterial sinusitis even at 8 days. Antibiotics are indicated. First-line: amoxicillin-clavulanate. Azithromycin has high pneumococcal resistance. CT is not required before starting antibiotics.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'On funduscopic examination, you observe blurred (indistinct) optic disc margins with disc swelling and venous engorgement bilaterally. This finding is associated with which condition?',
+ opts:['Diabetic retinopathy — order HbA1c and refer to ophthalmology',
+       'Open-angle glaucoma — start prostaglandin analog eye drops',
+       'Elevated intracranial pressure — urgent neurology or emergency evaluation',
+       'Hypertensive retinopathy — tighten blood pressure control'],
+ ans:2,ne:false,
+ rat:'Papilledema: blurred/swollen optic disc margins + disc elevation + venous engorgement = elevated intracranial pressure. This is a neurological emergency — brain tumor, hypertensive emergency, pseudotumor cerebri, meningitis. URGENT evaluation required. Open-angle glaucoma = cupping (enlarged cup-to-disc ratio) with sharp disc margins. Normal disc = sharp margins, cup-to-disc <0.5.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 48-year-old woman with a history of asthma presents with nasal polyps and develops severe bronchoconstriction after taking ibuprofen for a headache. Which triad does this represent?',
+ opts:['Wegener granulomatosis triad',
+       'Samter triad — aspirin-exacerbated respiratory disease',
+       'Churg-Strauss syndrome',
+       'Kartagener syndrome'],
+ ans:1,ne:false,
+ rat:'Samter triad (aspirin-exacerbated respiratory disease): asthma + nasal polyps + NSAID/aspirin intolerance causing severe bronchoconstriction. NSAIDs inhibit COX-1 → shunting of arachidonic acid to lipoxygenase pathway → excess leukotrienes → bronchoconstriction. Management: avoid all NSAIDs and aspirin, use acetaminophen for analgesia, consider aspirin desensitization.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 70-year-old man reports gradually worsening difficulty hearing high-pitched sounds over the past several years. He has no ear pain, no tinnitus, and no history of noise exposure. He finds it especially hard to understand speech in noisy environments. Which diagnosis is most likely?',
+ opts:['Acoustic neuroma — order MRI with gadolinium',
+       'Otosclerosis — refer for stapedectomy',
+       'Presbycusis — age-related sensorineural hearing loss',
+       'Cerumen impaction — perform ear irrigation'],
+ ans:2,ne:false,
+ rat:'Presbycusis: bilateral, symmetric, gradual high-frequency sensorineural hearing loss in older adults. Difficulty understanding speech (especially in noise) = classic complaint. Weber = midline (bilateral). Rinne = AC > BC both ears (positive, sensorineural pattern). Acoustic neuroma is typically unilateral with tinnitus. Otosclerosis is conductive, often with positive family history. Cerumen is sudden/reversible.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'During a school screening, you apply a vibrating tuning fork to the midline of a child\'s head (Weber test). She reports the sound is heard equally in both ears. You then place the tuning fork on her right mastoid and she hears it until she can no longer. You then hold it next to her right ear canal and she can still hear it. Which is the correct interpretation?',
+ opts:['Abnormal finding — this child has right conductive hearing loss',
+       'Normal finding — AC > BC (positive Rinne) and equal Weber',
+       'Abnormal finding — this child has right sensorineural hearing loss',
+       'Abnormal finding — the child should not be able to hear AC after BC stops'],
+ ans:1,ne:false,
+ rat:'Normal hearing: Weber = midline (equal bilaterally, no lateralization). Rinne = AC > BC (can still hear via air conduction after bone conduction stops) = POSITIVE Rinne = NORMAL or sensorineural pattern. This child has normal bilateral hearing per these tests. For conductive loss: Weber goes to bad ear, and Rinne shows BC ≥ AC (negative Rinne).'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 2-year-old child has recurrent AOM — this is her fourth episode this year. Her parents ask about ear tube placement. Which statement about tympanostomy tubes is most accurate?',
+ opts:['Ear tubes eliminate all future ear infections permanently',
+       'Ear tubes are indicated to equalize pressure and drain middle ear fluid, reducing recurrent AOM and conductive hearing loss',
+       'Ear tubes are contraindicated under age 5 due to eardrum fragility',
+       'Ear tubes are only indicated for bilateral AOM, not unilateral recurrent disease'],
+ ans:1,ne:false,
+ rat:'Tympanostomy tubes: indicated for recurrent AOM (≥3 episodes in 6 months or ≥4 in 1 year) or persistent otitis media with effusion (>3 months with hearing loss). They equalize middle ear pressure, allow drainage, and reduce recurrent infections. They do not eliminate all future ear infections — they reduce severity and frequency. No contraindication based on age alone.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A 19-year-old college student presents with bilateral red eyes, mucopurulent yellow-green discharge with the eyelids stuck together each morning, and no significant pruritus. He reports a new sexual partner 2 weeks ago. Which diagnosis and management is most appropriate?',
+ opts:['Viral conjunctivitis — supportive care with artificial tears for 1–2 weeks',
+       'Allergic conjunctivitis — topical olopatadine and avoid allergens',
+       'Chlamydial or gonococcal conjunctivitis — STI testing and systemic antibiotics',
+       'Chemical conjunctivitis — flush with saline and no further treatment'],
+ ans:2,ne:false,
+ rat:'Mucopurulent conjunctivitis in a sexually active young adult = consider STI-related conjunctivitis (chlamydial or gonococcal). Unilateral or bilateral, purulent discharge, new sexual partner = screen for gonorrhea and chlamydia. Gonococcal: severe purulent, copious — treat with ceftriaxone IM. Chlamydial: subacute — treat with azithromycin or doxycycline. Topical antibiotics alone are INSUFFICIENT for STI conjunctivitis — systemic treatment required.'},
+
+{w:'W3',topic:'HEENT',
+ stem:'A patient with central vertigo (vertigo from a brainstem lesion) is being evaluated. Which finding on physical exam would suggest CENTRAL rather than peripheral (BPPV/vestibular neuritis) vertigo?',
+ opts:['Brief vertigo triggered by position changes lasting under 1 minute',
+       'Positive Dix-Hallpike test with rotatory nystagmus that fatigues with repetition',
+       'Direction-changing nystagmus that does NOT fatigue or has no latency period',
+       'Sudden onset vertigo following a viral upper respiratory infection'],
+ ans:2,ne:false,
+ rat:'Central vertigo red flags: direction-changing nystagmus, nystagmus that does NOT fatigue with repeat testing, no latency period, associated neurological deficits (diplopia, dysarthria, facial numbness, ataxia, headache). BPPV = fatiguing rotatory nystagmus with latency. Vestibular neuritis = continuous vertigo post-viral, no nystagmus direction change. Central vertigo = MRI urgently.'},
+
+
+{w:'W3',topic:'HEENT',
+ stem:'A 45-year-old construction worker reports gradual difficulty hearing his co-workers over the past 2 years, always worse in his right ear. He denies vertigo, tinnitus, or ear pain. Weber test lateralizes to the left. Rinne test: right ear BC > AC (negative Rinne). Left ear: AC > BC (positive Rinne). Which of the following is the most accurate interpretation?',
+ opts:['Bilateral sensorineural hearing loss from noise exposure',
+       'Left conductive hearing loss',
+       'Right sensorineural hearing loss',
+       'Right conductive hearing loss'],
+ ans:3,ne:false,
+ rat:'Weber to LEFT + negative Rinne on RIGHT (BC > AC on right) = RIGHT CONDUCTIVE hearing loss. Memory rule: Weber goes to the BAD ear in conductive loss. Negative Rinne (BC ≥ AC) = conductive on that side. Possible causes in a construction worker: chronic noise-induced conductive damage, TM perforation, or cerumen impaction — all cause right-sided conductive loss. Sensorineural would show positive Rinne (AC > BC) on the affected ear with Weber lateralizing to the GOOD ear.'},
+
+// ═══════════ WEEK 4 — GI (16 questions) ══════════════════
+
+{w:'W4',topic:'GI',
+ stem:'A 16-year-old boy presents with 18 hours of pain that started around his belly button and has since migrated to his right lower quadrant. He has had no appetite since the pain began. Temperature is 38.3°C and WBC is 13,400. Which physical exam sign involves applying sustained pressure to the LEFT lower quadrant and observing pain in the RIGHT lower quadrant?',
+ opts:['McBurney point tenderness',
+       'Psoas sign',
+       'Rovsing sign',
+       'Obturator sign'],
+ ans:2,ne:false,
+ rat:'Rovsing sign: sustained LLQ palpation → referred RLQ pain from contralateral peritoneal irritation = appendicitis. McBurney point = direct RLQ tenderness at 1/3 from ASIS to umbilicus. Psoas sign = right leg extension against resistance causes RLQ pain = retrocecal appendicitis. Obturator sign = internal rotation of flexed right hip = pelvic appendicitis.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 24-year-old woman presents with 4 months of crampy abdominal pain that improves with defecation, alternating constipation and diarrhea, and bloating after meals. She has no weight loss, no fever, and no blood in her stool. CBC and CRP are both normal. Which of the following findings is NOT consistent with her most likely diagnosis?',
+ opts:['Abdominal pain improving with defecation',
+       'Rectal bleeding with bright red blood per rectum',
+       'Normal inflammatory markers (CRP, ESR)',
+       'Alternating bowel habits without structural abnormality on colonoscopy'],
+ ans:1,ne:true,
+ rat:'IBS (Rome IV): abdominal pain ≥1 day/week × 3 months, associated with stool changes. IBS NEVER causes blood in the stool — this is the single most important distinguishing fact. Blood in stool = IBD until proven otherwise. All other options ARE consistent with IBS: improving with defecation, normal CRP, and normal colonoscopy are all features of this functional disorder.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 28-year-old man with Crohn disease and a 10-year history of terminal ileal disease presents with fatigue, paresthesias, and a smooth beefy-red tongue. His CBC shows elevated MCV and hypersegmented neutrophils. Which is the most likely nutritional deficiency?',
+ opts:['Iron deficiency — from chronic GI blood loss',
+       'Vitamin B12 deficiency — from terminal ileal malabsorption',
+       'Folate deficiency — from poor dietary intake',
+       'Vitamin D deficiency — from fat malabsorption'],
+ ans:1,ne:false,
+ rat:'Terminal ileum is the exclusive site of vitamin B12 (cobalamin) absorption. Crohn disease affecting the terminal ileum = B12 malabsorption → megaloblastic anemia (elevated MCV, hypersegmented neutrophils). Smooth beefy-red tongue = glossitis from B12 deficiency. Also: subacute combined degeneration of the spinal cord (posterior + lateral columns). Iron deficiency = microcytic anemia.'},
+
+{w:'W4',topic:'GI',
+ stem:'Which of the following is the most important distinguishing feature between Crohn disease and ulcerative colitis?',
+ opts:['Crohn disease always causes bloody diarrhea; UC rarely does',
+       'Crohn disease can affect any part of the GI tract with skip lesions and transmural inflammation; UC is limited to the colon starting at the rectum and is mucosal only',
+       'UC is associated with extraintestinal manifestations; Crohn disease has none',
+       'Crohn disease is treated with surgery; UC is managed medically only'],
+ ans:1,ne:false,
+ rat:'The fundamental distinction: Crohn = any GI segment (mouth to anus), skip lesions, TRANSMURAL inflammation (fistulas, abscesses, strictures possible), spares the rectum. UC = colon only (starts at rectum, extends proximally), CONTINUOUS, MUCOSAL only (no fistulas). Both can cause bloody diarrhea and have extraintestinal manifestations. Both have surgical and medical management options.'},
+
+{w:'W4',topic:'GI',
+ stem:'Per USPSTF guidelines, at what age should average-risk adults begin colorectal cancer screening?',
+ opts:['Age 40',
+       'Age 45',
+       'Age 50',
+       'Age 55'],
+ ans:1,ne:false,
+ rat:'USPSTF 2021 update: colorectal cancer screening begins at age 45 for all average-risk adults (updated from age 50). Continue through age 75. Ages 76–85: individualized decision. Stop screening after age 85. Colonoscopy every 10 years remains the gold standard. This is a high-frequency exam trap — the old answer of 50 is WRONG.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 42-year-old man has 3 months of epigastric pain that wakes him from sleep at 2 AM. He finds that eating a small snack at bedtime relieves the pain temporarily. H. pylori breath test is positive. Which type of ulcer does this pain pattern most suggest?',
+ opts:['Gastric ulcer — food stimulates acid secretion and worsens the pain',
+       'Duodenal ulcer — food buffers acid in the duodenum and temporarily relieves pain',
+       'GERD — nocturnal symptoms are characteristic of acid reflux',
+       'Esophageal ulcer from severe GERD'],
+ ans:1,ne:false,
+ rat:'Duodenal ulcer: pain RELIEVED by food (food buffers acid in the duodenum) + nocturnal pain (stomach empty, acid unbuffered, peaks at 2–3 AM). Gastric ulcer: pain WORSENED by food (food stimulates parietal cell acid secretion against the damaged stomach wall). H. pylori causes 70% of duodenal ulcers. The food-pain relationship is the key distinguishing clinical feature.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 56-year-old man with a 12-year history of GERD has a surveillance EGD showing salmon-colored mucosa in the distal esophagus. Biopsy confirms intestinal metaplasia (goblet cells) with no dysplasia. Which statement about his condition is NOT true?',
+ opts:['This condition is a precursor to esophageal adenocarcinoma',
+       'PPIs relieve symptoms and should be continued but will not reverse the metaplastic change',
+       'Regular endoscopic surveillance is required regardless of symptom control',
+       'PPIs reverse Barrett\'s esophagus — no further surveillance is needed once symptoms are controlled'],
+ ans:3,ne:true,
+ rat:'NOT TRUE: PPIs do NOT reverse Barrett\'s esophagus. The metaplastic change (columnar intestinal epithelium replacing squamous epithelium) persists despite acid suppression. PPIs control symptoms and may slow progression but cannot reverse established Barrett\'s. Surveillance EGD is required: no dysplasia = every 3–5 years, low-grade dysplasia = every 6–12 months. Barrett\'s carries 30–40× increased adenocarcinoma risk.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 65-year-old woman with diverticulosis presents with acute left lower quadrant pain, fever 38.6°C, and leukocytosis. CT shows pericolonic fat stranding and a 3cm pericolic abscess. Which is the most appropriate management?',
+ opts:['Outpatient oral antibiotics (amoxicillin-clavulanate) and liquid diet',
+       'Hospital admission with IV antibiotics — the abscess may require percutaneous drainage',
+       'Urgent colonoscopy to evaluate the extent of disease',
+       'Immediate surgical resection — all patients with diverticular abscess require surgery'],
+ ans:1,ne:false,
+ rat:'Complicated diverticulitis with abscess: IV antibiotics + hospital admission. Abscesses >4cm may require percutaneous drainage; <4cm may respond to antibiotics alone. Colonoscopy is CONTRAINDICATED during acute diverticulitis (perforation risk) — defer 6–8 weeks. Uncomplicated diverticulitis (no abscess/perforation) can be managed outpatient with oral antibiotics.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 35-year-old woman presents with chronic diarrhea, bloating, and a 12-lb weight loss over 6 months. She has iron deficiency anemia and mildly elevated transaminases. Anti-tTG IgA antibody is markedly elevated. Which is the most appropriate next step?',
+ opts:['Start a strict gluten-free diet immediately and recheck anti-tTG IgA in 6 months',
+       'Order duodenal biopsy via EGD to confirm the diagnosis before starting treatment',
+       'Order HLA-DQ2/DQ8 genotyping — this is the diagnostic gold standard',
+       'Prescribe corticosteroids for autoimmune enteropathy'],
+ ans:1,ne:false,
+ rat:'Celiac disease: positive anti-tTG IgA + malabsorption + weight loss + iron deficiency anemia + elevated LFTs. CONFIRMATORY test = duodenal biopsy showing villous atrophy, crypt hyperplasia, and intraepithelial lymphocytes. Anti-tTG IgA is the screening test. Do NOT start the gluten-free diet before biopsy — dietary gluten is required for the biopsy to show abnormalities.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 58-year-old man has epigastric pain, chronic diarrhea, and multiple peptic ulcers including in the duodenum and jejunum. Fasting serum gastrin is markedly elevated. Which diagnosis should be strongly suspected?',
+ opts:['H. pylori gastritis with multiple ulcers',
+       'Zollinger-Ellison syndrome — gastrin-secreting gastrinoma',
+       'Crohn disease of the small bowel',
+       'NSAID-induced gastropathy'],
+ ans:1,ne:false,
+ rat:'Zollinger-Ellison syndrome: gastrin-secreting gastrinoma in the pancreas or duodenum → markedly elevated fasting gastrin → multiple ulcers in atypical locations (jejunum, distal duodenum) + secretory diarrhea. Part of MEN1 syndrome. H. pylori causes single ulcers in typical locations. Jejunal ulcers are pathognomonic for ZES. Treatment: PPI + gastrinoma resection.'},
+
+{w:'W4',topic:'GI',
+ stem:'Which of the following is the correct test for confirming H. pylori eradication after completing triple therapy?',
+ opts:['H. pylori serology (IgG antibody test) 4 weeks after completing antibiotics',
+       'Urea breath test OR stool antigen test — performed 4 weeks after completing antibiotics and 2 weeks after stopping PPIs',
+       'Repeat upper endoscopy with CLO test at 2 weeks after completing antibiotics',
+       'H. pylori serology repeated at 3 months — antibody titers decrease if eradication was successful'],
+ ans:1,ne:false,
+ rat:'H. pylori eradication confirmation: urea breath test OR stool antigen test. Test 4 weeks after completing antibiotics AND 2 weeks after stopping PPIs (PPIs can suppress H. pylori activity and cause false-negative results). Serology CANNOT confirm eradication — IgG antibodies persist for months to years after successful treatment. Repeat endoscopy is not routinely required unless alarm features are present.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 73-year-old woman presents with gradual onset confusion, jaundice, and asterixis (flapping tremor). She has known cirrhosis from hepatitis C. Serum ammonia is elevated. Which diagnosis is most consistent and what is the first-line treatment?',
+ opts:['Wernicke encephalopathy — IV thiamine immediately',
+       'Hepatic encephalopathy — lactulose titrated to 2–3 soft stools per day',
+       'Alcohol withdrawal delirium — benzodiazepine protocol',
+       'Subdural hematoma — urgent CT head'],
+ ans:1,ne:false,
+ rat:'Hepatic encephalopathy: cirrhosis + confusion + asterixis + elevated ammonia = portosystemic shunting → ammonia bypasses liver → accumulates in brain. First-line: lactulose (acidifies colon, traps ammonia as NH4+, promotes excretion). Second-line: rifaximin (reduces ammonia-producing gut bacteria). Identify and treat precipitants: GI bleed, infection, constipation, dehydration.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 60-year-old man with cirrhosis and ascites develops fever, abdominal pain, and confusion. Paracentesis reveals a PMN count of 340 cells/mm³. Blood cultures are pending. What is the most appropriate immediate action?',
+ opts:['Wait for culture results before starting antibiotics — treat the specific organism',
+       'Start IV cefotaxime empirically — do not wait for culture results',
+       'Repeat paracentesis in 24 hours to confirm the count before treating',
+       'Discharge with oral ciprofloxacin — this can be managed outpatient'],
+ ans:1,ne:false,
+ rat:'SBP (spontaneous bacterial peritonitis): ascitic PMN ≥250 cells/mm³ = SBP — treat empirically without waiting for cultures. First-line: IV cefotaxime. Add IV albumin to prevent hepatorenal syndrome. Do NOT delay for culture results — mortality increases significantly with each hour of delay. The PMN count of 340 exceeds the 250 threshold. SBP is always inpatient management.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 48-year-old woman with chronic GERD presents with new difficulty swallowing solids over the past 3 months, followed by difficulty swallowing liquids over the last 3 weeks. She has also lost 18 lbs unintentionally. Which is the most appropriate next step?',
+ opts:['Increase her PPI dose to twice daily and reassess in 8 weeks',
+       'Add an H2 blocker to her current PPI regimen',
+       'Urgent upper endoscopy — she has alarm features requiring immediate evaluation',
+       'Barium swallow — this is the first-line study for dysphagia'],
+ ans:2,ne:false,
+ rat:'Alarm features mandating immediate upper endoscopy: progressive dysphagia (solids → liquids), unintentional weight loss >10%, hematemesis, melena, anemia, new symptoms in patients >55. This patient has 2 major alarm features (progressive dysphagia + significant weight loss) — urgent EGD to rule out esophageal malignancy or Barrett\'s adenocarcinoma. PPIs and barium swallow are inappropriate when alarm features are present.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 52-year-old man with recurrent gout has heart failure (EF 30%). He presents with an acute gout flare of his right first MTP joint. Which treatment is most appropriate for the acute flare?',
+ opts:['Indomethacin 50mg TID — the most potent NSAID for acute gout',
+       'Naproxen 500mg BID — safer NSAID than indomethacin in heart failure',
+       'Colchicine 1.2mg followed by 0.6mg 1 hour later, or oral prednisone',
+       'Start allopurinol immediately — urate-lowering therapy also treats the acute flare'],
+ ans:2,ne:false,
+ rat:'Gout with heart failure: ALL NSAIDs (including indomethacin and naproxen, including COX-2 inhibitors) are contraindicated in heart failure — they cause sodium/water retention, worsen fluid overload, and impair diuretic/ACE inhibitor efficacy. Use colchicine (preferred) or corticosteroids. Never start allopurinol during an acute gout flare — it mobilizes urate and worsens the attack. Wait until the flare fully resolves.'},
+
+{w:'W4',topic:'GI',
+ stem:'A 44-year-old woman has an annual screening colonoscopy that reveals a 1cm tubular adenoma in the sigmoid colon, which is completely removed. Which surveillance interval is recommended?',
+ opts:['Annual colonoscopy for 3 years',
+       'Repeat colonoscopy in 3–5 years',
+       'Return to routine 10-year screening — low-risk adenoma',
+       'Repeat colonoscopy in 1 year — adenoma size >5mm requires earlier follow-up'],
+ ans:1,ne:false,
+ rat:'Post-polypectomy surveillance (USMSTF guidelines): 1–2 tubular adenomas <10mm (low-risk) → colonoscopy in 7–10 years. Tubular adenoma ≥10mm OR 3+ adenomas OR villous features OR high-grade dysplasia (higher risk) → repeat in 3 years. Wait — a 1cm adenoma is ≥10mm and falls into the 3-year category (NOT 7–10 years). This question tests the 1cm threshold.'}
+
+]; // end EXAM_Q
+
+
+// ── STATE ─────────────────────────────────────────────────
+var state = {
+  questions: [],
+  answers: [],   // selected option index, or -1
+  cur: 0,
+  startTime: 0,
+  timerInterval: null,
+  TOTAL_SECS: 90 * 60,
+  finished: false
+};
+
+// ── UTILITIES ─────────────────────────────────────────────
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function $(id) { return document.getElementById(id); }
+
+// ── START / RETAKE ────────────────────────────────────────
+function startExam() {
+  // Shuffle questions but also shuffle option order within each question
+  state.questions = shuffle(EXAM_Q).map(function(q) {
+    var correctText = q.opts[q.ans];
+    var newOpts = shuffle(q.opts.slice());
+    return Object.assign({}, q, {
+      opts: newOpts,
+      ans: newOpts.indexOf(correctText)
+    });
+  });
+  state.answers   = new Array(state.questions.length).fill(-1);
+  state.cur       = 0;
+  state.finished  = false;
+  state.startTime = Date.now();
+
+  $('introScreen').style.display  = 'none';
+  $('examScreen').style.display   = 'block';
+  $('timerPill').style.display    = 'flex';
+
+  buildQMap();
+  renderQuestion();
+  startTimer();
+}
+
+function retakeExam() {
+  clearInterval(state.timerInterval);
+  $('resultsScreen').style.display = 'none';
+  startExam();
+}
+
+// ── TIMER ─────────────────────────────────────────────────
+function startTimer() {
+  updateTimer();
+  state.timerInterval = setInterval(function() {
+    var remaining = state.TOTAL_SECS - Math.floor((Date.now() - state.startTime) / 1000);
+    if (remaining <= 0) { clearInterval(state.timerInterval); submitExam(); return; }
+    updateTimer();
+  }, 1000);
+}
+
+function updateTimer() {
+  var remaining = Math.max(0, state.TOTAL_SECS - Math.floor((Date.now() - state.startTime) / 1000));
+  var m = Math.floor(remaining / 60), s = remaining % 60;
+  $('timerText').textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  var dot = $('timerDot');
+  dot.className = 'timer-dot' + (remaining < 300 ? ' danger' : remaining < 600 ? ' warn' : '');
+}
+
+// ── QUESTION MAP ──────────────────────────────────────────
+function buildQMap() {
+  var map = $('qMap');
+  map.innerHTML = '';
+  state.questions.forEach(function(_, i) {
+    var d = document.createElement('div');
+    d.className = 'qm-dot ' + (i === state.cur ? 'current' : 'unanswered');
+    d.textContent = i + 1;
+    d.title = 'Go to question ' + (i + 1);
+    d.onclick = function() { goQ(i); };
+    map.appendChild(d);
+  });
+}
+
+function updateQMap() {
+  var dots = document.querySelectorAll('.qm-dot');
+  dots.forEach(function(d, i) {
+    d.className = 'qm-dot ' + (i === state.cur ? 'current' : state.answers[i] !== -1 ? 'answered' : 'unanswered');
+  });
+}
+
+// ── RENDER QUESTION ───────────────────────────────────────
+function renderQuestion() {
+  var q   = state.questions[state.cur];
+  var tot = state.questions.length;
+  var ans = state.answers.filter(function(a){ return a !== -1; }).length;
+  var L   = ['A','B','C','D'];
+
+  // Progress bar
+  $('epFill').style.width  = (ans / tot * 100) + '%';
+  $('epCount').textContent = ans + ' / ' + tot;
+
+  // Week badge class
+  var wkClass = { 'W1': 'wk1', 'W2': 'wk2', 'W3': 'wk3', 'W4': 'wk4' }[q.w] || 'wk1';
+  var wkLabel = { 'W1': 'Week 1 — HIV', 'W2': 'Week 2 — Dermatology', 'W3': 'Week 3 — HEENT', 'W4': 'Week 4 — GI' }[q.w] || q.w;
+  var neTag = q.ne ? ' <span style="font-size:10px;font-weight:700;background:rgba(201,67,42,.15);color:var(--coral);padding:1px 7px;border-radius:20px;margin-left:6px">NOT/EXCEPT</span>' : '';
+
+  var html = '<div class="q-card">'
+    + '<div class="q-card-hdr">'
+    + '<span class="q-card-num">Question ' + (state.cur + 1) + ' of ' + tot + neTag + '</span>'
+    + '<span class="q-card-wk ' + wkClass + '">' + wkLabel + '</span>'
+    + '</div>'
+    + '<div class="q-card-body">'
+    + '<div class="q-stem">' + q.stem + '</div>'
+    + '<div class="opts">';
+
+  q.opts.forEach(function(o, i) {
+    var sel = state.answers[state.cur] === i ? ' selected' : '';
+    html += '<button type="button" class="opt' + sel + '" data-idx="' + i + '">'
+      + '<div class="opt-lt">' + L[i] + '</div>'
+      + o + '</button>';
+  });
+
+  html += '</div></div></div>';
+  $('qCardContainer').innerHTML = html;
+
+  // Listeners — using event delegation on the opts container
+  document.querySelectorAll('.opt').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(this.dataset.idx);
+      state.answers[state.cur] = idx;
+      document.querySelectorAll('.opt').forEach(function(b) {
+        b.classList.remove('selected');
+        b.querySelector('.opt-lt').style.background = '';
+        b.querySelector('.opt-lt').style.color = '';
+      });
+      this.classList.add('selected');
+      this.querySelector('.opt-lt').style.background = 'var(--purple)';
+      this.querySelector('.opt-lt').style.color = '#fff';
+      updateQMap();
+      updateProgress();
+      // Auto-advance after brief delay unless last question
+      if (state.cur < tot - 1) {
+        setTimeout(function() { goQ(state.cur + 1); }, 380);
+      }
+    });
+  });
+
+  // Rebuild nav
+  var nav = $('examNav');
+  nav.innerHTML = '<button class="btn-prev" id="btnPrev" onclick="goQ(state.cur-1)"'
+    + (state.cur === 0 ? ' disabled' : '') + '>← Previous</button>';
+
+  if (state.cur === tot - 1) {
+    nav.innerHTML += '<button class="btn-submit" onclick="confirmSubmit()">Submit Exam →</button>';
+  } else {
+    nav.innerHTML += '<button class="btn-next" onclick="goQ(state.cur+1)">Next →</button>';
+  }
+
+  updateQMap();
+}
+
+function updateProgress() {
+  var ans = state.answers.filter(function(a){ return a !== -1; }).length;
+  var tot = state.questions.length;
+  $('epFill').style.width  = (ans / tot * 100) + '%';
+  $('epCount').textContent = ans + ' / ' + tot;
+}
+
+function goQ(idx) {
+  if (idx < 0 || idx >= state.questions.length) return;
+  state.cur = idx;
+  renderQuestion();
+  window.scrollTo(0, 0);
+}
+
+// ── SUBMIT ────────────────────────────────────────────────
+function confirmSubmit() {
+  var unanswered = state.answers.filter(function(a){ return a === -1; }).length;
+  if (unanswered > 0) {
+    if (!confirm(unanswered + ' question' + (unanswered !== 1 ? 's are' : ' is') + ' unanswered. Submit anyway?')) return;
+  }
+  submitExam();
+}
+
+function submitExam() {
+  clearInterval(state.timerInterval);
+  state.finished = true;
+
+  var elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+  var m = Math.floor(elapsed / 60), s = elapsed % 60;
+  var timeStr = m + 'm ' + (s < 10 ? '0' : '') + s + 's';
+  var tot     = state.questions.length;
+  var L       = ['A','B','C','D'];
+
+  // Score
+  var correct = 0, wrong = 0, skipped = 0;
+  state.questions.forEach(function(q, i) {
+    if (state.answers[i] === -1) skipped++;
+    else if (state.answers[i] === q.ans) correct++;
+    else wrong++;
+  });
+
+  var pct = Math.round(correct / tot * 100);
+  var passmark = 84;
+  var passed   = pct >= passmark;
+
+  // Hero
+  $('resPct').textContent = pct + '%';
+  var gradeText, gradeClass;
+  if (pct >= 90)       { gradeText = 'Excellent — well above pass mark';    gradeClass = 'rg-pass'; }
+  else if (passed)     { gradeText = 'Pass — above 84% pass mark';          gradeClass = 'rg-pass'; }
+  else if (pct >= 75)  { gradeText = 'Close — review weak domains and retake'; gradeClass = 'rg-close'; }
+  else                 { gradeText = 'Below pass mark — focused review needed';  gradeClass = 'rg-fail'; }
+  $('resGrade').textContent  = gradeText;
+  $('resGrade').className    = 'res-grade ' + gradeClass;
+  $('resMeta').textContent   = correct + ' of ' + tot + ' correct · ' + timeStr;
+  $('rsCorr').textContent    = correct;
+  $('rsWrong').textContent   = wrong;
+  $('rsSkip').textContent    = skipped;
+  $('rsTime').textContent    = timeStr;
+
+  // Domain breakdown by week
+  var weeks = ['W1','W2','W3','W4'];
+  var weekLabels = {'W1':'Week 1 — HIV','W2':'Week 2 — Dermatology','W3':'Week 3 — HEENT','W4':'Week 4 — GI'};
+  var weekColors = {'W1':'wk1','W2':'wk2','W3':'wk3','W4':'wk4'};
+  var domHtml = '';
+  weeks.forEach(function(wk) {
+    var qs   = state.questions.map(function(q,i){ return {q:q,i:i}; }).filter(function(x){ return x.q.w === wk; });
+    var wkCt = qs.length;
+    var wkCr = qs.filter(function(x){ return state.answers[x.i] === x.q.ans; }).length;
+    var wkPct = wkCt > 0 ? Math.round(wkCr / wkCt * 100) : 0;
+    var barClass = wkPct >= 84 ? 'bar-pass' : wkPct >= 60 ? 'bar-close' : 'bar-fail';
+    var scoreColor = wkPct >= 84 ? 'var(--green)' : wkPct >= 60 ? 'var(--amber)' : 'var(--coral)';
+    domHtml += '<div class="domain-row">'
+      + '<div class="domain-name"><span class="rb-wk ' + weekColors[wk] + '" style="margin-right:6px">' + wk.replace('W','Week ') + '</span>' + weekLabels[wk].split('—')[1].trim() + '</div>'
+      + '<div class="domain-score" style="color:' + scoreColor + '">' + wkCr + '/' + wkCt + ' (' + wkPct + '%)</div>'
+      + '<div class="domain-bar-wrap"><div class="domain-bar ' + barClass + '" style="width:' + wkPct + '%"></div></div>'
+      + '</div>';
+  });
+  $('domainBreakdown').innerHTML = domHtml;
+
+  // Question breakdown
+  var bkHtml = '';
+  state.questions.forEach(function(q, i) {
+    var userAns = state.answers[i];
+    var isCorrect = userAns === q.ans;
+    var isSkipped = userAns === -1;
+    var rowClass  = isCorrect ? 'correct' : isSkipped ? 'skip' : 'wrong';
+    var tagText   = isCorrect ? '✓ Correct' : isSkipped ? '— Skipped' : '✗ Wrong';
+    var ansInfo   = isSkipped
+      ? 'Not answered · Correct: ' + L[q.ans] + ' — ' + q.opts[q.ans]
+      : 'You chose: ' + L[userAns] + ' · Correct: ' + L[q.ans];
+    var wkBadgeClass = weekColors[q.w];
+    var neFlag = q.ne ? '<span style="font-size:10px;font-weight:700;color:var(--coral)"> NOT/EXCEPT</span>' : '';
+
+    bkHtml += '<div class="rb-row" data-result="' + rowClass + '">'
+      + '<div class="rb-top">'
+      + '<span class="rb-tag ' + rowClass + '">' + tagText + '</span>'
+      + '<div class="rb-q">' + q.stem.replace(/<[^>]+>/g,'') + neFlag + '</div>'
+      + '</div>'
+      + '<div class="rb-meta">'
+      + '<span class="rb-wk ' + wkBadgeClass + '">' + q.w.replace('W','Week ') + ' · ' + q.topic + '</span>'
+      + '<span style="font-size:12px;color:var(--text-light)">' + ansInfo + '</span>'
+      + '</div>'
+      + (!isCorrect ? '<div class="rb-rat">' + q.rat + '</div>' : '')
+      + '</div>';
+  });
+  $('bkContent').innerHTML = bkHtml;
+
+  // Show results
+  $('examScreen').style.display    = 'none';
+  $('timerPill').style.display     = 'none';
+  $('resultsScreen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+// ── BREAKDOWN FILTER ──────────────────────────────────────
+function filterBk(type, btn) {
+  document.querySelectorAll('.bk-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.rb-row').forEach(function(row) {
+    var result = row.dataset.result;
+    if (type === 'all') row.classList.remove('hidden');
+    else if (type === 'wrong')   row.classList.toggle('hidden', result !== 'wrong');
+    else if (type === 'correct') row.classList.toggle('hidden', result !== 'correct');
+  });
+}
+</script>
+</body>
+</html>
