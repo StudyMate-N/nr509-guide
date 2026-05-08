@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNAPPS Builder — NR511 · Greenwich School</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #0F1F3D;
+  --navy-mid:   #1B2A5A;
+  --purple:     #5B4FCF;
+  --purple-l:   #7B6FDF;
+  --purple-p:   #EFEDFE;
+  --purple-dim: rgba(91,79,207,.12);
+  --teal:       #0D7377;
+  --teal-l:     #14A085;
+  --amber:      #E8A020;
+  --coral:      #C9432A;
+  --green:      #2E7D52;
+  --green-p:    #E6F5EC;
+  --gray-50:    #F9F8F6;
+  --gray-100:   #F1EFE9;
+  --gray-200:   #E0DED6;
+  --text:       #1A1917;
+  --muted:      #5F5D57;
+  --light:      #9B9890;
+  --border:     rgba(0,0,0,.08);
+  --border-s:   rgba(0,0,0,.14);
+  --font-serif: 'DM Serif Display', serif;
+  --font-sans:  'DM Sans', sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); background: var(--gray-50); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+/* ── NAV ── */
+.nav { background: var(--navy); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 54px; position: sticky; top: 0; z-index: 200; }
+.nav-brand { font-family: var(--font-serif); color: #fff; font-size: 16px; text-decoration: none; }
+.nav-brand span { color: #7B6FDF; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-pill { font-size: 11px; font-weight: 700; background: rgba(91,79,207,.35); color: rgba(255,255,255,.9); padding: 3px 10px; border-radius: 20px; letter-spacing: .04em; }
+.nav-back { font-size: 12px; color: rgba(255,255,255,.6); text-decoration: none; background: rgba(255,255,255,.08); padding: 5px 12px; border-radius: var(--r-sm); transition: background .15s; }
+.nav-back:hover { background: rgba(255,255,255,.14); color: #fff; }
+
+/* ── LAYOUT ── */
+.page { max-width: 900px; margin: 0 auto; padding: 1.75rem 1.25rem 4rem; }
+
+/* ── INTRO ── */
+.intro { background: var(--navy); border-radius: var(--r-xl); padding: 2.25rem 2rem; margin-bottom: 1.5rem; position: relative; overflow: hidden; }
+.intro::before { content: ''; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px; border-radius: 50%; background: rgba(91,79,207,.18); pointer-events: none; }
+.intro::after  { content: ''; position: absolute; left: -60px; bottom: -60px; width: 200px; height: 200px; border-radius: 50%; background: rgba(13,115,119,.12); pointer-events: none; }
+.intro-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #7B6FDF; margin-bottom: .4rem; position: relative; z-index: 1; }
+.intro-title { font-family: var(--font-serif); font-size: 30px; color: #fff; margin-bottom: .5rem; position: relative; z-index: 1; }
+.intro-sub { font-size: 13.5px; color: rgba(255,255,255,.55); max-width: 560px; line-height: 1.65; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+.snapps-steps-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+.snapps-badge { display: flex; align-items: center; gap: 7px; background: rgba(255,255,255,.07); border: 0.5px solid rgba(255,255,255,.14); border-radius: var(--r-sm); padding: .45rem .75rem; }
+.snapps-letter { font-family: var(--font-serif); font-size: 18px; color: #7B6FDF; line-height: 1; min-width: 16px; }
+.snapps-word { font-size: 12px; color: rgba(255,255,255,.6); font-weight: 500; }
+.intro-actions { display: flex; gap: .75rem; flex-wrap: wrap; position: relative; z-index: 1; }
+.btn-start { background: var(--purple); color: #fff; border: none; border-radius: var(--r-md); padding: 11px 28px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: all .15s; box-shadow: 0 4px 16px rgba(91,79,207,.4); }
+.btn-start:hover { background: var(--purple-l); transform: translateY(-1px); }
+.btn-start-outline { background: transparent; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.75); border-radius: var(--r-md); padding: 11px 22px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--font-sans); transition: all .15s; }
+.btn-start-outline:hover { background: rgba(255,255,255,.08); color: #fff; }
+
+/* ── SCENARIO PICKER ── */
+.scenario-section { display: none; }
+.section-title { font-family: var(--font-serif); font-size: 20px; color: var(--navy); margin-bottom: .25rem; }
+.section-sub { font-size: 13px; color: var(--muted); margin-bottom: 1rem; }
+.scenario-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin-bottom: 1.25rem; }
+.scenario-card { background: #fff; border: 1px solid var(--border-s); border-radius: var(--r-md); padding: 1rem; cursor: pointer; transition: all .15s; text-align: left; }
+.scenario-card:hover { border-color: var(--purple); box-shadow: 0 0 0 3px var(--purple-dim); }
+.scenario-card.selected { border-color: var(--purple); background: var(--purple-p); box-shadow: 0 0 0 3px var(--purple-dim); }
+.sc-tag { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--purple); margin-bottom: 4px; }
+.sc-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.sc-preview { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.or-divider { display: flex; align-items: center; gap: .75rem; margin: 1rem 0; }
+.or-line { flex: 1; height: 1px; background: var(--border-s); }
+.or-text { font-size: 12px; color: var(--light); font-weight: 600; letter-spacing: .05em; }
+.custom-input-area { background: #fff; border: 1px solid var(--border-s); border-radius: var(--r-md); padding: 1rem; }
+.custom-input-area label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .4rem; }
+.custom-input-area textarea { width: 100%; border: 1px solid var(--border-s); border-radius: var(--r-sm); padding: .65rem .85rem; font-size: 13.5px; font-family: var(--font-sans); color: var(--text); resize: vertical; min-height: 80px; transition: border .15s; line-height: 1.55; }
+.custom-input-area textarea:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px var(--purple-dim); }
+
+/* ── BUILDER ── */
+.builder-section { display: none; }
+.progress-bar-wrap { background: #fff; border: 0.5px solid var(--border); border-radius: var(--r-md); padding: .65rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 12px; }
+.pb-label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.pb-track { flex: 1; height: 5px; background: var(--gray-100); border-radius: 3px; }
+.pb-fill { height: 100%; border-radius: 3px; background: var(--purple); transition: width .4s ease; }
+.pb-count { font-size: 12px; font-weight: 700; color: var(--purple); font-family: var(--font-mono); white-space: nowrap; }
+
+.step-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.25rem; align-items: start; }
+
+/* Step card */
+.step-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+.step-hdr { background: var(--navy); padding: .75rem 1.1rem; display: flex; align-items: center; gap: .75rem; }
+.step-letter { font-family: var(--font-serif); font-size: 28px; color: var(--purple-l); line-height: 1; min-width: 22px; }
+.step-hdr-text { }
+.step-hdr-name { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 1px; }
+.step-hdr-sub { font-size: 11.5px; color: rgba(255,255,255,.45); }
+.step-body { padding: 1.1rem; }
+
+/* Case context strip */
+.case-context { background: var(--gray-50); border: 0.5px solid var(--border); border-radius: var(--r-sm); padding: .65rem .85rem; margin-bottom: .9rem; font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+.case-context strong { color: var(--navy); }
+
+/* Prompt */
+.step-prompt { font-size: 13.5px; color: var(--text); line-height: 1.6; margin-bottom: .75rem; }
+.step-prompt strong { color: var(--purple); }
+.step-bullets { margin: .5rem 0 .85rem .5rem; }
+.step-bullet { font-size: 13px; color: var(--muted); margin-bottom: .3rem; padding-left: 1.1rem; position: relative; line-height: 1.5; }
+.step-bullet::before { content: '·'; position: absolute; left: 0; color: var(--purple); font-weight: 700; }
+
+/* Input */
+.step-textarea { width: 100%; border: 1px solid var(--border-s); border-radius: var(--r-sm); padding: .7rem .9rem; font-size: 13.5px; font-family: var(--font-sans); color: var(--text); resize: vertical; min-height: 110px; transition: border .15s; line-height: 1.6; }
+.step-textarea:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px var(--purple-dim); }
+.step-textarea::placeholder { color: var(--light); }
+.char-count { font-size: 11px; color: var(--light); text-align: right; margin-top: 4px; font-family: var(--font-mono); }
+
+/* AI Feedback box */
+.feedback-box { border-radius: var(--r-md); overflow: hidden; margin-top: .85rem; border: 1px solid var(--border-s); display: none; }
+.feedback-hdr { background: var(--navy); padding: .5rem .85rem; display: flex; align-items: center; gap: 6px; }
+.feedback-hdr-icon { font-size: 13px; }
+.feedback-hdr-text { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.feedback-body { padding: .8rem .9rem; background: #fff; font-size: 13px; color: var(--muted); line-height: 1.65; }
+.feedback-body.loading { display: flex; align-items: center; gap: 8px; color: var(--light); }
+.typing-dots { display: flex; gap: 4px; }
+.typing-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); animation: typing .9s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: .2s; }
+.typing-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes typing { 0%,80%,100%{opacity:.25;transform:scale(.8)} 40%{opacity:1;transform:scale(1)} }
+
+/* Step nav */
+.step-nav { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; }
+.btn-check { background: var(--purple); color: #fff; border: none; border-radius: var(--r-sm); padding: 8px 20px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: background .15s; }
+.btn-check:hover { background: var(--purple-l); }
+.btn-check:disabled { opacity: .4; cursor: not-allowed; }
+.btn-next-step { background: var(--navy); color: #fff; border: none; border-radius: var(--r-sm); padding: 8px 22px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: background .15s; display: none; }
+.btn-next-step:hover { background: var(--navy-mid); }
+.btn-prev-step { background: #fff; border: 0.5px solid var(--border-s); border-radius: var(--r-sm); padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-sans); color: var(--text); transition: all .12s; }
+.btn-prev-step:hover { border-color: var(--navy); }
+.btn-prev-step:disabled { opacity: .3; cursor: not-allowed; }
+
+/* Sidebar */
+.step-sidebar { display: flex; flex-direction: column; gap: .75rem; }
+.sidebar-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+.sc-hdr { font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--light); background: var(--gray-50); border-bottom: 0.5px solid var(--border); padding: .5rem .85rem; }
+.sc-body { padding: .75rem .85rem; }
+
+/* Step tracker */
+.step-tracker { display: flex; flex-direction: column; gap: 3px; }
+.tracker-item { display: flex; align-items: center; gap: 8px; padding: .35rem .5rem; border-radius: var(--r-sm); transition: background .12s; }
+.tracker-item.active { background: var(--purple-p); }
+.tracker-dot { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 13px; flex-shrink: 0; transition: all .15s; }
+.tracker-dot.done     { background: var(--green); color: #fff; }
+.tracker-dot.active   { background: var(--purple); color: #fff; }
+.tracker-dot.pending  { background: var(--gray-100); color: var(--light); }
+.tracker-label { font-size: 12.5px; font-weight: 500; }
+.tracker-item.active .tracker-label { color: var(--purple); font-weight: 600; }
+.tracker-item:not(.active) .tracker-label { color: var(--muted); }
+
+/* Tip card */
+.tip-text { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+.tip-text strong { color: var(--text); }
+
+/* Example card */
+.example-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; font-family: var(--font-sans); padding: .65rem .85rem; font-size: 12.5px; font-weight: 600; color: var(--purple); }
+.example-content { display: none; padding: 0 .85rem .75rem; font-size: 12.5px; color: var(--muted); line-height: 1.65; border-top: 0.5px solid var(--border); }
+.example-content.open { display: block; }
+
+/* ── OUTPUT SCREEN ── */
+.output-section { display: none; }
+.output-hero { background: var(--navy); border-radius: var(--r-xl); padding: 2rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 1.25rem; position: relative; overflow: hidden; }
+.output-hero::after { content:''; position:absolute; right:-50px; top:-50px; width:180px; height:180px; border-radius:50%; background:rgba(91,79,207,.2); pointer-events:none; }
+.output-hero-icon { font-size: 36px; flex-shrink: 0; }
+.output-hero-text {}
+.output-hero-title { font-family: var(--font-serif); font-size: 24px; color: #fff; margin-bottom: .25rem; }
+.output-hero-sub { font-size: 13px; color: rgba(255,255,255,.5); }
+.output-actions { display: flex; gap: .75rem; margin-top: 1rem; flex-wrap: wrap; }
+.btn-copy { background: var(--purple); color: #fff; border: none; border-radius: var(--r-sm); padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: background .15s; }
+.btn-copy:hover { background: var(--purple-l); }
+.btn-new { background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); border: 0.5px solid rgba(255,255,255,.2); border-radius: var(--r-sm); padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: background .15s; }
+.btn-new:hover { background: rgba(255,255,255,.18); }
+
+.output-doc { background: #fff; border: 0.5px solid var(--border); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 1.25rem; }
+.output-doc-hdr { background: var(--gray-50); border-bottom: 0.5px solid var(--border); padding: .65rem 1.25rem; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--light); display: flex; align-items: center; justify-content: space-between; }
+.output-step { border-bottom: 0.5px solid var(--border); padding: 1rem 1.25rem; }
+.output-step:last-child { border-bottom: none; }
+.output-step-hdr { display: flex; align-items: center; gap: 8px; margin-bottom: .5rem; }
+.output-step-letter { font-family: var(--font-serif); font-size: 20px; color: var(--purple); line-height: 1; min-width: 18px; }
+.output-step-name { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--purple); }
+.output-step-content { font-size: 13.5px; color: var(--text); line-height: 1.7; white-space: pre-wrap; }
+
+.score-card { background: #fff; border: 0.5px solid var(--border); border-radius: var(--r-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+.score-item { text-align: center; }
+.score-num { font-family: var(--font-serif); font-size: 28px; color: var(--purple); line-height: 1; }
+.score-lbl { font-size: 10px; color: var(--light); text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+
+/* ── MOBILE ── */
+@media(max-width:680px){
+  .step-layout { grid-template-columns: 1fr; }
+  .step-sidebar { display: none; }
+  .scenario-grid { grid-template-columns: 1fr; }
+  .page { padding: 1.25rem 1rem 4rem; }
+  .snapps-steps-row { gap: .35rem; }
+  .score-card { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/nr511">Greenwich <span>School</span></a>
+  <div class="nav-right">
+    <span class="nav-pill">NR511</span>
+    <a class="nav-back" href="/nr511">← Dashboard</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ══ INTRO ══════════════════════════════════════════════ -->
+<div id="introSection">
+  <div class="intro">
+    <div class="intro-eyebrow">NR511 · Clinical Reasoning · Differential Diagnosis</div>
+    <div class="intro-title">SNAPPS Case Builder</div>
+    <div class="intro-sub">Structure your thinking before you stand in front of your preceptor. Work through any clinical scenario using the SNAPPS framework — step by step, with AI coaching at each stage.</div>
+    <div class="snapps-steps-row">
+      <div class="snapps-badge"><span class="snapps-letter">S</span><span class="snapps-word">Summarize</span></div>
+      <div class="snapps-badge"><span class="snapps-letter">N</span><span class="snapps-word">Narrow</span></div>
+      <div class="snapps-badge"><span class="snapps-letter">A</span><span class="snapps-word">Analyze</span></div>
+      <div class="snapps-badge"><span class="snapps-letter">P</span><span class="snapps-word">Probe</span></div>
+      <div class="snapps-badge"><span class="snapps-letter">P</span><span class="snapps-word">Plan</span></div>
+      <div class="snapps-badge"><span class="snapps-letter">S</span><span class="snapps-word">Select</span></div>
+    </div>
+    <div class="intro-actions">
+      <button class="btn-start" onclick="showScenarioPicker()">Build a Case →</button>
+      <button class="btn-start-outline" onclick="showScenarioPicker(true)">Enter my own case</button>
+    </div>
+  </div>
+
+  <!-- What is SNAPPS -->
+  <div style="background:#fff;border:0.5px solid var(--border);border-radius:var(--r-lg);overflow:hidden;margin-bottom:1.25rem">
+    <div style="background:var(--gray-50);border-bottom:0.5px solid var(--border);padding:.6rem 1.25rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--light)">What is SNAPPS?</div>
+    <div style="padding:1.1rem 1.25rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem">
+      <div style="padding:.75rem;background:var(--purple-p);border-radius:var(--r-sm)">
+        <div style="font-family:var(--font-serif);font-size:22px;color:var(--purple);margin-bottom:.25rem">S</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:2px">Summarize</div>
+        <div style="font-size:12px;color:var(--muted)">Present the history and key physical findings concisely</div>
+      </div>
+      <div style="padding:.75rem;background:#EDF6F6;border-radius:var(--r-sm)">
+        <div style="font-family:var(--font-serif);font-size:22px;color:var(--teal);margin-bottom:.25rem">N</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:2px">Narrow</div>
+        <div style="font-size:12px;color:var(--muted)">Identify your top 2–3 differential diagnoses</div>
+      </div>
+      <div style="padding:.75rem;background:#FFF3DC;border-radius:var(--r-sm)">
+        <div style="font-family:var(--font-serif);font-size:22px;color:var(--amber);margin-bottom:.25rem">A</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:2px">Analyze</div>
+        <div style="font-size:12px;color:var(--muted)">Compare and contrast your differentials with evidence</div>
+      </div>
+      <div style="padding:.75rem;background:var(--green-p);border-radius:var(--r-sm)">
+        <div style="font-family:var(--font-serif);font-size:22px;color:var(--green);margin-bottom:.25rem">P</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:2px">Probe</div>
+        <div style="font-size:12px;color:var(--muted)">Ask your preceptor a focused clinical question</div>
+      </div>
+      <div style="padding:.75rem;background:#FBEAE7;border-radius:var(--r-sm)">
+        <div style="font-family:var(--font-serif);font-size:22px;color:var(--coral);margin-bottom:.25rem">P</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:2px">Plan</div>
+        <div style="font-size:12px;color:var(--muted)">Outline your diagnostic and management plan</div>
+      </div>
+      <div style="padding:.75rem;background:var(--gray-100);border-radius:var(--r-sm)">
+        <div style="font-family:var(--font-serif);font-size:22px;color:var(--muted);margin-bottom:.25rem">S</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--navy);margin-bottom:2px">Select</div>
+        <div style="font-size:12px;color:var(--muted)">Choose a learning issue to research further</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCENARIO PICKER ════════════════════════════════════ -->
+<div id="scenarioSection" class="scenario-section">
+  <div class="section-title">Choose a case</div>
+  <div class="section-sub">Select a built-in scenario or enter your own patient presentation below.</div>
+
+  <div class="scenario-grid" id="scenarioGrid">
+    <!-- populated by JS -->
+  </div>
+
+  <div class="or-divider">
+    <div class="or-line"></div>
+    <span class="or-text">OR ENTER YOUR OWN</span>
+    <div class="or-line"></div>
+  </div>
+
+  <div class="custom-input-area">
+    <label>Patient presentation (HPI + key findings)</label>
+    <textarea id="customCase" placeholder="e.g. A 45-year-old woman presents with 3 days of productive cough, fever 38.8°C, and right-sided pleuritic chest pain. She is short of breath on exertion. Exam reveals dullness to percussion and decreased breath sounds at the right base. WBC 14,200. CXR shows right lower lobe opacity..."></textarea>
+  </div>
+
+  <div style="display:flex;gap:.75rem;margin-top:1rem">
+    <button class="btn-start" id="btnBeginBuild" onclick="beginBuild()" disabled>Begin Building →</button>
+    <button class="btn-start-outline" onclick="showIntro()" style="background:rgba(0,0,0,.04);border:1px solid var(--border-s);color:var(--muted)">← Back</button>
+  </div>
+</div>
+
+<!-- ══ BUILDER ════════════════════════════════════════════ -->
+<div id="builderSection" class="builder-section">
+
+  <div class="progress-bar-wrap">
+    <span class="pb-label">Step progress</span>
+    <div class="pb-track"><div class="pb-fill" id="pbFill" style="width:0%"></div></div>
+    <span class="pb-count" id="pbCount">1 / 6</span>
+  </div>
+
+  <div class="step-layout">
+    <!-- STEP CARD -->
+    <div class="step-card">
+      <div class="step-hdr">
+        <div class="step-letter" id="stepLetter">S</div>
+        <div class="step-hdr-text">
+          <div class="step-hdr-name" id="stepName">Summarize the History and Findings</div>
+          <div class="step-hdr-sub" id="stepSub">Concise presentation of the case</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="case-context" id="caseContext"></div>
+        <div class="step-prompt" id="stepPrompt"></div>
+        <div class="step-bullets" id="stepBullets"></div>
+        <textarea class="step-textarea" id="stepInput" placeholder="" rows="5" oninput="onInputChange()"></textarea>
+        <div class="char-count" id="charCount">0 characters</div>
+        <div class="feedback-box" id="feedbackBox">
+          <div class="feedback-hdr">
+            <span class="feedback-hdr-icon">🤖</span>
+            <span class="feedback-hdr-text">AI Feedback</span>
+          </div>
+          <div class="feedback-body" id="feedbackBody"></div>
+        </div>
+        <div class="step-nav">
+          <button class="btn-prev-step" id="btnPrev" onclick="prevStep()" disabled>← Back</button>
+          <div style="display:flex;gap:.65rem">
+            <button class="btn-check" id="btnCheck" onclick="checkStep()" disabled>Get Feedback</button>
+            <button class="btn-next-step" id="btnNextStep" onclick="nextStep()">Next Step →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="step-sidebar">
+      <!-- Step tracker -->
+      <div class="sidebar-card">
+        <div class="sc-hdr">Progress</div>
+        <div class="sc-body">
+          <div class="step-tracker" id="stepTracker"></div>
+        </div>
+      </div>
+
+      <!-- Tip card -->
+      <div class="sidebar-card">
+        <div class="sc-hdr">💡 Coaching tip</div>
+        <div class="sc-body">
+          <div class="tip-text" id="coachingTip"></div>
+        </div>
+      </div>
+
+      <!-- Example toggle -->
+      <div class="sidebar-card">
+        <button class="example-toggle" onclick="toggleExample(this)">
+          See example <span>▾</span>
+        </button>
+        <div class="example-content" id="exampleContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ OUTPUT ═════════════════════════════════════════════ -->
+<div id="outputSection" class="output-section">
+
+  <div class="output-hero">
+    <div class="output-hero-icon">✅</div>
+    <div class="output-hero-text">
+      <div class="output-hero-title">SNAPPS Presentation Complete</div>
+      <div class="output-hero-sub" id="outputCaseName">Your structured case presentation is ready to review, copy, and use.</div>
+      <div class="output-actions">
+        <button class="btn-copy" onclick="copyOutput()">Copy full presentation</button>
+        <button class="btn-new" onclick="resetAll()">Build another case</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="score-card" id="scoreCard"></div>
+
+  <div class="output-doc">
+    <div class="output-doc-hdr">
+      <span>Your SNAPPS Presentation</span>
+      <span id="outputDate" style="font-weight:400"></span>
+    </div>
+    <div id="outputSteps"></div>
+  </div>
+
+  <div style="background:#fff;border:0.5px solid var(--border);border-radius:var(--r-lg);padding:1rem 1.25rem;margin-bottom:1.25rem">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--light);margin-bottom:.65rem">Next steps</div>
+    <div style="display:flex;flex-direction:column;gap:.5rem">
+      <div style="font-size:13.5px;color:var(--text)">📋 <strong>Practice out loud</strong> — read your presentation aloud. Time yourself. A complete SNAPPS should take 3–5 minutes.</div>
+      <div style="font-size:13.5px;color:var(--text)">🔄 <strong>Build another case</strong> — do 2–3 different presentations before your preceptor meeting to build fluency.</div>
+      <div style="font-size:13.5px;color:var(--text)">📚 <strong>Research your learning issue</strong> — the S (Select) step isn't just performative. Use it to drive 15 minutes of targeted review.</div>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ── AUTH ──────────────────────────────────────────────────
+(function(){
+  var unlocked = typeof localStorage !== 'undefined' && (
+    localStorage.getItem('nr511unlocked') === 'true' ||
+    localStorage.getItem('nr509unlocked') === 'true'
+  );
+  var isPreview = !window.location.hostname ||
+    window.location.hostname === 'localhost' ||
+    window.location.protocol === 'blob:' ||
+    window.location.hostname.includes('claude.ai');
+  if (!unlocked && !isPreview) {
+    if (window.location.hostname.includes('vercel.app') ||
+        window.location.hostname.includes('greenwich')) {
+      window.location.replace('/nr511');
+    }
+  }
+})();
+
+// ── SCENARIO BANK ─────────────────────────────────────────
+var SCENARIOS = [
+  {
+    id: 'pneumonia',
+    tag: 'Respiratory',
+    name: 'Community-Acquired Pneumonia',
+    preview: '52-year-old with 3-day productive cough, fever, and right-sided pleuritic pain',
+    fullCase: 'A 52-year-old male presents with 3 days of productive cough with yellow-green sputum, fever of 38.9°C, and right-sided pleuritic chest pain. He reports shortness of breath with exertion. He is a current smoker (20 pack-years). On exam: RR 22, HR 104, BP 128/78, SpO2 93% on room air. Lung exam reveals dullness to percussion and decreased breath sounds with bronchial breathing at the right base. WBC 15,200 with 88% neutrophils. CXR shows right lower lobe consolidation.'
+  },
+  {
+    id: 'uti',
+    tag: 'GU/GI',
+    name: 'Complicated UTI vs. Pyelonephritis',
+    preview: '28-year-old woman with dysuria, frequency, and flank pain for 2 days',
+    fullCase: 'A 28-year-old woman presents with 2 days of dysuria and urinary frequency. She now reports right flank pain and nausea that began today. She denies vaginal discharge or odor. She is not pregnant (last menstrual period 2 weeks ago, not sexually active currently). Temperature 38.6°C, HR 98, BP 112/70. Exam shows right CVA tenderness on fist percussion. UA shows large leukocyte esterase, positive nitrites, WBC >50/hpf, and 2+ bacteria. No vaginal discharge or cervical motion tenderness on pelvic exam.'
+  },
+  {
+    id: 'chest-pain',
+    tag: 'Cardiovascular',
+    name: 'Chest Pain — Differential',
+    preview: '44-year-old with sudden sharp chest pain, worse with inspiration',
+    fullCase: 'A 44-year-old male presents with sudden onset sharp left-sided chest pain that began 2 hours ago. The pain is worse with deep inspiration and when lying flat, and improves when he leans forward. He had a recent URI 10 days ago. He denies radiation of pain, diaphoresis, or palpitations. He has no cardiac history. Vital signs: T 37.8°C, HR 96 regular, BP 124/80, SpO2 98%. Exam shows a friction rub at the left lower sternal border. ECG shows diffuse ST elevation in a "saddle" pattern with PR depression. Troponin is mildly elevated at 0.06.'
+  },
+  {
+    id: 'abdominal',
+    tag: 'GI',
+    name: 'Acute Abdominal Pain',
+    preview: '19-year-old with periumbilical pain migrating to RLQ over 12 hours',
+    fullCase: 'A 19-year-old male presents with 12 hours of abdominal pain that started as a dull periumbilical ache and has since migrated to the right lower quadrant. He reports anorexia since the pain began and one episode of nausea without vomiting. Temperature 38.3°C, HR 94, BP 118/72. Abdomen is tender at McBurney\'s point. You elicit pain in the RLQ when palpating the LLQ (Rovsing sign positive). There is guarding but no rigidity. WBC 13,800 with 84% neutrophils.'
+  },
+  {
+    id: 'headache',
+    tag: 'Neurology',
+    name: 'Headache — New Onset',
+    preview: '38-year-old with worst headache of her life, sudden onset',
+    fullCase: 'A 38-year-old woman presents to urgent care with the worst headache of her life that began suddenly 90 minutes ago while she was exercising. She describes it as 10/10, global, and "thunderclap" in onset. She has had migraines before but says this is completely different. She is mildly confused and reports stiff neck and photophobia. Temperature 37.2°C, HR 86, BP 162/94. Pupils equal and reactive. She has nuchal rigidity on exam. No focal neurological deficits.'
+  },
+  {
+    id: 'diabetes',
+    tag: 'Endocrine',
+    name: 'New Diabetes — Workup',
+    preview: '55-year-old with polyuria, polydipsia, fatigue, and blurry vision for 3 weeks',
+    fullCase: 'A 55-year-old obese male (BMI 34) presents with 3 weeks of increased urination, increased thirst, fatigue, and blurry vision. He has not seen a doctor in 5 years. Family history positive for T2DM (mother, brother). He is sedentary and reports a high-carbohydrate diet. Vital signs: T 37.0°C, BP 148/92, HR 78. Fasting glucose today is 284 mg/dL. HbA1c returned at 10.8%. UA shows 3+ glucose, trace ketones. Fundoscopic exam shows mild dot hemorrhages and hard exudates bilaterally.'
+  }
+];
+
+// ── STEP DEFINITIONS ──────────────────────────────────────
+var STEPS = [
+  {
+    letter: 'S',
+    name: 'Summarize the History and Findings',
+    sub: 'Concise presentation — history and key physical exam findings',
+    prompt: 'Present the case concisely and in a logical sequence. A preceptor should be able to visualize the patient from your summary alone. Include: demographics, chief complaint, relevant history, key positives and negatives, pertinent exam findings, and any relevant labs or imaging.',
+    bullets: [
+      'Age, sex, chief complaint and duration',
+      'Relevant history: pertinent positives AND negatives',
+      'Vital signs (if abnormal)',
+      'Key physical exam findings',
+      'Pertinent labs or imaging'
+    ],
+    placeholder: 'Start with: "This is a [age]-year-old [sex] who presents with [chief complaint] for [duration]..."',
+    tip: '<strong>The 2-minute rule:</strong> A strong summary is 60–90 seconds delivered. If you\'re going longer than 2 minutes, you\'re including too much. Cut anything that doesn\'t support or argue against your differentials.',
+    example: 'This is a 52-year-old male with a 20 pack-year smoking history who presents with 3 days of productive yellow-green sputum, fever of 38.9°C, and right-sided pleuritic chest pain with exertional dyspnea. He is tachypneic at 22, tachycardic at 104, and hypoxic at 93% on room air. Lung exam shows dullness and decreased breath sounds at the right base. WBC 15,200 with a left shift. CXR confirms right lower lobe consolidation.',
+    aiPrompt: (caseText, input) => `You are an NP clinical educator evaluating a student's SNAPPS presentation for NR511 (Differential Diagnosis). 
+
+The clinical scenario is:
+${caseText}
+
+The student's Summarize step response is:
+"${input}"
+
+Provide brief, specific, constructive feedback (3-5 sentences max). Focus on:
+1. Did they include demographics, chief complaint, duration?
+2. Did they include pertinent positives AND negatives?
+3. Were abnormal vitals mentioned?
+4. Was it concise and logical?
+Do NOT rewrite for them. Point out 1 strength and 1 specific improvement. Keep tone encouraging but precise.`
+  },
+  {
+    letter: 'N',
+    name: 'Narrow the Differential',
+    sub: 'Identify your top 2–3 most likely diagnoses',
+    prompt: 'State your top 2 to 3 differential diagnoses based on the clinical presentation. List the most likely diagnosis first. For each, give a one-line rationale: what about the presentation supports this diagnosis?',
+    bullets: [
+      'List 2–3 diagnoses in order from most to least likely',
+      'Provide a brief rationale for each',
+      'Include at least one serious/life-threatening diagnosis to rule out',
+      'Be specific — "pneumonia" is better than "infection"'
+    ],
+    placeholder: '1. [Most likely diagnosis] — because...\n2. [Second diagnosis] — because...\n3. [Third diagnosis / must rule out] — because...',
+    tip: '<strong>The "can\'t miss" rule:</strong> Always include at least one serious diagnosis that could harm the patient if missed — even if you think it\'s unlikely. Preceptors are watching for this. It shows clinical maturity.',
+    example: '1. Community-acquired pneumonia — right lower lobe consolidation on CXR with productive cough, fever, tachycardia, and hypoxia in a smoker\n2. Pulmonary embolism — must rule out given hypoxia, tachycardia, and pleuritic chest pain, even though CXR consolidation makes pneumonia more likely\n3. Lung abscess — productive purulent sputum and consolidation in a smoker, though more subacute course is typical',
+    aiPrompt: (caseText, input) => `You are an NP clinical educator evaluating a student's SNAPPS differential diagnosis (Narrow step) for NR511.
+
+Clinical scenario:
+${caseText}
+
+Student's Narrow step (top 2-3 differentials):
+"${input}"
+
+Provide brief, specific feedback (3-5 sentences). Focus on:
+1. Are 2-3 differentials listed with rationale?
+2. Is a serious/life-threatening diagnosis included?
+3. Are the differentials clinically appropriate for this presentation?
+4. Is the most likely diagnosis listed first?
+Keep feedback concise and constructive. One strength, one improvement.`
+  },
+  {
+    letter: 'A',
+    name: 'Analyze the Differential',
+    sub: 'Compare and contrast your diagnoses with supporting and refuting evidence',
+    prompt: 'For each diagnosis in your differential, identify what supports it and what argues against it from the case. This is the reasoning step — show the preceptor your clinical thinking.',
+    bullets: [
+      'For each diagnosis: supporting evidence from the case',
+      'For each diagnosis: evidence against it (pertinent negatives)',
+      'Compare how the findings discriminate between your diagnoses',
+      'Identify the one or two findings that most change your probability'
+    ],
+    placeholder: 'Diagnosis 1 supports: ... | argues against: ...\nDiagnosis 2 supports: ... | argues against: ...\nThe finding that most differentiates them is...',
+    tip: '<strong>Pertinent negatives matter equally:</strong> "No hemoptysis argues against TB" is just as important as "productive cough supports pneumonia." Preceptors evaluate whether you understand what should be present if a diagnosis were true.',
+    example: 'CAP: Supported by fever, productive purulent sputum, lobar consolidation on CXR, leukocytosis with left shift, tachycardia, and smoking risk. Argued against by young-ish patient (52) with no immunocompromise.\n\nPE: Supported by tachycardia, hypoxia, and pleuritic pain. Argued against by lobar consolidation (not typical for PE), no Wells criteria risk factors documented, no leg swelling.\n\nThe CXR consolidation pattern is the key discriminating finding — it strongly favors CAP over PE.',
+    aiPrompt: (caseText, input) => `You are an NP clinical educator evaluating the Analyze step of a student SNAPPS presentation for NR511.
+
+Clinical scenario:
+${caseText}
+
+Student's Analyze step:
+"${input}"
+
+Provide feedback (3-5 sentences) on:
+1. Does the student provide supporting evidence for each diagnosis?
+2. Do they include pertinent negatives (evidence against each)?
+3. Do they identify what discriminates between the diagnoses?
+4. Is the reasoning sound and clinically appropriate?
+One strength, one improvement. Keep it direct.`
+  },
+  {
+    letter: 'P',
+    name: 'Probe the Preceptor',
+    sub: 'Ask a focused, specific clinical question',
+    prompt: 'Formulate one specific clinical question to ask your preceptor. This is not a general question — it should be directly related to a point of uncertainty in this case. Good probe questions show intellectual engagement and identify a genuine knowledge gap.',
+    bullets: [
+      'Ask about a specific diagnostic or management uncertainty',
+      'Be specific — not "how do I treat pneumonia?" but "when do you decide inpatient vs outpatient for CAP using the PSI?"',
+      'Ask about something you\'ve thought about but remain uncertain on',
+      'This shows your preceptor where you are in your reasoning'
+    ],
+    placeholder: 'My question for you is: when [specific scenario], how do you decide between [option A] and [option B]?',
+    tip: '<strong>Specificity earns respect:</strong> "Can you teach me about chest pain?" signals no preparation. "In a patient where both CAP and PE are on the differential, what\'s your threshold for ordering a CT-PA before starting antibiotics?" signals deep thinking. Generic questions reflect negatively on your preparation.',
+    example: 'My question is: in a patient like this where the CXR shows lobar consolidation but the tachycardia and pleuritic pain make me want to rule out PE, at what point do you send a D-dimer or CT-PA before just treating empirically for CAP? I know Wells criteria helps stratify, but I\'m unsure about the threshold in this specific overlap scenario.',
+    aiPrompt: (caseText, input) => `You are an NP clinical educator evaluating the Probe step of a student SNAPPS for NR511.
+
+Clinical scenario:
+${caseText}
+
+Student's probe question:
+"${input}"
+
+Provide brief feedback (2-4 sentences) on:
+1. Is the question specific and related to this case?
+2. Does it reflect genuine clinical reasoning (not just a basic knowledge question)?
+3. Would this question be appropriate and impressive to a preceptor?
+Brief and constructive. Note if they need to make it more specific.`
+  },
+  {
+    letter: 'P',
+    name: 'Plan the Management',
+    sub: 'Diagnostic workup and treatment plan for the most likely diagnosis',
+    prompt: 'State your management plan for the most likely diagnosis. Include both diagnostic steps (what you still need to order or confirm) and treatment/management decisions. Organize into: immediate actions, diagnostics, treatment, and follow-up.',
+    bullets: [
+      'Immediate actions — anything that needs to happen now',
+      'Diagnostics — additional workup to confirm the diagnosis',
+      'Treatment — first-line management',
+      'Disposition — admit, discharge, follow-up timeframe',
+      'Patient education — key points for this diagnosis'
+    ],
+    placeholder: 'Immediate: ...\nDiagnostics: ...\nTreatment: ...\nDisposition/Follow-up: ...',
+    tip: '<strong>Rule out before committing:</strong> "I\'d start antibiotics and also order a D-dimer to rule out PE before committing" shows better clinical thinking than just "start amoxicillin." Identify what additional information would change your plan.',
+    example: 'Immediate: IV access, supplemental O2 titrated to SpO2 ≥95%, obtain blood cultures x2 before antibiotics.\n\nDiagnostics: Repeat CXR in 24h, sputum culture and Gram stain, procalcitonin, BMP, consider CT-PA if clinical deterioration.\n\nTreatment: Empiric outpatient CAP — azithromycin 500mg day 1 then 250mg x 4 days, OR doxycycline 100mg BID x 5 days if macrolide-resistant area. However, with hypoxia at 93% and HR 104, this patient likely meets PSI Class III-IV — recommend admission with ceftriaxone + azithromycin IV.\n\nDisposition: Admit for IV antibiotics, oxygen, monitoring.\nFollow-up: CXR in 6–8 weeks to confirm resolution (exclude malignancy).',
+    aiPrompt: (caseText, input) => `You are an NP clinical educator evaluating the Plan step of a student SNAPPS for NR511.
+
+Clinical scenario:
+${caseText}
+
+Student's management plan:
+"${input}"
+
+Provide feedback (3-5 sentences) on:
+1. Did they include diagnostics AND treatment?
+2. Is the treatment plan evidence-based and appropriate?
+3. Did they address disposition?
+4. Did they consider what would change their plan?
+One strength, one specific improvement. Be concise.`
+  },
+  {
+    letter: 'S',
+    name: 'Select a Learning Issue',
+    sub: 'Identify a self-directed learning topic to research further',
+    prompt: 'Identify one specific topic related to this case that you will research independently after the encounter. This demonstrates self-directed learning and shows your preceptor where your knowledge gaps are — which is a strength, not a weakness.',
+    bullets: [
+      'Be specific — "CAP antibiotic selection" is better than "pneumonia"',
+      'Connect it directly to a decision point in your plan',
+      'State what resource you will use (UpToDate, ACC guidelines, etc.)',
+      'Set a realistic scope — what specifically will you learn?'
+    ],
+    placeholder: 'I will research [specific topic] to better understand [specific decision point]. I will use [resource] and focus on [specific aspect].',
+    tip: '<strong>This step is evaluated:</strong> Preceptors in NR511 note whether your learning issue is generic ("I\'ll read about pneumonia") or targeted ("I\'ll review the PSI/PORT score and when it changes CAP disposition from outpatient to inpatient"). Targeted learning issues show you know what you don\'t know.',
+    example: 'I will research the CURB-65 and PSI scoring systems for CAP to better understand the evidence-based criteria for admission versus outpatient treatment. My specific question is: what PSI class threshold do current ATS/IDSA guidelines recommend for inpatient admission, and are there patient-specific factors that override the score? I will use UpToDate and the 2019 ATS/IDSA CAP guidelines.',
+    aiPrompt: (caseText, input) => `You are an NP clinical educator evaluating the Select (learning issue) step of a student SNAPPS for NR511.
+
+Clinical scenario:
+${caseText}
+
+Student's selected learning issue:
+"${input}"
+
+Provide brief feedback (2-4 sentences) on:
+1. Is the learning issue specific and directly related to this case?
+2. Does it target a genuine knowledge gap (not just a generic topic)?
+3. Did they identify a resource or approach?
+Overall, would a preceptor view this as thoughtful self-directed learning?
+Keep feedback brief and encouraging.`
+  }
+];
+
+// ── STATE ─────────────────────────────────────────────────
+var state = {
+  currentStep: 0,
+  selectedScenario: null,
+  customCase: '',
+  responses: ['','','','','',''],
+  feedbackGiven: [false,false,false,false,false,false],
+  caseText: ''
+};
+
+// ── INIT ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  buildScenarioGrid();
+  buildStepTracker();
+  document.getElementById('customCase').addEventListener('input', function() {
+    var hasScenario = state.selectedScenario !== null || this.value.trim().length > 20;
+    document.getElementById('btnBeginBuild').disabled = !hasScenario;
+    if (this.value.trim().length > 20) {
+      // deselect built-in scenario
+      document.querySelectorAll('.scenario-card').forEach(function(c) { c.classList.remove('selected'); });
+      state.selectedScenario = null;
+    }
+  });
+});
+
+function buildScenarioGrid() {
+  var grid = document.getElementById('scenarioGrid');
+  SCENARIOS.forEach(function(s) {
+    var card = document.createElement('div');
+    card.className = 'scenario-card';
+    card.innerHTML = '<div class="sc-tag">' + s.tag + '</div><div class="sc-name">' + s.name + '</div><div class="sc-preview">' + s.preview + '</div>';
+    card.onclick = function() {
+      document.querySelectorAll('.scenario-card').forEach(function(c){ c.classList.remove('selected'); });
+      card.classList.add('selected');
+      state.selectedScenario = s;
+      document.getElementById('customCase').value = '';
+      document.getElementById('btnBeginBuild').disabled = false;
+    };
+    grid.appendChild(card);
+  });
+}
+
+function buildStepTracker() {
+  var tracker = document.getElementById('stepTracker');
+  tracker.innerHTML = '';
+  var stepNames = ['Summarize','Narrow','Analyze','Probe','Plan','Select'];
+  var stepLetters = ['S','N','A','P','P','S'];
+  stepNames.forEach(function(name, i) {
+    var item = document.createElement('div');
+    item.className = 'tracker-item' + (i === state.currentStep ? ' active' : '');
+    item.id = 'tracker-' + i;
+    var dotClass = i < state.currentStep ? 'done' : (i === state.currentStep ? 'active' : 'pending');
+    var dotContent = i < state.currentStep ? '✓' : stepLetters[i];
+    item.innerHTML = '<div class="tracker-dot ' + dotClass + '">' + dotContent + '</div>'
+      + '<div class="tracker-label">' + stepLetters[i] + ' — ' + name + '</div>';
+    item.onclick = (function(idx){ return function(){ if(idx <= state.currentStep) goToStep(idx); }; })(i);
+    tracker.appendChild(item);
+  });
+}
+
+// ── NAVIGATION ────────────────────────────────────────────
+function showIntro() {
+  document.getElementById('introSection').style.display = 'block';
+  document.getElementById('scenarioSection').style.display = 'none';
+  document.getElementById('builderSection').style.display = 'none';
+  document.getElementById('outputSection').style.display = 'none';
+}
+
+function showScenarioPicker(skipToCustom) {
+  document.getElementById('introSection').style.display = 'none';
+  document.getElementById('scenarioSection').style.display = 'block';
+  if (skipToCustom) {
+    document.getElementById('customCase').focus();
+  }
+}
+
+function beginBuild() {
+  var customText = document.getElementById('customCase').value.trim();
+  if (state.selectedScenario) {
+    state.caseText = state.selectedScenario.fullCase;
+  } else if (customText.length > 20) {
+    state.caseText = customText;
+  } else {
+    return;
+  }
+  state.currentStep = 0;
+  state.responses = ['','','','','',''];
+  state.feedbackGiven = [false,false,false,false,false,false];
+  document.getElementById('scenarioSection').style.display = 'none';
+  document.getElementById('builderSection').style.display = 'block';
+  renderStep();
+}
+
+function renderStep() {
+  var step = STEPS[state.currentStep];
+  var i    = state.currentStep;
+
+  // Header
+  document.getElementById('stepLetter').textContent  = step.letter;
+  document.getElementById('stepName').textContent    = step.name;
+  document.getElementById('stepSub').textContent     = step.sub;
+
+  // Case context (truncated)
+  var ctx = state.caseText.length > 280 ? state.caseText.slice(0,280) + '...' : state.caseText;
+  document.getElementById('caseContext').innerHTML = '<strong>Case:</strong> ' + ctx;
+
+  // Prompt & bullets
+  document.getElementById('stepPrompt').innerHTML = step.prompt;
+  var bulletsHtml = step.bullets.map(function(b){ return '<div class="step-bullet">' + b + '</div>'; }).join('');
+  document.getElementById('stepBullets').innerHTML = bulletsHtml;
+
+  // Textarea
+  var ta = document.getElementById('stepInput');
+  ta.placeholder = step.placeholder;
+  ta.value = state.responses[i];
+  updateCharCount();
+
+  // Feedback box
+  var fb = document.getElementById('feedbackBox');
+  fb.style.display = state.feedbackGiven[i] ? 'block' : 'none';
+  document.getElementById('feedbackBody').innerHTML = state.feedbackGiven[i]
+    ? (state.feedbackGiven[i] === true ? '<em>Feedback already provided above.</em>' : state.feedbackGiven[i])
+    : '';
+
+  // Buttons
+  document.getElementById('btnPrev').disabled = i === 0;
+  document.getElementById('btnCheck').disabled = ta.value.trim().length < 20;
+  document.getElementById('btnCheck').style.display = 'inline-block';
+  document.getElementById('btnNextStep').style.display = state.feedbackGiven[i] ? 'inline-block' : 'none';
+  document.getElementById('btnNextStep').textContent = i === 5 ? 'Complete →' : 'Next Step →';
+
+  // Sidebar
+  document.getElementById('coachingTip').innerHTML = step.tip;
+  document.getElementById('exampleContent').innerHTML = '<em>Example response:</em><br><br>' + step.example.replace(/\n/g,'<br>');
+  document.getElementById('exampleContent').classList.remove('open');
+
+  // Progress
+  document.getElementById('pbFill').style.width = ((i / 6) * 100) + '%';
+  document.getElementById('pbCount').textContent = (i + 1) + ' / 6';
+
+  // Tracker
+  buildStepTracker();
+  window.scrollTo(0, 0);
+}
+
+function goToStep(idx) {
+  state.responses[state.currentStep] = document.getElementById('stepInput').value;
+  state.currentStep = idx;
+  renderStep();
+}
+
+function prevStep() {
+  if (state.currentStep === 0) return;
+  state.responses[state.currentStep] = document.getElementById('stepInput').value;
+  state.currentStep--;
+  renderStep();
+}
+
+function nextStep() {
+  state.responses[state.currentStep] = document.getElementById('stepInput').value;
+  if (state.currentStep === 5) {
+    showOutput();
+    return;
+  }
+  state.currentStep++;
+  renderStep();
+}
+
+function onInputChange() {
+  var val = document.getElementById('stepInput').value;
+  state.responses[state.currentStep] = val;
+  document.getElementById('btnCheck').disabled = val.trim().length < 20;
+  updateCharCount();
+}
+
+function updateCharCount() {
+  var len = document.getElementById('stepInput').value.length;
+  document.getElementById('charCount').textContent = len + ' character' + (len !== 1 ? 's' : '');
+}
+
+function toggleExample(btn) {
+  var content = document.getElementById('exampleContent');
+  content.classList.toggle('open');
+  btn.querySelector('span').textContent = content.classList.contains('open') ? '▴' : '▾';
+}
+
+// ── AI FEEDBACK ───────────────────────────────────────────
+async function checkStep() {
+  var input = document.getElementById('stepInput').value.trim();
+  if (input.length < 20) return;
+
+  var step   = STEPS[state.currentStep];
+  var i      = state.currentStep;
+  var btn    = document.getElementById('btnCheck');
+  var fb     = document.getElementById('feedbackBox');
+  var body   = document.getElementById('feedbackBody');
+
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+  fb.style.display = 'block';
+  body.className = 'feedback-body loading';
+  body.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div><span>Getting feedback...</span>';
+
+  try {
+    var prompt = step.aiPrompt(state.caseText, input);
+    var response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await response.json();
+    var text = data.content && data.content[0] ? data.content[0].text : 'Unable to get feedback. Try again.';
+    body.className = 'feedback-body';
+    body.innerHTML = text.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    state.feedbackGiven[i] = text;
+    document.getElementById('btnNextStep').style.display = 'inline-block';
+    btn.textContent = 'Feedback received ✓';
+    btn.style.background = 'var(--green)';
+    setTimeout(function(){ btn.style.background = ''; }, 2000);
+  } catch(e) {
+    body.className = 'feedback-body';
+    body.innerHTML = '<em style="color:var(--coral)">Feedback unavailable — you can continue without it. Your response has been saved.</em>';
+    state.feedbackGiven[i] = true;
+    document.getElementById('btnNextStep').style.display = 'inline-block';
+    btn.textContent = 'Get Feedback';
+    btn.disabled = false;
+  }
+}
+
+// ── OUTPUT ────────────────────────────────────────────────
+function showOutput() {
+  document.getElementById('builderSection').style.display = 'none';
+  document.getElementById('outputSection').style.display = 'block';
+
+  // Case name
+  var caseName = state.selectedScenario ? state.selectedScenario.name : 'Custom case';
+  document.getElementById('outputCaseName').textContent = caseName + ' · ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('outputDate').textContent = new Date().toLocaleDateString();
+
+  // Score card
+  var filledSteps = state.responses.filter(function(r){ return r.trim().length > 20; }).length;
+  var feedbackCount = state.feedbackGiven.filter(Boolean).length;
+  var wordCount = state.responses.join(' ').split(/\s+/).filter(Boolean).length;
+  document.getElementById('scoreCard').innerHTML =
+    '<div class="score-item"><div class="score-num">' + filledSteps + '/6</div><div class="score-lbl">Steps completed</div></div>'
+  + '<div class="score-item"><div class="score-num">' + feedbackCount + '</div><div class="score-lbl">AI reviews</div></div>'
+  + '<div class="score-item"><div class="score-num">~' + Math.ceil(wordCount/130) + 'min</div><div class="score-lbl">Estimated delivery time</div></div>';
+
+  // Output steps
+  var stepLetters = ['S','N','A','P','P','S'];
+  var stepNames = ['Summarize','Narrow','Analyze','Probe','Plan','Select'];
+  var stepsHtml = '';
+  state.responses.forEach(function(response, i) {
+    var content = response.trim() || '<em style="color:var(--light)">Not completed</em>';
+    stepsHtml += '<div class="output-step">'
+      + '<div class="output-step-hdr">'
+      + '<div class="output-step-letter">' + stepLetters[i] + '</div>'
+      + '<div class="output-step-name">' + stepNames[i] + '</div>'
+      + '</div>'
+      + '<div class="output-step-content">' + content + '</div>'
+      + '</div>';
+  });
+  document.getElementById('outputSteps').innerHTML = stepsHtml;
+  window.scrollTo(0, 0);
+}
+
+function copyOutput() {
+  var stepLetters = ['S','N','A','P','P','S'];
+  var stepNames = ['Summarize','Narrow','Analyze','Probe','Plan','Select'];
+  var text = 'SNAPPS Case Presentation\n';
+  text += '=' + '='.repeat(39) + '\n\n';
+  state.responses.forEach(function(response, i) {
+    text += stepLetters[i] + ' — ' + stepNames[i].toUpperCase() + '\n';
+    text += (response.trim() || '(not completed)') + '\n\n';
+  });
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.querySelector('.btn-copy');
+    btn.textContent = '✓ Copied!';
+    btn.style.background = 'var(--green)';
+    setTimeout(function(){ btn.textContent = 'Copy full presentation'; btn.style.background = ''; }, 2000);
+  }).catch(function() {
+    alert('Copy failed. Please select and copy the text manually.');
+  });
+}
+
+function resetAll() {
+  state = { currentStep: 0, selectedScenario: null, customCase: '', responses: ['','','','','',''], feedbackGiven: [false,false,false,false,false,false], caseText: '' };
+  document.querySelectorAll('.scenario-card').forEach(function(c){ c.classList.remove('selected'); });
+  document.getElementById('customCase').value = '';
+  document.getElementById('btnBeginBuild').disabled = true;
+  document.getElementById('outputSection').style.display = 'none';
+  showIntro();
+}
+</script>
+</body>
+</html>
