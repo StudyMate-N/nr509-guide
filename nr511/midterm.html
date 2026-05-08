@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midterm High-Yield Guide — NR511 · Greenwich School</title>
+<style>
+/* ── TOKENS (NR509 guide.css adapted for NR511 purple accent) ── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --navy:#0F1F3D;--navy-mid:#1B2A5A;--navy-light:#2C3E6B;
+  --teal:#0D7377;--teal-light:#14A085;--teal-pale:#E0F5F1;
+  --amber:#E8A020;--amber-pale:#FFF3DC;
+  --coral:#C9432A;--coral-pale:#FBEAE7;
+  --purple:#5B4FCF;--purple-pale:#EFEDFE;
+  --green:#2E7D52;--green-pale:#E6F5EC;
+  --red:#C0392B;--red-pale:#FDECEA;
+  --gray-50:#F9F8F6;--gray-100:#F1EFE9;--gray-200:#E0DED6;
+  --gray-400:#9B9890;--gray-600:#5F5D57;
+  --text:#1A1917;--text-muted:#5F5D57;--text-light:#9B9890;
+  --border:rgba(0,0,0,.08);--border-strong:rgba(0,0,0,.14);
+  --white:#fff;
+  --font-serif:'DM Serif Display',serif;
+  --font-sans:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:#fff;color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* NAV */
+.nav{background:var(--navy);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:54px;position:sticky;top:0;z-index:200;gap:1rem}
+.nav-brand{font-family:var(--font-serif);color:#fff;font-size:16px;white-space:nowrap;text-decoration:none}
+.nav-brand span{color:#7B6FDF}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-pill-week{background:rgba(91,79,207,.35);border:0.5px solid rgba(91,79,207,.5);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.04em;color:rgba(255,255,255,.85);text-transform:uppercase}
+.nav-btn{background:var(--purple);color:#fff;border:none;border-radius:var(--radius-sm);padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:background .15s;white-space:nowrap;text-decoration:none}
+.nav-btn:hover{background:#6B5FDF}
+
+/* WEEK NAV DOTS */
+.nav-weeks{display:flex;align-items:center;gap:4px;flex:1;justify-content:center}
+.nav-wk-dot{width:28px;height:28px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;font-family:var(--font-mono);transition:all .15s;border:1.5px solid transparent}
+.nav-wk-dot.done{background:var(--purple);color:#fff}
+.nav-wk-dot.active{background:#fff;color:var(--navy)}
+.nav-wk-dot.pending{background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.15)}
+.nav-wk-dot:hover{transform:scale(1.12)}
+
+/* PAGE */
+.page{max-width:1060px;margin:0 auto;padding:.75rem 1.25rem 2.5rem}
+
+/* GUIDE HEADER */
+.guide-hdr{background:var(--navy);border-radius:var(--radius-md);padding:.9rem 1.25rem;margin-bottom:.75rem;position:relative;overflow:hidden}
+.guide-hdr::after{content:'';position:absolute;right:-50px;top:-50px;width:220px;height:220px;border-radius:50%;background:rgba(91,79,207,.2);pointer-events:none}
+.guide-hdr::before{content:'';position:absolute;left:-40px;bottom:-40px;width:160px;height:160px;border-radius:50%;background:rgba(13,115,119,.12);pointer-events:none}
+.guide-eye{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7B6FDF;margin-bottom:4px}
+.guide-title{font-family:var(--font-serif);font-size:28px;color:#fff;margin-bottom:6px}
+.guide-sub{font-size:13px;color:rgba(255,255,255,.55);font-style:italic;line-height:1.6;max-width:600px}
+.guide-tags{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.guide-tag{font-size:11px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.65);padding:3px 10px;border-radius:20px;font-weight:500}
+
+/* WEEK HEADER */
+.week-hdr{display:flex;align-items:center;gap:10px;margin:.85rem 0 .5rem}
+.week-hdr-num{width:38px;height:38px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-serif);font-size:18px;flex-shrink:0}
+.week-hdr-num.heavy{background:var(--coral)}
+.week-hdr-text{}
+.week-hdr-title{font-family:var(--font-serif);font-size:22px;color:var(--navy);margin-bottom:2px}
+.week-hdr-sub{font-size:12px;color:var(--text-light);font-family:var(--font-mono)}
+.week-hdr-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(201,67,42,.1);color:var(--coral);margin-left:auto;flex-shrink:0;align-self:flex-start;margin-top:4px}
+
+/* TWO-COLUMN LAYOUT */
+.two-col{display:grid;grid-template-columns:1fr 236px;gap:1rem;align-items:start}
+.concept-row{margin-bottom:.75rem}
+.concept-left{min-width:0}
+
+/* CONCEPT CARD */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:.75rem}
+.card:last-child{margin-bottom:0}
+.card-hdr{background:#EEEDFA;border-bottom:1px solid rgba(91,79,207,.15);padding:.5rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.card-name{font-family:var(--font-serif);font-size:20px;color:var(--purple)}
+.week-tag{font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--purple);background:rgba(91,79,207,.13);padding:3px 9px;border-radius:20px;text-transform:uppercase;white-space:nowrap}
+.card-body{padding:.75rem 1rem}
+
+/* PROSE */
+.prose p{font-size:13.5px;line-height:1.5;color:var(--text);margin-bottom:.4rem}
+.prose p:last-child{margin-bottom:0}
+
+/* SNAP CARDS */
+.snap-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin:.5rem 0}
+.snap{background:var(--gray-50);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:.5rem .7rem}
+.snap-lbl{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-light);margin-bottom:3px}
+.snap-val{font-size:12.5px;color:var(--text);line-height:1.5;font-weight:500}
+.snap-val b{color:var(--purple);font-size:14px}
+.snap-val .teal{color:var(--teal)}
+.snap-val .coral{color:var(--coral)}
+
+/* DATA TABLE */
+.data-table{width:100%;border-collapse:collapse;margin:.4rem 0;font-size:13.5px}
+.data-table thead th{background:var(--navy);color:#fff;text-align:left;padding:7px 11px;font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.data-table thead th:first-child{border-top-left-radius:6px}
+.data-table thead th:last-child{border-top-right-radius:6px}
+.data-table tbody td{padding:7px 11px;border-top:1px solid var(--border);vertical-align:top;font-size:13px}
+.data-table tbody td:first-child{font-weight:600;color:var(--navy)}
+.data-table tbody tr:nth-child(even) td{background:rgba(15,31,61,.022)}
+.table-cap{font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-light);margin:.5rem 0 .2rem}
+
+/* CALLOUTS */
+.exam-tip{background:var(--amber-pale);border-left:2px solid var(--amber);padding:.55rem .75rem;margin:.6rem 0;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.exam-tip-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#A06C0A;margin-bottom:3px}
+.exam-tip-text{font-size:13px;color:#7A5208;line-height:1.6}
+.exam-tip-text strong{color:#5A3808}
+.critical{background:var(--coral-pale);border-left:2px solid var(--coral);padding:.55rem .75rem;margin:.6rem 0;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.critical-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:3px}
+.critical-text{font-size:13px;color:#7B2919;line-height:1.6}
+.critical-text strong{color:#5C1E10}
+.not-except{background:var(--purple-pale);border-left:2px solid var(--purple);padding:.55rem .75rem;margin:.6rem 0;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.not-except-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:3px}
+.not-except-text{font-size:13px;color:#3A2F88;line-height:1.6}
+
+/* EXAM QUESTIONS */
+.exam-block{border:0.5px solid var(--border-strong);border-radius:var(--radius-md);overflow:hidden;margin-top:.75rem}
+.exam-hdr{background:var(--navy);padding:.55rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.exam-hdr-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.exam-hdr-badge{font-size:10px;color:#7B6FDF;background:rgba(91,79,207,.18);padding:2px 8px;border-radius:20px;font-weight:600}
+.exam-body{padding:.7rem .9rem}
+.q-num{font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--text-light);text-transform:uppercase;margin-bottom:.35rem}
+.q-stem{font-size:13.5px;color:var(--text);line-height:1.55;margin-bottom:.6rem}
+.opts{display:flex;flex-direction:column;gap:.25rem;margin-bottom:.5rem}
+.opt{display:flex;align-items:flex-start;gap:8px;padding:.38rem .6rem;border-radius:var(--radius-sm);cursor:pointer;border:0.5px solid var(--border);font-size:13px;color:var(--text);background:#fff;transition:all .12s;line-height:1.45;text-align:left;width:100%;font-family:var(--font-sans)}
+.opt:hover{background:var(--gray-50);border-color:var(--border-strong)}
+.opt.selected{border-color:var(--navy);background:#EEF1FA;border-width:1.5px}
+.opt.correct{background:var(--green-pale);border-color:var(--green);color:#1A5C3A}
+.opt.wrong{background:var(--red-pale);border-color:var(--red);color:#8B2419}
+.opt.neutral-r{background:var(--gray-50);border-color:var(--border)}
+.opt-lt{font-weight:700;font-size:10px;min-width:18px;height:18px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;color:var(--text-muted);font-family:var(--font-mono);transition:all .12s}
+.opt.correct .opt-lt{background:var(--green);color:#fff}
+.opt.wrong .opt-lt{background:var(--red);color:#fff}
+.check-btn{background:var(--navy);color:#fff;border:none;border-radius:var(--radius-sm);padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-sans);transition:background .15s}
+.check-btn:hover{background:var(--navy-light)}
+.check-btn:disabled{opacity:.4;cursor:not-allowed}
+.rationale{margin-top:.5rem;background:#EEF1FA;border-radius:var(--radius-sm);padding:.6rem .8rem;font-size:12.5px;color:#1A2A6B;line-height:1.55;display:none}
+.rationale.open{display:block}
+.rationale strong{font-weight:600}
+.rat-wrong{margin-top:.45rem;font-size:12px;color:#2A3A8B}
+.q-div{height:0.5px;background:var(--border);margin:.65rem 0}
+
+/* MARGIN STRIP */
+.margin{display:flex;flex-direction:column;gap:.4rem}
+.mc{border-radius:var(--radius-md);padding:.55rem .7rem;border:0.5px solid transparent}
+.mc-lbl{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:3px}
+.mc-val{font-size:12px;line-height:1.45}
+.mc-stars{background:var(--amber-pale);border-color:rgba(232,160,32,.2)}
+.mc-stars .mc-lbl{color:#A06C0A}.mc-stars .mc-val{color:#7A5208}
+.star-row{font-size:14px;color:var(--amber);letter-spacing:2px;margin-bottom:2px}
+.mc-trap{background:var(--coral-pale);border-left:2px solid var(--coral);border-radius:0}
+.mc-trap .mc-lbl{color:var(--coral)}.mc-trap .mc-val{color:#7B2919}
+.mc-pearl{background:var(--teal-pale);border-left:2px solid var(--teal);border-radius:0}
+.mc-pearl .mc-lbl{color:var(--teal)}.mc-pearl .mc-val{color:#0A4B4E}
+.mc-miss{background:var(--purple-pale);border-left:2px solid var(--purple);border-radius:0}
+.mc-miss .mc-lbl{color:var(--purple)}.mc-miss .mc-val{color:#3A2F88}
+.mc-src{background:var(--gray-100);border-radius:var(--radius-sm)}
+.mc-src .mc-lbl{color:var(--text-light)}.mc-src .mc-val{font-size:11.5px;color:var(--text-muted);font-style:italic}
+
+/* WEEK DIVIDER */
+.week-divider{border:none;border-top:1px solid var(--border);margin:1rem 0}
+
+/* FOOTER */
+.guide-footer{border-top:0.5px solid var(--border);margin-top:3rem;padding-top:1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.footer-brand{font-family:var(--font-serif);font-size:14px;color:var(--text-muted)}
+.footer-note{font-size:11px;color:var(--text-light)}
+.footer-btn{background:transparent;border:0.5px solid var(--border-strong);color:var(--text-muted);border-radius:var(--radius-sm);padding:5px 12px;font-size:12px;cursor:pointer;font-family:var(--font-sans)}
+
+/* TRIAGE BOX */
+.triage-box{background:var(--purple-pale);border:0.5px solid rgba(91,79,207,.2);border-radius:var(--radius-md);padding:.9rem 1.1rem;margin-bottom:1.25rem;display:flex;gap:.75rem;align-items:flex-start}
+.triage-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.triage-title{font-size:12px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.triage-options{display:flex;flex-direction:column;gap:.3rem}
+.triage-option{display:flex;gap:8px;align-items:baseline;font-size:13px}
+.triage-time{font-family:var(--font-mono);font-size:10px;font-weight:700;color:#fff;background:var(--purple);padding:2px 7px;border-radius:4px;flex-shrink:0}
+.triage-desc{color:var(--text-muted);line-height:1.5}
+
+/* NOT/EXCEPT BANNER */
+.not-except-banner{background:var(--navy);border-radius:var(--radius-md);padding:.6rem .9rem;margin-bottom:.75rem;display:flex;gap:.65rem;align-items:flex-start}
+.neb-icon{font-size:22px;flex-shrink:0}
+.neb-title{font-family:var(--font-serif);font-size:16px;color:#fff;margin-bottom:.3rem}
+.neb-text{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
+.neb-text strong{color:rgba(255,255,255,.85)}
+
+
+/* INTRA-WEEK JUMP NAV */
+.week-jump-nav{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.75rem;padding:.5rem .75rem;background:var(--gray-100);border-radius:var(--radius-md);border:0.5px solid var(--border)}
+.week-jump-nav a{font-size:11.5px;font-weight:600;color:var(--purple);text-decoration:none;padding:3px 9px;border-radius:20px;background:#fff;border:0.5px solid rgba(91,79,207,.2);transition:all .14s;white-space:nowrap}
+.week-jump-nav a:hover{background:var(--purple);color:#fff}
+.week-jump-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-light);align-self:center;margin-right:4px}
+
+/* MOBILE */
+@media(max-width:700px){
+  .two-col{grid-template-columns:1fr}
+  .concept-row .margin{margin-top:.5rem}
+  .snap-row{grid-template-columns:1fr 1fr}
+  .page{padding:1.25rem 1rem 5rem}
+  .nav-weeks{display:none}
+  .guide-hdr{padding:1.25rem 1rem}
+  .guide-title{font-size:22px}
+  .card-body{padding:1rem}
+  .exam-body{padding:.75rem}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/nr511">Greenwich <span>School</span></a>
+  <div class="nav-weeks">
+    <a class="nav-wk-dot active" href="#week1" title="Week 1 — HIV">1</a>
+    <a class="nav-wk-dot pending" href="#week2" title="Week 2 — Dermatology">2</a>
+    <a class="nav-wk-dot pending" href="#week3" title="Week 3 — HEENT">3</a>
+    <a class="nav-wk-dot pending" href="#week4" title="Week 4 — GI">4</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-pill-week">NR511 Midterm</span>
+    <a class="nav-btn" href="/nr511">← Dashboard</a>
+  </div>
+</nav>
+
+<div class="page" id="pageRoot">
+
+<!-- GUIDE HEADER -->
+<div class="guide-hdr">
+  <div class="guide-eye">NR511 · Midterm Prep · Weeks 1–4</div>
+  <div class="guide-title">Midterm High-Yield Guide</div>
+  <div class="guide-sub">"95% of this exam comes straight from the study guide." — confirmed student intel. Every concept here traces to the Chamberlain weekly study guide and Bates' assigned chapters.</div>
+  <div class="guide-tags">
+    <span class="guide-tag">75 Questions</span>
+    <span class="guide-tag">Weeks 1–4</span>
+    <span class="guide-tag">NOT/EXCEPT Format</span>
+    <span class="guide-tag">~95% Study Guide Fidelity</span>
+    <span class="guide-tag">Bates' Referenced</span>
+  </div>
+</div>
+
+<!-- NOT/EXCEPT BANNER -->
+<div class="not-except-banner">
+  <div class="neb-icon">⚠</div>
+  <div>
+    <div class="neb-title">NOT/EXCEPT stems — the #1 source of preventable failures</div>
+    <div class="neb-text"><strong>Read the last line of every question before reading the vignette.</strong> "Which of the following is NOT associated with…" requires you to find the one wrong answer — not the best answer. Three good options + one bad one. The bad one is the answer. Confirmed across multiple cohorts as the most missed question format.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- WEEK 1 — HIV EPIDEMIOLOGY                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="week1">
+<div class="week-hdr">
+  <div class="week-hdr-num">1</div>
+  <div class="week-hdr-text">
+    <div class="week-hdr-title">HIV Epidemiology</div>
+    <div class="week-hdr-sub">ELISA · CD4 thresholds · Opportunistic infections · PrEP · USPSTF screening</div>
+  </div>
+</div>
+
+<div class="week-jump-nav">
+  <span class="week-jump-lbl">Jump to:</span>
+  <a href="#c-hiv-staging">HIV Staging &amp; CD4</a>
+  <a href="#c-hiv-dx">Diagnosis &amp; Screening</a>
+  <a href="#c-prep">PrEP &amp; 90-90-90</a>
+  <a href="#c-acute-hiv">Acute HIV &amp; Window Period</a>
+</div>
+
+<!-- CONCEPT: HIV Staging & CD4 Thresholds -->
+<div class="concept-row two-col" id="c-hiv-staging">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">HIV Staging &amp; CD4 Thresholds</div>
+    <div class="week-tag">Week 1 · Always tested</div>
+  </div>
+  <div class="card-body">
+    <div class="prose">
+      <p>Three stages defined by CD4 count. The exam tests exact threshold numbers and which OIs emerge at each level — memorize the sequence below.</p>
+    </div>
+
+    <div class="table-cap">CD4 thresholds for opportunistic infections — memorize this sequence</div>
+    <table class="data-table">
+      <thead><tr><th>CD4 threshold</th><th>Opportunistic infection</th><th>Prophylaxis</th></tr></thead>
+      <tbody>
+        <tr><td>&lt;200 cells/μL</td><td><strong>PCP</strong> (Pneumocystis jirovecii pneumonia) — presents with dyspnea, dry cough, bilateral interstitial infiltrates</td><td>TMP-SMX (Bactrim) daily</td></tr>
+        <tr><td>&lt;150 cells/μL</td><td><strong>Histoplasmosis</strong> — endemic areas (Ohio/Mississippi River valleys)</td><td>Itraconazole in endemic areas</td></tr>
+        <tr><td>&lt;100 cells/μL</td><td><strong>Toxoplasma gondii</strong> — ring-enhancing CNS lesions, seizures, focal deficits</td><td>TMP-SMX (same drug as PCP)</td></tr>
+        <tr><td>&lt;50 cells/μL</td><td><strong>CMV retinitis</strong>, <strong>MAC</strong> (Mycobacterium avium complex), <strong>Cryptococcal meningitis</strong></td><td>Azithromycin (MAC); fluconazole (cryptococcus)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Critical</div>
+      <div class="critical-text"><strong>PCP prophylaxis starts at CD4 &lt;200.</strong> Toxo prophylaxis starts at CD4 &lt;100. Both use TMP-SMX — the same drug covers both infections simultaneously. CMV, MAC, and Cryptococcus are CD4 &lt;50 — these are very late AIDS complications.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">AIDS defined by</div><div class="snap-val">CD4 <b>&lt;200</b> OR AIDS-defining illness</div></div>
+      <div class="snap"><div class="snap-lbl">PCP prophylaxis</div><div class="snap-val"><span class="teal">TMP-SMX</span> starts at CD4 &lt;200</div></div>
+      <div class="snap"><div class="snap-lbl">Most infectious stage</div><div class="snap-val">Stage 1 — Acute HIV (high viral load)</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style questions</span><span class="exam-hdr-badge">NR511 format · select best answer</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 2</div>
+        <div class="q-stem">A 34-year-old man with HIV has a CD4 count of 85 cells/μL. He is currently on ART but has a viral load of 2,400 copies/mL. He has never had an opportunistic infection. Which of the following prophylactic medications should he be receiving?</div>
+        <div class="opts" id="q_cd4_1o">
+          <button class="opt" onclick="checkQ('q_cd4_1','D')"><div class="opt-lt">A</div>No prophylaxis needed — CD4 &gt;50</button>
+          <button class="opt" onclick="checkQ('q_cd4_1','A')"><div class="opt-lt">B</div>Azithromycin for MAC prophylaxis</button>
+          <button class="opt" onclick="checkQ('q_cd4_1','B')"><div class="opt-lt">C</div>TMP-SMX for PCP and Toxoplasma prophylaxis</button>
+          <button class="opt" onclick="checkQ('q_cd4_1','C')"><div class="opt-lt">D</div>Fluconazole for cryptococcal prophylaxis</button>
+        </div>
+        <button class="check-btn" id="q_cd4_1b" disabled onclick="revealQ('q_cd4_1','A')">Check answer</button>
+        <div class="rationale" id="q_cd4_1r"><strong>Correct: B — TMP-SMX.</strong> CD4 of 85 is below both the PCP threshold (&lt;200) and the Toxoplasma threshold (&lt;100). TMP-SMX covers both simultaneously. <div class="rat-wrong"><strong>A (MAC prophylaxis with azithromycin):</strong> MAC prophylaxis begins at CD4 &lt;50. This patient is at 85. <strong>C (fluconazole):</strong> Cryptococcal prophylaxis is for CD4 &lt;50. <strong>D:</strong> CD4 &lt;200 requires PCP prophylaxis regardless of ART status or viral load.</div></div>
+
+        <div class="q-div"></div>
+        <div class="q-num">Question 2 of 2</div>
+        <div class="q-stem">A patient with HIV presents with 3 weeks of headache, fever, and neck stiffness. CD4 count is 38 cells/μL. CSF opening pressure is elevated. India ink stain of the CSF is positive. Which of the following is NOT a characteristic feature of this condition?</div>
+        <div class="opts" id="q_cd4_2o">
+          <button class="opt" onclick="checkQ('q_cd4_2','A')"><div class="opt-lt">A</div>Occurs at CD4 counts below 50 cells/μL</button>
+          <button class="opt" onclick="checkQ('q_cd4_2','B')"><div class="opt-lt">B</div>Diagnosed by positive India ink stain of CSF</button>
+          <button class="opt" onclick="checkQ('q_cd4_2','C')"><div class="opt-lt">C</div>Treated with TMP-SMX as first-line induction therapy</button>
+          <button class="opt" onclick="checkQ('q_cd4_2','D')"><div class="opt-lt">D</div>Caused by Cryptococcus neoformans</button>
+        </div>
+        <button class="check-btn" id="q_cd4_2b" disabled onclick="revealQ('q_cd4_2','C')">Check answer</button>
+        <div class="rationale" id="q_cd4_2r"><strong>Correct: C — NOT TMP-SMX.</strong> This is cryptococcal meningitis. TMP-SMX treats PCP and Toxoplasma — NOT Cryptococcus. Cryptococcal meningitis is treated with amphotericin B + flucytosine (induction) → fluconazole (consolidation and maintenance). <div class="rat-wrong">All other options are true: A — CD4 &lt;50. B — India ink shows encapsulated yeast. D — caused by Cryptococcus neoformans.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- concept-left -->
+
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">CD4 thresholds appear on every midterm. The &lt;200 threshold for AIDS and PCP prophylaxis is the most tested single fact in Week 1.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Confusing Toxo prophylaxis threshold (&lt;100) with PCP threshold (&lt;200). Both use TMP-SMX — the drug is the same but the trigger CD4 count is different.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">U=U (Undetectable = Untransmittable): a patient on effective ART with an undetectable viral load cannot sexually transmit HIV. This changes counseling entirely.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">MAC prophylaxis threshold. Students confuse &lt;50 (MAC/CMV/Crypto) with &lt;200 (PCP). MAC = &lt;50. PCP = &lt;200. The difference is 4× — not a rounding error.</div></div>
+  <div class="mc mc-src"><div class="mc-lbl">Bates' / Study guide reference</div><div class="mc-val">Hollier Ch. 19 — HIV disease staging and OI prophylaxis thresholds. Chamberlain Week 1 study guide: CD4 table is tested directly.</div></div>
+</div>
+</div><!-- two-col -->
+
+<!-- CONCEPT: HIV Diagnosis & Screening -->
+<div class="concept-row two-col" id="c-hiv-dx">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">HIV Diagnosis &amp; USPSTF Screening</div>
+    <div class="week-tag">Week 1 · Confirmed tested</div>
+  </div>
+  <div class="card-body">
+    <div class="prose">
+      <p>The HIV testing sequence is a reliable exam question: which test first, which test confirms, and which test cannot confirm eradication. The exam asks about cost-effectiveness (ELISA), specificity (Western blot), and the appropriate use of each test.</p>
+    </div>
+
+    <div class="table-cap">HIV testing sequence — memorize the order and purpose</div>
+    <table class="data-table">
+      <thead><tr><th>Test</th><th>Use</th><th>Characteristic</th><th>Exam trap</th></tr></thead>
+      <tbody>
+        <tr><td>ELISA (4th gen immunoassay)</td><td>Initial screening</td><td>High sensitivity — catches almost all true positives. Detects HIV antibody + p24 antigen.</td><td>"Most cost-effective screening test" = ELISA. NOT Western blot.</td></tr>
+        <tr><td>Western blot</td><td>Confirmation only</td><td>High specificity — confirms true positives. Never use as a screening test.</td><td>Expensive and complex — confirmatory only, never first-line.</td></tr>
+        <tr><td>HIV RNA PCR (viral load)</td><td>Acute HIV (window period), ART monitoring</td><td>Detects virus before antibodies form. Best test during acute window.</td><td>Cannot use serology during acute HIV — antibodies haven't formed yet.</td></tr>
+        <tr><td>Serology (antibody tests)</td><td>NOT for confirming eradication</td><td>Antibodies persist for months to years after eradication. Cannot prove cure.</td><td>Use urea breath test or stool antigen for H. pylori eradication confirmation — same logic applies to HIV serology.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip</div>
+      <div class="exam-tip-text">"Most cost-effective initial screening test for HIV" = <strong>ELISA</strong>. This exact phrasing has appeared on the midterm. ELISA is not the most specific test — it is the most sensitive and most cost-effective. Western blot is confirmatory only.</div>
+    </div>
+
+    <div class="table-cap">USPSTF HIV screening recommendations</div>
+    <table class="data-table">
+      <thead><tr><th>Population</th><th>Recommendation</th></tr></thead>
+      <tbody>
+        <tr><td>All adults aged 15–65</td><td>Screen at least once regardless of risk factors</td></tr>
+        <tr><td>Younger adolescents (&lt;15) and older adults (&gt;65)</td><td>Screen if at increased risk</td></tr>
+        <tr><td>All pregnant women</td><td>Screen including during labor if not previously tested</td></tr>
+        <tr><td>High-risk adults (MSM, PWID, multiple partners)</td><td>Rescreen at least annually</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">NOT/EXCEPT pattern</div>
+      <div class="not-except-text">"Which patient does NOT require HIV screening per USPSTF?" → typically the patient who is 66+ with no risk factors. All adults 15–65 are screened once regardless of risk. The 66-year-old with no risk factors is the exception.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">First screening test</div><div class="snap-val"><b>ELISA</b> — most sensitive, most cost-effective</div></div>
+      <div class="snap"><div class="snap-lbl">Confirmatory test</div><div class="snap-val"><b>Western blot</b> — high specificity</div></div>
+      <div class="snap"><div class="snap-lbl">Screen all adults</div><div class="snap-val">Ages <b>15–65</b> at least once</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★☆</div><div class="mc-val">The ELISA-first sequence and "most cost-effective" phrasing appear consistently. USPSTF age range (15–65) is a reliable single-answer question.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Ordering Western blot as a screening test. It is confirmatory only. The exam presents scenarios where ELISA is the correct first test but Western blot is listed as a distractor.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">4th generation ELISA detects both p24 antigen AND antibodies — it narrows the window period to 18–45 days post-exposure versus 3–12 weeks for older 3rd gen tests.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Students miss that ALL adults 15–65 are screened regardless of risk. A 45-year-old in a monogamous relationship for 20 years still gets screened once.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: PrEP & Transmission -->
+<div class="concept-row two-col" id="c-prep">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">PrEP, Transmission &amp; 90-90-90</div>
+    <div class="week-tag">Week 1</div>
+  </div>
+  <div class="card-body">
+    <div class="prose">
+      <p>Pre-exposure prophylaxis (PrEP) is a clinical practice question — who qualifies, what drug, and what monitoring is required. The 90-90-90 targets represent the cascade of care from diagnosis to viral suppression.</p>
+    </div>
+
+    <div class="table-cap">PrEP — key clinical facts</div>
+    <table class="data-table">
+      <thead><tr><th>Aspect</th><th>Key fact</th></tr></thead>
+      <tbody>
+        <tr><td>First-line drug</td><td>Tenofovir/emtricitabine (Truvada) or tenofovir alafenamide/emtricitabine (Descovy)</td></tr>
+        <tr><td>Indication</td><td>HIV-negative individuals at substantial ongoing risk: MSM, serodiscordant couples, PWID, heterosexual with high-risk partners</td></tr>
+        <tr><td>Efficacy</td><td>&gt;99% effective when taken daily as prescribed</td></tr>
+        <tr><td>Monitoring (every 3 months)</td><td>HIV test (must confirm negative before each refill), STI screening, renal function (tenofovir is nephrotoxic)</td></tr>
+        <tr><td>Onset of protection</td><td>7 days for receptive anal sex; 21 days for receptive vaginal sex and injection drug use</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">90-90-90 cascade of care (updated to 95-95-95)</div>
+    <table class="data-table">
+      <thead><tr><th>Goal</th><th>Target</th></tr></thead>
+      <tbody>
+        <tr><td>Of all HIV+ persons</td><td><strong>90%</strong> diagnosed (know their status)</td></tr>
+        <tr><td>Of all diagnosed persons</td><td><strong>90%</strong> on antiretroviral therapy</td></tr>
+        <tr><td>Of all on ART</td><td><strong>90%</strong> achieving viral suppression (undetectable)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip</div>
+      <div class="exam-tip-text">The updated 2030 target is <strong>95-95-95</strong>. If the exam references current targets, know both versions. The concept is always: diagnosis → treatment → suppression. Losses at each step drive ongoing transmission.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">PrEP drug</div><div class="snap-val"><b>Tenofovir/emtricitabine</b> — daily oral</div></div>
+      <div class="snap"><div class="snap-lbl">Monitor every 3 mo</div><div class="snap-val">HIV test + STI screen + <span class="coral">renal function</span></div></div>
+      <div class="snap"><div class="snap-lbl">90-90-90 goal</div><div class="snap-val">Diagnose → Treat → <b>Suppress</b></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★☆☆</div><div class="mc-val">PrEP monitoring requirements appear as a clinical scenario. The 90-90-90 targets appear as a definition question.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">PrEP monitoring interval. The exam tests "every 3 months" — not every 6 months. HIV testing at every visit is mandatory before refilling PrEP.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">PrEP does not protect against other STIs. Condoms remain important. The exam may present a patient on PrEP who tests positive for gonorrhea — PrEP failure is not the explanation.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">The renal monitoring requirement. Tenofovir is nephrotoxic — renal function is monitored every 3 months. Students forget this and select "HIV test only" as the monitoring answer.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Acute HIV Presentation -->
+<div class="concept-row two-col" id="c-acute-hiv">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Acute HIV &amp; The Window Period</div>
+    <div class="week-tag">Week 1 · Window period testing</div>
+  </div>
+  <div class="card-body">
+
+
+    <div class="table-cap">Acute HIV — clinical presentation</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Timing</td><td>2–4 weeks after exposure. Resolves spontaneously in 2–4 weeks.</td></tr>
+        <tr><td>Symptoms</td><td>Fever, lymphadenopathy, pharyngitis, diffuse maculopapular rash, myalgias, arthralgias, headache — "mononucleosis-like"</td></tr>
+        <tr><td>Viral load</td><td>Extremely high — peak of the entire disease course. Most infectious stage.</td></tr>
+        <tr><td>Antibody test (ELISA)</td><td><strong>May be NEGATIVE</strong> — antibodies have not yet formed. ELISA will miss acute HIV.</td></tr>
+        <tr><td>Correct test during window</td><td><strong>HIV RNA PCR (viral load)</strong> — detects the virus directly before antibodies form</td></tr>
+        <tr><td>Window period duration</td><td>18–45 days for 4th gen ELISA. Up to 90 days for older tests.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Critical — the window period question</div>
+      <div class="critical-text">"A patient presents 3 weeks after unprotected sex with fever, lymphadenopathy, pharyngitis, and rash. HIV ELISA returns negative. What is the most appropriate next step?" → <strong>HIV RNA PCR (viral load)</strong>. ELISA is negative during the window period because antibodies have not yet formed. Only PCR detects the virus directly. Do not reassure the patient based on a negative ELISA in this scenario.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Presentation</div><div class="snap-val">Fever + LAD + rash — <b>mono-like</b>, 2–4 weeks post-exposure</div></div>
+      <div class="snap"><div class="snap-lbl">ELISA during window</div><div class="snap-val"><span class="coral">May be negative</span> — antibodies not yet formed</div></div>
+      <div class="snap"><div class="snap-lbl">Correct window test</div><div class="snap-val"><b>HIV RNA PCR</b> — detects virus directly</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style questions</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 2</div>
+        <div class="q-stem">A 24-year-old man presents with 5 days of fever, sore throat, generalized lymphadenopathy, and a diffuse maculopapular rash. He reports an unprotected sexual encounter with a new partner 3 weeks ago. He is very concerned about HIV. A 4th generation HIV ELISA returns negative. What is the most appropriate next step?</div>
+        <div class="opts" id="q_ahiv_1o">
+          <button class="opt" onclick="checkQ('q_ahiv_1','A')"><div class="opt-lt">A</div>Reassure the patient — the negative ELISA rules out HIV infection</button>
+          <button class="opt" onclick="checkQ('q_ahiv_1','B')"><div class="opt-lt">B</div>Order a Western blot for confirmation</button>
+          <button class="opt" onclick="checkQ('q_ahiv_1','C')"><div class="opt-lt">C</div>Order HIV RNA PCR (viral load) — the patient may be in the window period</button>
+          <button class="opt" onclick="checkQ('q_ahiv_1','D')"><div class="opt-lt">D</div>Repeat the ELISA in 6 months</button>
+        </div>
+        <button class="check-btn" id="q_ahiv_1b" disabled onclick="revealQ('q_ahiv_1','C')">Check answer</button>
+        <div class="rationale" id="q_ahiv_1r"><strong>Correct: C — HIV RNA PCR.</strong> This presentation is classic acute HIV syndrome: fever + diffuse lymphadenopathy + maculopapular rash + pharyngitis, 2–4 weeks after potential exposure. ELISA may be negative during the window period because antibodies have not yet formed. HIV RNA PCR detects the virus directly and is the appropriate test during the window period. <div class="rat-wrong"><strong>A:</strong> Reassurance based on a negative ELISA in the window period is dangerous and incorrect. <strong>B:</strong> Western blot is confirmatory — only useful after a positive ELISA. <strong>D:</strong> Repeating ELISA in 6 months delays diagnosis of acute HIV unnecessarily; RNA PCR is available now.</div></div>
+
+        <div class="q-div"></div>
+        <div class="q-num">Question 2 of 2</div>
+        <div class="q-stem">A clinic is implementing a new HIV screening protocol. Per current USPSTF guidelines, which of the following patients does NOT require routine HIV screening?</div>
+        <div class="opts" id="q_ahiv_2o">
+          <button class="opt" onclick="checkQ('q_ahiv_2','C')"><div class="opt-lt">A</div>A 70-year-old woman presenting for a routine physical — no known risk factors, no prior HIV testing</button>
+          <button class="opt" onclick="checkQ('q_ahiv_2','D')"><div class="opt-lt">B</div>A 35-year-old pregnant woman presenting for her first prenatal visit</button>
+          <button class="opt" onclick="checkQ('q_ahiv_2','A')"><div class="opt-lt">C</div>A 22-year-old woman presenting for her annual well-woman exam — no known risk factors</button>
+          <button class="opt" onclick="checkQ('q_ahiv_2','B')"><div class="opt-lt">D</div>A 58-year-old man with hypertension presenting for medication refill — no known risk factors</button>
+        </div>
+        <button class="check-btn" id="q_ahiv_2b" disabled onclick="revealQ('q_ahiv_2','A')">Check answer</button>
+        <div class="rationale" id="q_ahiv_2r"><strong>Correct: C — The 70-year-old without risk factors does NOT require routine screening.</strong> USPSTF recommends screening all adults aged 15–65 at least once regardless of risk. The 70-year-old exceeds the upper age limit (65) and has no identified risk factors — she falls outside the universal screening recommendation. <div class="rat-wrong"><strong>A:</strong> Age 22 = within 15–65 range — screen. <strong>B:</strong> Age 58 = within 15–65 range — screen. <strong>D:</strong> All pregnant women are screened at the first prenatal visit regardless of age or risk — USPSTF Grade A recommendation.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★☆</div><div class="mc-val">The window period scenario — negative ELISA + classic acute syndrome — is a confirmed exam question. Students who haven't studied this order Western blot (wrong) or reassure the patient (dangerous).</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Ordering Western blot when ELISA is negative. Western blot is a confirmatory test — it requires a positive ELISA first. It has no role when the ELISA is negative.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">4th generation ELISA detects both p24 antigen AND antibody — narrowing the window to 18–45 days. 3rd generation tests detected antibody only — window was 3–12 weeks. The current standard is 4th generation.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Students see "negative ELISA" and think the patient is HIV-negative. A negative ELISA in the window period means antibodies haven't formed yet — not that infection is absent. The virus is there; the test just can't see it yet.</div></div>
+</div>
+</div>
+
+</div><!-- week1 -->
+
+<hr class="week-divider">
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- WEEK 2 — DERMATOLOGY                               -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="week2">
+<div class="week-hdr">
+  <div class="week-hdr-num heavy">2</div>
+  <div class="week-hdr-text">
+    <div class="week-hdr-title">Dermatology</div>
+    <div class="week-hdr-sub">Primary lesions · Zoster · Acne · Rosacea · Psoriasis · Tinea · Melanoma</div>
+  </div>
+  <div class="week-hdr-badge">Heaviest week — most questions</div>
+</div>
+
+<!-- CONCEPT: Primary vs Secondary Lesions -->
+
+<div class="week-jump-nav"><span class="week-jump-lbl">Jump to:</span><a href="#c-lesions">Lesion Terminology</a><a href="#c-atopic">Atopic Dermatitis</a><a href="#c-zoster">Herpes Zoster</a><a href="#c-acne">Acne &amp; Rosacea</a><a href="#c-psoriasis">Psoriasis</a><a href="#c-tinea">Tinea · Melanoma</a></div>
+
+<div class="concept-row two-col" id="c-lesions">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Primary vs. Secondary Lesion Terminology</div>
+    <div class="week-tag">Week 2 · Foundation — tested every semester</div>
+  </div>
+  <div class="card-body">
+
+
+    <div class="table-cap">Primary lesions — arise from normal skin</div>
+    <table class="data-table">
+      <thead><tr><th>Lesion</th><th>Raised?</th><th>Size</th><th>Classic example</th></tr></thead>
+      <tbody>
+        <tr><td>Macule</td><td>Flat</td><td>&lt;1 cm</td><td>Freckle, café-au-lait spot, flat mole</td></tr>
+        <tr><td>Patch</td><td>Flat</td><td>&gt;1 cm</td><td>Port-wine stain, large vitiligo area</td></tr>
+        <tr><td>Papule</td><td>Raised, solid</td><td>&lt;1 cm</td><td>Acne, wart, lichen planus</td></tr>
+        <tr><td>Plaque</td><td>Raised, solid, flat-topped</td><td>&gt;1 cm</td><td>Psoriasis plaque, lichen simplex</td></tr>
+        <tr><td>Nodule</td><td>Raised, solid, deeper</td><td>Any</td><td>Rheumatoid nodule, basal cell carcinoma</td></tr>
+        <tr><td>Vesicle</td><td>Raised, fluid-filled (clear)</td><td>&lt;1 cm</td><td>Herpes simplex, early varicella</td></tr>
+        <tr><td>Bulla</td><td>Raised, fluid-filled (clear)</td><td>&gt;1 cm</td><td>Bullous pemphigoid, second-degree burn</td></tr>
+        <tr><td>Pustule</td><td>Raised, pus-filled</td><td>Any</td><td>Acne pustule, folliculitis</td></tr>
+        <tr><td>Wheal (hive)</td><td>Transient raised edema</td><td>Variable</td><td>Urticaria — resolves within hours</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Secondary lesions — arise from changes in primary lesions</div>
+    <table class="data-table">
+      <thead><tr><th>Lesion</th><th>Definition</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Scale</td><td>Accumulated dead epithelium</td><td>Psoriasis (silver scale), seborrheic dermatitis</td></tr>
+        <tr><td>Crust</td><td>Dried serum, blood, or pus</td><td>Impetigo (honey-crusted), herpes after rupture</td></tr>
+        <tr><td>Erosion</td><td>Loss of epidermis only — heals WITHOUT scar</td><td>Ruptured vesicle</td></tr>
+        <tr><td>Ulcer</td><td>Loss of epidermis AND dermis — heals WITH scar</td><td>Venous stasis ulcer, pressure injury</td></tr>
+        <tr><td>Lichenification</td><td>Thickened leathery skin from chronic scratching</td><td>Chronic atopic dermatitis</td></tr>
+        <tr><td>Excoriation</td><td>Linear scratch marks</td><td>Scabies, atopic dermatitis</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip</div>
+      <div class="exam-tip-text">The size rule: <strong>&lt;1 cm = macule / papule / vesicle</strong>. <strong>&gt;1 cm = patch / plaque / bulla</strong>. Know which is palpable (raised) vs flat. Flat + non-palpable = macule or patch. Raised + solid = papule or plaque. Fluid-filled = vesicle or bulla.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Flat + &lt;1 cm</div><div class="snap-val"><b>Macule</b> (freckle)</div></div>
+      <div class="snap"><div class="snap-lbl">Raised + solid + &gt;1 cm</div><div class="snap-val"><b>Plaque</b> (psoriasis)</div></div>
+      <div class="snap"><div class="snap-lbl">Fluid + &gt;1 cm</div><div class="snap-val"><b>Bulla</b> (bullous pemphigoid)</div></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">Lesion terminology appears in every dermatology clinical scenario. The exam describes a rash and uses these terms — know them or you cannot interpret the question.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Confusing vesicle and bulla. The distinction is purely size: &lt;1 cm = vesicle. &gt;1 cm = bulla. Both are clear-fluid filled. The content is the same; the diameter changes the name.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">A psoriasis lesion is a PLAQUE (raised, flat-topped, &gt;1 cm with silver scale) — not a macule or papule. The silver scale is a secondary lesion on top of the primary plaque.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Erosion vs. ulcer: Erosion = epidermis only = no scar. Ulcer = epidermis + dermis = scars. The scar distinction is the exam question.</div></div>
+</div>
+</div>
+
+
+<!-- CONCEPT: Atopic Dermatitis -->
+<div class="concept-row two-col" id="c-atopic">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Atopic Dermatitis (Eczema)</div>
+    <div class="week-tag">Week 2 · Flexor vs extensor distinction</div>
+  </div>
+  <div class="card-body">
+
+
+    <div class="table-cap">Atopic dermatitis — key clinical features</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Primary symptom</td><td>Severe pruritus — "the itch that rashes." Scratching causes the rash, not the reverse.</td></tr>
+        <tr><td>Distribution — infants</td><td>Cheeks, scalp, and extensor surfaces of arms and legs</td></tr>
+        <tr><td>Distribution — children</td><td><strong>Antecubital and popliteal fossae</strong> (inner elbow, back of knee) — flexural areas. Most commonly tested.</td></tr>
+        <tr><td>Distribution — adults</td><td>Flexural areas, hands, neck, eyelids, face</td></tr>
+        <tr><td>Atopic triad</td><td>Atopic dermatitis + <strong>asthma</strong> + <strong>allergic rhinitis</strong>. Presence of one increases risk of the others.</td></tr>
+        <tr><td>Skin appearance</td><td>Erythematous, dry, lichenified (thickened, leathery from chronic scratching)</td></tr>
+        <tr><td>Triggers</td><td>Irritants (soaps, detergents), allergens, heat, sweat, stress, Staph aureus colonization</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Atopic dermatitis — treatment ladder</div>
+    <table class="data-table">
+      <thead><tr><th>Severity</th><th>First-line treatment</th></tr></thead>
+      <tbody>
+        <tr><td>Mild</td><td>Frequent moisturizing (emollients), avoid triggers, <strong>low-potency topical corticosteroid</strong> (hydrocortisone 1%)</td></tr>
+        <tr><td>Moderate</td><td>Mid-potency topical corticosteroid (triamcinolone). Topical calcineurin inhibitors (tacrolimus, pimecrolimus) as steroid-sparing agents.</td></tr>
+        <tr><td>Severe</td><td>High-potency topical corticosteroid. Dupilumab (biologic IL-4/IL-13 inhibitor) for refractory cases.</td></tr>
+        <tr><td>Secondary infection</td><td>Treat Staph aureus — topical mupirocin or systemic antibiotic if widespread</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Atopic dermatitis vs. Psoriasis — the comparison the exam uses</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Atopic Dermatitis</th><th>Psoriasis</th></tr></thead>
+      <tbody>
+        <tr><td>Location</td><td><strong>FLEXOR surfaces</strong> — antecubital, popliteal fossae</td><td><strong>EXTENSOR surfaces</strong> — elbows, knees, scalp, sacrum</td></tr>
+        <tr><td>Primary symptom</td><td>Intense pruritus</td><td>Pruritus variable — scale more prominent</td></tr>
+        <tr><td>Scale</td><td>Absent or fine</td><td>Silver-white, thick — Auspitz sign on removal</td></tr>
+        <tr><td>Age of onset</td><td>Infancy to childhood — often improves with age</td><td>Any age — bimodal peaks at 20s and 50s</td></tr>
+        <tr><td>Associated conditions</td><td>Asthma, allergic rhinitis — atopic triad</td><td>Psoriatic arthritis (30%), metabolic syndrome</td></tr>
+        <tr><td>Topical steroids</td><td><strong>First-line treatment</strong></td><td><strong>First-line treatment</strong> — both use topical steroids</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip — the location rule</div>
+      <div class="exam-tip-text"><strong>Antecubital and popliteal fossae (inner elbow and behind the knee) = atopic dermatitis.</strong> Elbows and knees (extensor) = psoriasis. This anatomical distinction is the single most tested feature distinguishing these two conditions. A child with itchy patches in skin folds = atopic dermatitis.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Classic location</div><div class="snap-val"><b>Flexural</b> — antecubital, popliteal fossae</div></div>
+      <div class="snap"><div class="snap-lbl">Atopic triad</div><div class="snap-val">Eczema + <b>asthma</b> + allergic rhinitis</div></div>
+      <div class="snap"><div class="snap-lbl">Psoriasis contrast</div><div class="snap-val">Extensor surfaces — <b>elbows, knees</b></div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 7-year-old boy is brought in by his mother for intensely itchy skin. On exam you find erythematous, dry, lichenified patches in the antecubital fossae bilaterally and behind both knees. His mother reports he also has asthma and seasonal allergies. Which of the following is NOT a true statement about this condition?</div>
+        <div class="opts" id="q_atopic_1o">
+          <button class="opt" onclick="checkQ('q_atopic_1','B')"><div class="opt-lt">A</div>This condition is associated with asthma and allergic rhinitis as part of the atopic triad</button>
+          <button class="opt" onclick="checkQ('q_atopic_1','C')"><div class="opt-lt">B</div>The rash characteristically involves the extensor surfaces of the elbows and knees</button>
+          <button class="opt" onclick="checkQ('q_atopic_1','D')"><div class="opt-lt">C</div>First-line treatment includes topical corticosteroids and emollient moisturizers</button>
+          <button class="opt" onclick="checkQ('q_atopic_1','A')"><div class="opt-lt">D</div>The rash characteristically involves flexural surfaces such as the antecubital and popliteal fossae</button>
+        </div>
+        <button class="check-btn" id="q_atopic_1b" disabled onclick="revealQ('q_atopic_1','D')">Check answer</button>
+        <div class="rationale" id="q_atopic_1r"><strong>Correct: C — NOT true.</strong> Atopic dermatitis in children affects FLEXURAL (flexor) surfaces — antecubital fossae (inner elbow) and popliteal fossae (behind the knee). Extensor surfaces (outer elbows, outer knees) are the location of PSORIASIS, not atopic dermatitis. This flexor vs extensor distinction is the most tested comparison between these two conditions. <div class="rat-wrong">All other options are true: A — flexural surfaces are the classic location. B — atopic triad is eczema + asthma + allergic rhinitis. D — topical corticosteroids and emollients are first-line.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">Atopic dermatitis appears every semester — most often as a comparison to psoriasis. The flexor vs extensor location distinction is the single most frequently tested feature of both conditions combined.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Psoriasis is on extensor surfaces (outer elbow, outer knee). Atopic dermatitis is in flexural folds (inner elbow, back of knee). The exam reverses these in distractor options. Know: flexural = eczema, extensor = psoriasis.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Staph aureus colonization worsens atopic dermatitis. A patient with a flare who has signs of secondary infection (honey crusting, warmth, purulent discharge) needs antibiotic treatment — topical mupirocin for limited disease.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Students apply topical steroids to the face for atopic dermatitis — but high-potency steroids should never be used on the face or skin folds. Always use low-potency (hydrocortisone 1%) on facial and intertriginous skin.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Herpes Zoster -->
+<div class="concept-row two-col" id="c-zoster">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Herpes Zoster (Shingles)</div>
+    <div class="week-tag">Week 2 · Highly tested</div>
+  </div>
+  <div class="card-body">
+    <div class="prose">
+      <p>VZV reactivation from dorsal root ganglia. Prodromal burning pain precedes rash by 3–5 days — treat on clinical suspicion even before the rash appears.</p>
+    </div>
+
+    <div class="table-cap">Herpes zoster — clinical features and management</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Cause</td><td>Reactivation of latent VZV from dorsal root ganglia</td></tr>
+        <tr><td>Prodrome</td><td>Burning/tingling/aching pain in the affected dermatome 3–5 days BEFORE rash appears</td></tr>
+        <tr><td>Rash</td><td>Grouped vesicles on erythematous base in a unilateral dermatomal distribution. Does NOT cross the midline.</td></tr>
+        <tr><td>Duration</td><td>Vesicles crust over in 7–10 days. Full resolution in 2–4 weeks.</td></tr>
+        <tr><td>Ophthalmic zoster</td><td>V1 dermatome (forehead, eye). Hutchinson sign = tip-of-nose vesicle = eye likely involved → urgent ophthalmology.</td></tr>
+        <tr><td>First-line treatment</td><td>Valacyclovir 1g TID × 7 days OR acyclovir 800mg 5×/day × 7 days</td></tr>
+        <tr><td>Treatment window</td><td>Start within 72 hours of rash onset. After 72h = reduced benefit.</td></tr>
+        <tr><td>Postherpetic neuralgia</td><td>Pain persisting &gt;3 months after rash resolution. Treat with gabapentin, pregabalin, or TCAs.</td></tr>
+        <tr><td>Prevention (vaccine)</td><td>Shingrix (recombinant) — all adults ≥50. Two doses (0 and 2–6 months). 97% effective. Preferred over old Zostavax.</td></tr>
+        <tr><td>Contagion</td><td>Active vesicles can transmit VZV to varicella-naive contacts (causes chickenpox, not shingles, in them). Cover the rash.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Critical — the NOT/EXCEPT trap</div>
+      <div class="critical-text">"Which of the following is NOT true about herpes zoster?" → <strong>it crosses the midline</strong>. Herpes zoster NEVER crosses the midline. This is the most commonly tested false statement about zoster.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Defining feature</div><div class="snap-val">Unilateral dermatomal — <span class="coral">never crosses midline</span></div></div>
+      <div class="snap"><div class="snap-lbl">Prodrome</div><div class="snap-val">Pain <b>3–5 days</b> before rash — still treat</div></div>
+      <div class="snap"><div class="snap-lbl">Treat within</div><div class="snap-val"><b>72 hours</b> of rash onset</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 68-year-old woman presents with a 5-day history of burning pain along her left flank, now accompanied by grouped vesicles on an erythematous base that follow a dermatome on her left side only. She reports the pain began 4 days before any skin lesion appeared. Which of the following is NOT a true statement about her condition?</div>
+        <div class="opts" id="q_zoster_1o">
+          <button class="opt" onclick="checkQ('q_zoster_1','A')"><div class="opt-lt">A</div>Prodromal pain may precede the rash by 3–5 days</button>
+          <button class="opt" onclick="checkQ('q_zoster_1','B')"><div class="opt-lt">B</div>The rash typically crosses the midline to affect both sides</button>
+          <button class="opt" onclick="checkQ('q_zoster_1','C')"><div class="opt-lt">C</div>Treatment with valacyclovir should be initiated within 72 hours of rash onset</button>
+          <button class="opt" onclick="checkQ('q_zoster_1','D')"><div class="opt-lt">D</div>Caused by reactivation of varicella-zoster virus from dorsal root ganglia</button>
+        </div>
+        <button class="check-btn" id="q_zoster_1b" disabled onclick="revealQ('q_zoster_1','B')">Check answer</button>
+        <div class="rationale" id="q_zoster_1r"><strong>Correct: B — NOT true.</strong> Herpes zoster is strictly unilateral and dermatomal — it NEVER crosses the midline. The virus reactivates from a single dorsal root ganglion, supplying one side of the body only. <div class="rat-wrong">All other options are true: A — prodromal pain 3–5 days before rash is classic. C — treat within 72 hours of rash onset. D — reactivation of latent VZV from dorsal root ganglia.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">Zoster is tested every semester. The NOT/EXCEPT form ("does NOT cross the midline" as the true false statement) is the most common format. Prodrome timing also appears.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">The 72-hour treatment window is from rash ONSET, not from pain onset. Pain may have started 5 days earlier. The clock starts with the RASH.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Hutchinson sign: vesicle on the tip of the nose = ophthalmic branch of trigeminal nerve (V1) involved = high risk of eye involvement. Refer urgently to ophthalmology.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">The Shingrix vaccine recommendation: all adults ≥50 (not just immunocompromised). Two doses required. Recombinant vaccine — preferred over live attenuated Zostavax.</div></div>
+  <div class="mc mc-src"><div class="mc-lbl">Study guide reference</div><div class="mc-val">Chamberlain Week 2 study guide — zoster treatment window and dermatomal pattern are explicitly listed as high-yield test items.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Acne & Rosacea -->
+<div class="concept-row two-col" id="c-acne">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Acne Vulgaris &amp; Rosacea</div>
+    <div class="week-tag">Week 2</div>
+  </div>
+  <div class="card-body">
+    <div class="table-cap">Acne vulgaris — treatment by severity</div>
+    <table class="data-table">
+      <thead><tr><th>Severity</th><th>Lesion type</th><th>First-line treatment</th></tr></thead>
+      <tbody>
+        <tr><td>Mild (comedonal)</td><td>Open/closed comedones only</td><td>Topical retinoid (tretinoin, adapalene)</td></tr>
+        <tr><td>Mild-moderate inflammatory</td><td>Papules and pustules</td><td>Topical retinoid + benzoyl peroxide (BPO)</td></tr>
+        <tr><td>Moderate-severe</td><td>Many papules/pustules, nodules</td><td>Oral doxycycline + topical retinoid + BPO</td></tr>
+        <tr><td>Severe nodulocystic</td><td>Nodules, cysts, scarring risk</td><td>Isotretinoin (Accutane) — requires iPLEDGE</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Acne NOT/EXCEPT traps</div>
+      <div class="critical-text"><strong>Never prescribe topical antibiotic alone</strong> — always combine with BPO to prevent antibiotic resistance. Topical steroids <em>worsen</em> acne (comedogenic). Isotretinoin is Category X in pregnancy — iPLEDGE requires two forms of contraception and monthly pregnancy tests.</div>
+    </div>
+
+    <div class="table-cap">Rosacea — the key facts tested</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Rosacea</th></tr></thead>
+      <tbody>
+        <tr><td>Classic appearance</td><td>Facial erythema, telangiectasias, flushing. Papulopustular subtype resembles acne but lacks comedones.</td></tr>
+        <tr><td>Triggers</td><td>Sun, heat, alcohol, spicy food, stress, exercise</td></tr>
+        <tr><td>Rhinophyma</td><td>Bulbous red nose — severe phymatous rosacea</td></tr>
+        <tr><td>First-line treatment</td><td>Topical metronidazole 0.75% or azelaic acid. Takes 6–8 weeks to show improvement.</td></tr>
+        <tr><td>CONTRAINDICATED</td><td>Topical corticosteroids — cause steroid-induced rosacea and rebound flares</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">NOT/EXCEPT pattern — rosacea</div>
+      <div class="not-except-text">"Which treatment is NOT recommended for rosacea?" → <strong>topical corticosteroids</strong>. They cause steroid rosacea and rebound. This is the most commonly tested false treatment for rosacea.</div>
+    </div>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip</div>
+      <div class="exam-tip-text">Rosacea vs. acne: rosacea has no comedones. If the description includes blackheads or whiteheads → acne. If facial erythema + flushing + no comedones → rosacea. Metronidazole cream takes 6–8 weeks — counsel patients not to stop early.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Acne first-line</div><div class="snap-val"><b>BPO</b> — always the foundation</div></div>
+      <div class="snap"><div class="snap-lbl">Rosacea first-line</div><div class="snap-val"><b>Topical metronidazole</b> — 6–8 weeks</div></div>
+      <div class="snap"><div class="snap-lbl">Both contraindicated</div><div class="snap-val"><span class="coral">Topical steroids</span> worsen both</div></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★☆</div><div class="mc-val">Acne treatment ladder and rosacea contraindications appear every semester. The isotretinoin iPLEDGE requirements and the "no topical steroids in rosacea" fact are the most tested specifics.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Topical steroids worsen BOTH acne and rosacea. They are never a treatment for either. The exam lists them as a distractor answer for both conditions.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Rosacea has NO comedones. If you see comedones (blackheads, whiteheads) in the description, it's acne. This single feature differentiates them on clinical presentation.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Prescribing topical antibiotic alone for acne. The correct answer always combines an antibiotic with BPO. Antibiotic monotherapy promotes P. acnes resistance.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Psoriasis -->
+<div class="concept-row two-col" id="c-psoriasis">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Psoriasis</div>
+    <div class="week-tag">Week 2 · High yield</div>
+  </div>
+  <div class="card-body">
+
+
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Classic appearance</td><td>Erythematous plaques with silver-white scale on EXTENSOR surfaces — elbows, knees, scalp, sacrum</td></tr>
+        <tr><td>Auspitz sign</td><td>Pinpoint bleeding when scale is removed — from dilated capillaries in the dermis underneath</td></tr>
+        <tr><td>Koebner phenomenon</td><td>Psoriatic lesions appear at sites of trauma or injury (scratches, surgical scars)</td></tr>
+        <tr><td>Nail findings</td><td>Pitting, onycholysis (nail separation from bed), "oil drop" sign — yellow-brown discoloration</td></tr>
+        <tr><td>Psoriatic arthritis</td><td>Occurs in 30% — asymmetric oligoarthritis including DIP joints. "Pencil-in-cup" deformity on X-ray.</td></tr>
+        <tr><td>First-line treatment (mild)</td><td>Topical corticosteroids + topical vitamin D analogues (calcipotriene)</td></tr>
+        <tr><td>Moderate-severe</td><td>Methotrexate, cyclosporine, biologics (TNF inhibitors, IL-17 inhibitors)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">NOT/EXCEPT — drugs that WORSEN psoriasis</div>
+      <div class="not-except-text">These drugs are confirmed to trigger or worsen psoriasis: <strong>beta-blockers</strong> (metoprolol, propranolol), <strong>lithium</strong>, <strong>NSAIDs</strong>, <strong>antimalarials</strong> (hydroxychloroquine), <strong>ACE inhibitors</strong>. "Which drug does NOT worsen psoriasis?" → SSRIs are safe.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Location</div><div class="snap-val"><b>Extensor</b> surfaces (elbows, knees)</div></div>
+      <div class="snap"><div class="snap-lbl">Auspitz sign</div><div class="snap-val">Pinpoint bleeding on <b>scale removal</b></div></div>
+      <div class="snap"><div class="snap-lbl">Worsen psoriasis</div><div class="snap-val"><span class="coral">BB · lithium · NSAIDs · antimalarials</span></div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 42-year-old man with well-controlled psoriasis is started on a new medication for bipolar disorder. Three weeks later he presents with a significant flare of his skin disease. Which medication most likely caused the exacerbation?</div>
+        <div class="opts" id="q_psor_1o">
+          <button class="opt" onclick="checkQ('q_psor_1','A')"><div class="opt-lt">A</div>Sertraline</button>
+          <button class="opt" onclick="checkQ('q_psor_1','B')"><div class="opt-lt">B</div>Lithium carbonate</button>
+          <button class="opt" onclick="checkQ('q_psor_1','C')"><div class="opt-lt">C</div>Valproic acid</button>
+          <button class="opt" onclick="checkQ('q_psor_1','D')"><div class="opt-lt">D</div>Quetiapine</button>
+        </div>
+        <button class="check-btn" id="q_psor_1b" disabled onclick="revealQ('q_psor_1','B')">Check answer</button>
+        <div class="rationale" id="q_psor_1r"><strong>Correct: B — Lithium.</strong> Lithium is a well-established trigger for psoriasis exacerbations. It inhibits adenylate cyclase and alters epidermal proliferation. This is a confirmed exam question — bipolar disorder + psoriasis flare = think lithium. <div class="rat-wrong"><strong>A (sertraline):</strong> SSRIs do not worsen psoriasis. <strong>C (valproic acid):</strong> Not a confirmed psoriasis trigger. <strong>D (quetiapine):</strong> Not associated with psoriasis flares.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★☆</div><div class="mc-val">The drug-triggers list (beta-blockers, lithium, NSAIDs, antimalarials) is tested directly — usually as NOT/EXCEPT asking which drug does NOT worsen psoriasis.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Psoriasis is on EXTENSOR surfaces. Atopic dermatitis is on FLEXOR surfaces (antecubital, popliteal fossae). The exam tests this location distinction directly and frequently.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Auspitz sign is pathognomonic for psoriasis — pinpoint bleeding on scale removal. No other common skin condition produces this finding. It identifies the diagnosis when the clinical picture is ambiguous.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">NSAIDs worsening psoriasis. Students focus on lithium and beta-blockers but miss NSAIDs. All four (BB, lithium, NSAIDs, antimalarials) appear in the NOT/EXCEPT list.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Tinea, AK, Scabies, Melanoma -->
+<div class="concept-row two-col" id="c-tinea">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Tinea · Actinic Keratosis · Scabies · Melanoma ABCDE</div>
+    <div class="week-tag">Week 2 · High volume</div>
+  </div>
+  <div class="card-body">
+
+    <div class="table-cap">Tinea infections — location, appearance, and treatment</div>
+    <table class="data-table">
+      <thead><tr><th>Type</th><th>Location</th><th>Appearance</th><th>Treatment</th></tr></thead>
+      <tbody>
+        <tr><td>Tinea capitis</td><td>Scalp</td><td>Scaling, hair loss, broken hairs ("black dot"). Most common in children.</td><td><strong>Oral griseofulvin</strong> — topical cannot penetrate hair follicle</td></tr>
+        <tr><td>Tinea corporis</td><td>Body trunk/limbs</td><td>Ring-shaped plaque with central clearing and raised scaly border ("ringworm")</td><td>Topical azole (clotrimazole, miconazole) × 2–4 weeks</td></tr>
+        <tr><td>Tinea pedis</td><td>Feet ("athlete's foot")</td><td>Scaling, maceration, fissures between toes</td><td>Topical terbinafine or azole</td></tr>
+        <tr><td>Tinea unguium (onychomycosis)</td><td>Nails</td><td>Yellow, thickened, brittle nails from distal edge</td><td>Oral terbinafine × 6 weeks (fingernails) or 12 weeks (toenails)</td></tr>
+        <tr><td>Tinea versicolor</td><td>Trunk</td><td>Hypo- or hyperpigmented macules. Caused by Malassezia (normal flora overgrowth).</td><td>Topical selenium sulfide, ketoconazole shampoo, or azole</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip — tinea capitis</div>
+      <div class="exam-tip-text">Tinea capitis requires <strong>oral treatment</strong> — topical antifungals cannot penetrate the hair follicle. "Which is the correct treatment for tinea capitis?" → oral griseofulvin. Topical antifungal alone = wrong answer.</div>
+    </div>
+
+    <div class="table-cap">Actinic keratosis vs. seborrheic keratosis — the distinction always tested</div>
+    <table class="data-table">
+      <thead><tr><th></th><th>Actinic Keratosis</th><th>Seborrheic Keratosis</th></tr></thead>
+      <tbody>
+        <tr><td>Feel</td><td>Rough, sandpaper texture</td><td>Waxy, "stuck-on" verrucous</td></tr>
+        <tr><td>Color</td><td>Pink-red, scaly</td><td>Tan to dark brown</td></tr>
+        <tr><td>Location</td><td>Sun-exposed areas (face, scalp, hands)</td><td>Trunk, face — any area</td></tr>
+        <tr><td>Malignant potential</td><td><strong>YES — precursor to SCC</strong></td><td><strong>NONE — completely benign</strong></td></tr>
+        <tr><td>Action</td><td>Treat: cryotherapy, 5-FU, imiquimod</td><td>Reassure — remove only for cosmetic reasons</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Scabies — the most tested management fact</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Cause</td><td>Sarcoptes scabiei mite — burrows into stratum corneum</td></tr>
+        <tr><td>Primary symptom</td><td>Intense NOCTURNAL pruritus — worst at night</td></tr>
+        <tr><td>Pathognomonic finding</td><td>Linear burrows in web spaces of fingers, wrists, genitalia</td></tr>
+        <tr><td>Treatment</td><td>Permethrin 5% cream — apply neck-to-toes × 8–10 hours, repeat in 1 week</td></tr>
+        <tr><td>Contact treatment</td><td><strong>Treat ALL household contacts and sexual partners simultaneously</strong> — even if asymptomatic</td></tr>
+        <tr><td>Persistent itch after Rx</td><td>Can persist 2–4 weeks after successful treatment — NOT treatment failure</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">NOT/EXCEPT — scabies management</div>
+      <div class="not-except-text">"Which is NOT part of scabies management?" → treating only symptomatic household members. ALL contacts must be treated simultaneously — including asymptomatic household members and sexual partners.</div>
+    </div>
+
+    <div class="table-cap">ABCDE melanoma criteria — know all five</div>
+    <table class="data-table">
+      <thead><tr><th>Letter</th><th>Criterion</th><th>Concerning finding</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>Asymmetry</td><td>One half does not mirror the other</td></tr>
+        <tr><td>B</td><td>Border</td><td>Irregular, notched, ragged, or blurred edges</td></tr>
+        <tr><td>C</td><td>Color</td><td>Variation within the lesion — multiple shades of tan, brown, black, red, white, or blue</td></tr>
+        <tr><td>D</td><td>Diameter</td><td>Greater than 6mm (size of a pencil eraser)</td></tr>
+        <tr><td>E</td><td>Evolution</td><td>Any change in size, shape, color, or new symptom (bleeding, itching)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Critical — action on melanoma criteria</div>
+      <div class="critical-text">Any lesion meeting ≥1 ABCDE criterion requires <strong>referral for biopsy</strong> — not monitoring, not photography, not reassurance. "Most appropriate action for a lesion with irregular border and color variation?" → refer for dermatologic evaluation and biopsy.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Tinea capitis Rx</div><div class="snap-val"><b>Oral griseofulvin</b> — not topical</div></div>
+      <div class="snap"><div class="snap-lbl">AK → cancer risk</div><div class="snap-val">Precursor to <span class="coral">SCC</span></div></div>
+      <div class="snap"><div class="snap-lbl">Scabies treatment</div><div class="snap-val"><b>All contacts</b> treated simultaneously</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style questions</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 2</div>
+        <div class="q-stem">A 68-year-old man presents with a lesion on his right forearm that is 8mm in diameter, has irregular notched borders, contains areas of tan, dark brown, and red coloration, and his wife reports it has grown larger over the past 3 months. He has had significant sun exposure throughout his life. Which of the following is the most appropriate next action?</div>
+        <div class="opts" id="q_mel_1o">
+          <button class="opt" onclick="checkQ('q_mel_1','C')"><div class="opt-lt">A</div>Refer for dermatologic evaluation and excisional biopsy</button>
+          <button class="opt" onclick="checkQ('q_mel_1','D')"><div class="opt-lt">B</div>Apply topical tretinoin cream and reassess in 3 months</button>
+          <button class="opt" onclick="checkQ('q_mel_1','A')"><div class="opt-lt">C</div>Reassure the patient — this is likely a benign seborrheic keratosis given his age</button>
+          <button class="opt" onclick="checkQ('q_mel_1','B')"><div class="opt-lt">D</div>Photograph the lesion and monitor for changes over the next 6 months</button>
+        </div>
+        <button class="check-btn" id="q_mel_1b" disabled onclick="revealQ('q_mel_1','A')">Check answer</button>
+        <div class="rationale" id="q_mel_1r"><strong>Correct: C — Refer for dermatologic evaluation and biopsy.</strong> This lesion meets multiple ABCDE criteria: Border (irregular, notched), Color (multiple colors — tan, dark brown, red), Diameter (&gt;6mm), and Evolution (growing). Any lesion meeting ABCDE criteria requires referral for biopsy — not monitoring, not photography, not topical treatment. <div class="rat-wrong"><strong>A:</strong> Seborrheic keratosis is waxy, "stuck-on," with a well-defined border and uniform color. This lesion is irregular and multicolored — suspicious for melanoma. <strong>B:</strong> Monitoring a lesion meeting ABCDE criteria delays diagnosis of potentially curable melanoma. <strong>D:</strong> Topical tretinoin has no role in evaluation of a suspicious pigmented lesion.</div></div>
+
+        <div class="q-div"></div>
+        <div class="q-num">Question 2 of 2</div>
+        <div class="q-stem">A 9-year-old girl is brought in with scaling hair loss and broken-off hairs on her scalp. KOH preparation shows branching hyphae. Her mother asks why the pediatrician is prescribing oral medication instead of a shampoo. Which of the following is the correct explanation?</div>
+        <div class="opts" id="q_tinea_1o">
+          <button class="opt" onclick="checkQ('q_tinea_1','A')"><div class="opt-lt">A</div>Oral antifungals are stronger and work faster than topical agents</button>
+          <button class="opt" onclick="checkQ('q_tinea_1','B')"><div class="opt-lt">B</div>Topical antifungals cannot penetrate the hair follicle to eradicate the infection</button>
+          <button class="opt" onclick="checkQ('q_tinea_1','C')"><div class="opt-lt">C</div>Topical antifungals are contraindicated in children under 12</button>
+          <button class="opt" onclick="checkQ('q_tinea_1','D')"><div class="opt-lt">D</div>The KOH test result indicates bacterial rather than fungal infection</button>
+        </div>
+        <button class="check-btn" id="q_tinea_1b" disabled onclick="revealQ('q_tinea_1','B')">Check answer</button>
+        <div class="rationale" id="q_tinea_1r"><strong>Correct: B — Topical antifungals cannot penetrate the hair follicle.</strong> Tinea capitis requires oral treatment (griseofulvin first-line) because the dermatophyte infects the hair shaft and follicle, which topical antifungals cannot reach. This is the most commonly tested fact about tinea capitis treatment. <div class="rat-wrong"><strong>A:</strong> While oral antifungals are more bioavailable, the reason for oral treatment is specifically about hair follicle penetration, not speed. <strong>C:</strong> Topical antifungals are not contraindicated in children — they simply don't work for tinea capitis. <strong>D:</strong> KOH preparation showing branching hyphae confirms a fungal infection, not bacterial.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">This multi-condition card covers the highest-volume dermatology exam content. Tinea capitis oral treatment, AK vs seborrheic keratosis, and ABCDE melanoma criteria each appear as standalone questions.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Actinic keratosis = rough/sandpaper = precancerous (SCC). Seborrheic keratosis = waxy/stuck-on = completely benign. These are tested as a direct comparison. Mixing them up changes the clinical action entirely.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Tinea versicolor: hypopigmented macules on the trunk that fluoresce under Wood's lamp (yellow-green). Caused by Malassezia furfur — normal skin flora that overgrows in humid conditions. "Spaghetti and meatballs" on KOH prep.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">ABCDE action: students know the criteria but hesitate on the action. Any lesion meeting criteria → biopsy referral. Not monitor. Not photograph. Not reassure. Biopsy.</div></div>
+</div>
+</div>
+</div><!-- week2 -->
+
+<hr class="week-divider">
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- WEEK 3 — HEENT                                     -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="week3">
+<div class="week-hdr">
+  <div class="week-hdr-num heavy">3</div>
+  <div class="week-hdr-text">
+    <div class="week-hdr-title">HEENT</div>
+    <div class="week-hdr-sub">Eyes · Ears · Nose · Throat — Bates' chapters tested directly. Most students seek outside resources for this week. We built it better.</div>
+  </div>
+  <div class="week-hdr-badge">Under-served — differentiate here</div>
+</div>
+
+<div class="week-jump-nav">
+  <span class="week-jump-lbl">Jump to:</span>
+  <a href="#c-eye">Eye Emergencies &amp; Red Eye</a>
+  <a href="#c-hearing">Weber &amp; Rinne</a>
+  <a href="#c-pharyngitis">Pharyngitis · AOM · Sinusitis</a>
+  <a href="#c-bppv">BPPV vs Ménière</a>
+</div>
+
+
+<!-- CONCEPT: Eye Emergencies -->
+<div class="concept-row two-col" id="c-eye">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Eye Emergencies &amp; Red Eye Differential</div>
+    <div class="week-tag">Week 3 · Emergency recognition</div>
+  </div>
+  <div class="card-body">
+
+
+    <div class="table-cap">Eye emergencies requiring same-day ophthalmology referral</div>
+    <table class="data-table">
+      <thead><tr><th>Condition</th><th>Classic presentation</th><th>Key finding</th><th>Critical action</th></tr></thead>
+      <tbody>
+        <tr><td>Acute angle-closure glaucoma</td><td>Sudden severe eye pain + halos + nausea + headache</td><td><strong>Fixed mid-dilated pupil</strong>. Eye feels hard on palpation. Decreased vision.</td><td>EMERGENCY — same-day ophthalmology. <strong>DO NOT dilate</strong> — worsens the attack.</td></tr>
+        <tr><td>Central retinal artery occlusion (CRAO)</td><td>Sudden PAINLESS monocular vision loss — "curtain pulled across"</td><td><strong>Cherry red spot at macula</strong> on funduscopy. Pale ischemic retina.</td><td>EMERGENCY — immediate ER. Window is 90–120 minutes.</td></tr>
+        <tr><td>Retinal detachment</td><td>Sudden shower of floaters, flashing lights, then shadow across visual field</td><td>No pain. Peripheral vision lost first.</td><td>EMERGENCY — same-day surgical repair.</td></tr>
+        <tr><td>Corneal ulcer</td><td>Eye pain + redness + purulent discharge + photophobia. Contact lens history or eye trauma.</td><td>Visible opacity on cornea. Fluorescein staining positive.</td><td>Same-day ophthalmology — can cause permanent vision loss.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Critical — angle-closure glaucoma</div>
+      <div class="critical-text"><strong>Fixed mid-dilated pupil + halos + severe eye pain + rock-hard eye = angle-closure glaucoma.</strong> NEVER dilate this patient — dilation closes the drainage angle further and catastrophically worsens the attack. Refer immediately. Do not attempt any ophthalmic procedure in the primary care setting.</div>
+    </div>
+
+    <div class="table-cap">Red eye differential — the four key patterns</div>
+    <table class="data-table">
+      <thead><tr><th>Condition</th><th>Discharge</th><th>Pain</th><th>Pupil</th><th>Itching</th><th>Treatment</th></tr></thead>
+      <tbody>
+        <tr><td>Viral conjunctivitis</td><td>Watery, clear</td><td>Mild, gritty</td><td>Normal</td><td>Mild</td><td>Supportive — artificial tears, cool compresses. Self-limiting 1–2 weeks.</td></tr>
+        <tr><td>Bacterial conjunctivitis</td><td>Mucopurulent, yellow-green. Lids stuck shut in morning.</td><td>Mild</td><td>Normal</td><td>No</td><td>Topical antibiotic drops (tobramycin, erythromycin)</td></tr>
+        <tr><td>Allergic conjunctivitis</td><td>Watery, clear. BILATERAL.</td><td>No pain</td><td>Normal</td><td><strong>INTENSE itch</strong></td><td>Topical antihistamine/mast cell stabilizer (olopatadine). Remove allergen.</td></tr>
+        <tr><td>Angle-closure glaucoma</td><td>None</td><td><strong>SEVERE</strong></td><td><strong>Fixed mid-dilated</strong></td><td>No</td><td>EMERGENCY — immediate ophthalmology</td></tr>
+        <tr><td>Subconjunctival hemorrhage</td><td>None</td><td>None</td><td>Normal</td><td>No</td><td>Reassure — resolves in 2–3 weeks. Benign.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip</div>
+      <div class="exam-tip-text">The red eye differentiator: <strong>intense itch = allergic</strong>. <strong>Mucopurulent morning discharge = bacterial</strong>. <strong>Severe pain + fixed mid-dilated pupil = angle-closure emergency</strong>. Itching is the hallmark of allergic conjunctivitis — no other type causes significant itch.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Fixed mid-dilated pupil</div><div class="snap-val"><span class="coral">Angle-closure</span> — NEVER dilate</div></div>
+      <div class="snap"><div class="snap-lbl">Cherry red spot</div><div class="snap-val"><b>CRAO</b> — eye stroke, emergency</div></div>
+      <div class="snap"><div class="snap-lbl">Intense itch</div><div class="snap-val"><b>Allergic</b> conjunctivitis — bilateral</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 2</div>
+        <div class="q-stem">A 64-year-old woman presents with sudden severe right eye pain, nausea, and blurred vision with halos around lights that began 2 hours ago. On exam the right pupil is fixed and mid-dilated and the eye feels firm on gentle palpation. Which of the following is the most appropriate next action?</div>
+        <div class="opts" id="q_eye_1o">
+          <button class="opt" onclick="checkQ('q_eye_1','A')"><div class="opt-lt">A</div>Prescribe topical antibiotic drops and follow up in 48 hours</button>
+          <button class="opt" onclick="checkQ('q_eye_1','B')"><div class="opt-lt">B</div>Dilate the pupil to allow funduscopic examination</button>
+          <button class="opt" onclick="checkQ('q_eye_1','C')"><div class="opt-lt">C</div>Arrange same-day emergency ophthalmology referral without dilating the eye</button>
+          <button class="opt" onclick="checkQ('q_eye_1','D')"><div class="opt-lt">D</div>Order a CT head to rule out intracranial pathology first</button>
+        </div>
+        <button class="check-btn" id="q_eye_1b" disabled onclick="revealQ('q_eye_1','C')">Check answer</button>
+        <div class="rationale" id="q_eye_1r"><strong>Correct: C — Same-day ophthalmology, no dilation.</strong> This is acute angle-closure glaucoma: fixed mid-dilated pupil + severe eye pain + halos + firm eye. Immediate ophthalmology is essential. NEVER dilate — dilation closes the angle further and worsens the attack catastrophically. <div class="rat-wrong"><strong>A:</strong> Antibiotics are for bacterial conjunctivitis — not angle-closure glaucoma. <strong>B:</strong> Dilation is specifically contraindicated and dangerous. <strong>D:</strong> CT head delays definitive ophthalmologic treatment — this is not intracranial pathology.</div></div>
+
+        <div class="q-div"></div>
+        <div class="q-num">Question 2 of 2</div>
+        <div class="q-stem">A 19-year-old college student presents with bilateral red eyes, profuse watery discharge, and intense itching that started during allergy season. Both eyes started at the same time. Visual acuity is normal and pupils are equal and reactive. He has a history of seasonal allergic rhinitis. Which of the following is the most likely diagnosis and first-line treatment?</div>
+        <div class="opts" id="q_redeye_1o">
+          <button class="opt" onclick="checkQ('q_redeye_1','B')"><div class="opt-lt">A</div>Allergic conjunctivitis — topical antihistamine/mast cell stabilizer (olopatadine)</button>
+          <button class="opt" onclick="checkQ('q_redeye_1','C')"><div class="opt-lt">B</div>Bacterial conjunctivitis — topical antibiotic drops (tobramycin)</button>
+          <button class="opt" onclick="checkQ('q_redeye_1','D')"><div class="opt-lt">C</div>Acute angle-closure glaucoma — same-day ophthalmology referral</button>
+          <button class="opt" onclick="checkQ('q_redeye_1','A')"><div class="opt-lt">D</div>Viral conjunctivitis — supportive care with artificial tears</button>
+        </div>
+        <button class="check-btn" id="q_redeye_1b" disabled onclick="revealQ('q_redeye_1','C')">Check answer</button>
+        <div class="rationale" id="q_redeye_1r"><strong>Correct: B — Allergic conjunctivitis.</strong> The defining features: <strong>bilateral</strong> red eyes + <strong>intense itching</strong> + watery clear discharge + history of atopy (allergic rhinitis) + seasonal onset. Intense itch is the hallmark of allergic conjunctivitis — no other form causes significant itch. First-line: topical antihistamine/mast cell stabilizer (olopatadine). <div class="rat-wrong"><strong>A (viral):</strong> Viral conjunctivitis is watery and bilateral but itch is mild; often follows a URI. <strong>C (bacterial):</strong> Bacterial has mucopurulent thick discharge, lids stuck shut in the morning — not watery discharge with itch. <strong>D (angle-closure):</strong> Angle-closure is unilateral, severely painful, with fixed mid-dilated pupil — not bilateral itch with clear discharge.</div></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">Angle-closure glaucoma is tested every semester. The fixed mid-dilated pupil + "do not dilate" instruction is the most tested HEENT emergency fact.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Dilating the pupil in suspected angle-closure glaucoma. It is specifically and dangerously contraindicated. The exam presents this as a tempting answer — it is always wrong.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">CRAO = "eye stroke." Cherry red spot at the fovea because the fovea gets blood from the choroidal circulation (not the retinal artery), so only the fovea remains perfused while the surrounding retina turns pale and ischemic.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Subconjunctival hemorrhage action. Students over-triage it. A painless, bright red patch on the sclera with normal vision and normal pupil = subconjunctival hemorrhage = reassure. No treatment. No referral. Just wait.</div></div>
+  <div class="mc mc-src"><div class="mc-lbl">Bates' reference</div><div class="mc-val">Bates' Ch. 7 — Eye examination. Funduscopic technique and abnormal findings are tested directly from Bates' chapter descriptions.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Hearing Tests -->
+<div class="concept-row two-col" id="c-hearing">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Hearing Tests — Weber &amp; Rinne</div>
+    <div class="week-tag">Week 3 · Bates' technique — highly tested</div>
+  </div>
+  <div class="card-body">
+
+
+    <div class="table-cap">Weber test — tuning fork placed on the crown of the skull</div>
+    <table class="data-table">
+      <thead><tr><th>Result</th><th>Interpretation</th><th>Mechanism</th></tr></thead>
+      <tbody>
+        <tr><td>Equal in both ears (midline)</td><td>Normal</td><td>Both inner ears receiving equal signal</td></tr>
+        <tr><td>Lateralizes to the <strong>BAD ear</strong></td><td><strong>CONDUCTIVE hearing loss</strong> on that side</td><td>The blockage (wax, middle ear fluid) reduces ambient noise, making bone conduction relatively louder on that side</td></tr>
+        <tr><td>Lateralizes to the <strong>GOOD ear</strong></td><td><strong>SENSORINEURAL hearing loss</strong> on the opposite side</td><td>The damaged cochlea cannot process bone-conducted sound, so the intact cochlea receives it louder</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Rinne test — tuning fork on mastoid, then next to ear canal</div>
+    <table class="data-table">
+      <thead><tr><th>Result</th><th>Interpretation</th></tr></thead>
+      <tbody>
+        <tr><td>Air conduction (AC) &gt; Bone conduction (BC) — <strong>Positive Rinne</strong></td><td>Normal OR sensorineural hearing loss (both reduced but AC still greater)</td></tr>
+        <tr><td>Bone conduction (BC) ≥ Air conduction (AC) — <strong>Negative Rinne</strong></td><td><strong>CONDUCTIVE hearing loss</strong> — blockage makes bone conduction seem relatively louder</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Putting Weber + Rinne together — exam scenarios</div>
+    <table class="data-table">
+      <thead><tr><th>Weber</th><th>Rinne (affected ear)</th><th>Diagnosis</th><th>Example causes</th></tr></thead>
+      <tbody>
+        <tr><td>Midline — equal</td><td>AC &gt; BC (positive)</td><td>Normal hearing</td><td>—</td></tr>
+        <tr><td>Lateralizes to LEFT</td><td>BC ≥ AC in LEFT (negative)</td><td>LEFT conductive hearing loss</td><td>Cerumen impaction, otitis media with effusion, otosclerosis, TM perforation</td></tr>
+        <tr><td>Lateralizes to RIGHT</td><td>AC &gt; BC in both (positive but reduced in RIGHT)</td><td>RIGHT sensorineural hearing loss</td><td>Noise exposure, presbycusis, acoustic neuroma, ototoxic drugs (aminoglycosides, cisplatin)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Critical — most tested Weber/Rinne question</div>
+      <div class="critical-text">"Weber lateralizes to the left. Rinne shows BC &gt; AC in the left ear. What type of hearing loss?" = <strong>LEFT conductive hearing loss.</strong> Weber goes to the BAD ear. Negative Rinne (BC &gt; AC) = conductive = same side as Weber lateralization.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Weber → bad ear</div><div class="snap-val"><b>Conductive</b> hearing loss on that side</div></div>
+      <div class="snap"><div class="snap-lbl">Weber → good ear</div><div class="snap-val"><b>Sensorineural</b> on the opposite side</div></div>
+      <div class="snap"><div class="snap-lbl">Negative Rinne (BC &gt; AC)</div><div class="snap-val"><b>Conductive</b> loss — same side</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 55-year-old man reports gradual hearing loss in his right ear following years of occupational noise exposure. Weber test lateralizes to the left ear. Rinne test shows air conduction greater than bone conduction bilaterally, but both are reduced in the right ear. Which type of hearing loss does this patient have?</div>
+        <div class="opts" id="q_hear_1o">
+          <button class="opt" onclick="checkQ('q_hear_1','A')"><div class="opt-lt">A</div>Right conductive hearing loss</button>
+          <button class="opt" onclick="checkQ('q_hear_1','B')"><div class="opt-lt">B</div>Left sensorineural hearing loss</button>
+          <button class="opt" onclick="checkQ('q_hear_1','C')"><div class="opt-lt">C</div>Bilateral conductive hearing loss</button>
+          <button class="opt" onclick="checkQ('q_hear_1','D')"><div class="opt-lt">D</div>Right sensorineural hearing loss</button>
+        </div>
+        <button class="check-btn" id="q_hear_1b" disabled onclick="revealQ('q_hear_1','D')">Check answer</button>
+        <div class="rationale" id="q_hear_1r"><strong>Correct: D — Right sensorineural hearing loss.</strong> Weber lateralizes to the LEFT (the good ear) = sensorineural loss on the RIGHT (opposite side). Rinne shows AC &gt; BC in both ears (positive Rinne) but reduced in the right = sensorineural pattern. Noise exposure is a classic cause of sensorineural hearing loss. <div class="rat-wrong"><strong>A:</strong> Conductive loss would cause Weber to lateralize to the RIGHT (bad ear) and a negative Rinne on the right. <strong>B:</strong> If the loss were on the left, Weber would lateralize right. <strong>C:</strong> Bilateral conductive would show bilateral negative Rinne.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">Weber and Rinne interpretation appears on every HEENT midterm. Students who memorize the table pass this question; students who try to reason through it in the moment often confuse the lateralization direction.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Weber lateralizes to the bad ear in CONDUCTIVE loss — counterintuitive because students expect sound to be louder in the good ear. The mechanism: the blockage reduces ambient noise, making bone conduction relatively louder on the blocked side.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Presbycusis (age-related hearing loss) is sensorineural — bilateral, symmetric, high-frequency loss first. Weber = midline (equal bilateral loss). Rinne = positive bilaterally (AC still &gt; BC but both reduced).</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Confusing which side Weber points to. Weber points to the BAD ear in conductive loss and the GOOD ear in sensorineural. Students reverse these. The mnemonic: "conductive amplifies the blocked side, sensorineural abandons the damaged side."</div></div>
+  <div class="mc mc-src"><div class="mc-lbl">Bates' reference</div><div class="mc-val">Bates' Ch. 7 — Ears. Weber and Rinne interpretation table is directly reproduced in Chamberlain Week 3 study guide. The question format follows Bates' exactly.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Pharyngitis, AOM, Sinusitis -->
+<div class="concept-row two-col" id="c-pharyngitis">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Pharyngitis · AOM vs. AOE · Sinusitis</div>
+    <div class="week-tag">Week 3 · High yield</div>
+  </div>
+  <div class="card-body">
+
+    <div class="table-cap">Pharyngitis — GAS vs. Mono vs. Peritonsillar abscess</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>GAS Pharyngitis</th><th>Mono (EBV)</th><th>Peritonsillar Abscess</th></tr></thead>
+      <tbody>
+        <tr><td>Lymphadenopathy</td><td>Anterior cervical</td><td><strong>Posterior cervical</strong> (hallmark) + anterior</td><td>Unilateral anterior</td></tr>
+        <tr><td>Uvula</td><td>Midline</td><td>Midline</td><td><strong>Deviates AWAY from abscess</strong></td></tr>
+        <tr><td>Voice</td><td>Normal</td><td>Muffled</td><td><strong>"Hot potato" voice</strong> + trismus</td></tr>
+        <tr><td>Splenomegaly</td><td>No</td><td><strong>YES — no contact sports</strong></td><td>No</td></tr>
+        <tr><td>Diagnosis</td><td>Centor ≥3 → RADT</td><td>Monospot + heterophile antibodies</td><td>Clinical — uvula deviation + trismus</td></tr>
+        <tr><td>Treatment</td><td>Amoxicillin × 10 days</td><td>Supportive — <strong>NO amoxicillin</strong></td><td>ED referral — needle aspiration or I&amp;D</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Critical — mono + amoxicillin</div>
+      <div class="critical-text"><strong>NEVER give amoxicillin (or ampicillin) to a patient with mononucleosis</strong> — causes a diffuse maculopapular rash in up to 90% of patients. This is the most commonly tested mono fact. "Which antibiotic is contraindicated in EBV pharyngitis?" = amoxicillin.</div>
+    </div>
+
+    <div class="table-cap">Centor criteria — scoring for GAS pharyngitis</div>
+    <table class="data-table">
+      <thead><tr><th>Criterion</th><th>Points</th></tr></thead>
+      <tbody>
+        <tr><td>Tonsillar exudates</td><td>+1</td></tr>
+        <tr><td>Tender anterior cervical lymphadenopathy</td><td>+1</td></tr>
+        <tr><td>Fever (temperature &gt;38°C)</td><td>+1</td></tr>
+        <tr><td>Absence of cough</td><td>+1</td></tr>
+        <tr><td>Score 0–1: no test, no antibiotics | Score 2–3: RADT | Score 4: treat empirically or test</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">AOM vs. Otitis Externa — the pulling test</div>
+    <table class="data-table">
+      <thead><tr><th></th><th>Acute Otitis Media (AOM)</th><th>Otitis Externa (AOE)</th></tr></thead>
+      <tbody>
+        <tr><td>Location</td><td>Middle ear (behind TM)</td><td>Outer ear canal</td></tr>
+        <tr><td>TM appearance</td><td>Bulging, erythematous, opacified, decreased mobility</td><td>Normal TM — erythema in canal</td></tr>
+        <tr><td>Pulling pinna/tragus</td><td>Pain NOT worsened</td><td><strong>Pain WORSENED</strong> — the defining feature</td></tr>
+        <tr><td>Common organism</td><td>S. pneumoniae, H. influenzae, M. catarrhalis</td><td>Pseudomonas aeruginosa</td></tr>
+        <tr><td>Treatment</td><td>Amoxicillin 80–90 mg/kg/day (high-dose)</td><td>Topical ofloxacin drops ± acidifying agent</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip — AOM vs AOE</div>
+      <div class="exam-tip-text">Pulling on the ear is the key test. <strong>Pain worse with pulling pinna = otitis externa</strong> (outer ear involved). <strong>Pain NOT changed by pulling = otitis media</strong> (middle ear, behind the TM). This single maneuver differentiates them clinically.</div>
+    </div>
+
+    <div class="table-cap">Viral vs. bacterial sinusitis</div>
+    <table class="data-table">
+      <thead><tr><th></th><th>Viral</th><th>Bacterial</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>&lt;10 days, improving</td><td>&gt;10 days OR worsens after initial improvement ("double worsening")</td></tr>
+        <tr><td>Treatment</td><td>Symptomatic only — saline irrigation, decongestants. No antibiotics.</td><td>Amoxicillin-clavulanate × 5–7 days</td></tr>
+      </tbody>
+    </table>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Posterior cervical LAD</div><div class="snap-val"><b>EBV/Mono</b> — not strep</div></div>
+      <div class="snap"><div class="snap-lbl">Pain worse pulling ear</div><div class="snap-val"><b>Otitis externa</b></div></div>
+      <div class="snap"><div class="snap-lbl">Sinusitis antibiotics</div><div class="snap-val">Only if <b>&gt;10 days</b> or double worsening</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 20-year-old college student presents with severe sore throat, fever 38.9°C, posterior cervical lymphadenopathy, significant fatigue, and splenomegaly on exam. Monospot test is positive. He asks if he needs an antibiotic because his roommate was recently treated for strep throat. Which of the following is the most appropriate response?</div>
+        <div class="opts" id="q_mono_1o">
+          <button class="opt" onclick="checkQ('q_mono_1','A')"><div class="opt-lt">A</div>Prescribe amoxicillin 500mg TID × 10 days to cover possible concurrent Group A Strep</button>
+          <button class="opt" onclick="checkQ('q_mono_1','B')"><div class="opt-lt">B</div>Prescribe azithromycin as an alternative if strep coverage is needed, and advise no contact sports</button>
+          <button class="opt" onclick="checkQ('q_mono_1','C')"><div class="opt-lt">C</div>Prescribe penicillin V — the standard treatment for pharyngitis</button>
+          <button class="opt" onclick="checkQ('q_mono_1','D')"><div class="opt-lt">D</div>Prescribe acyclovir — the first-line antiviral for EBV pharyngitis</button>
+        </div>
+        <button class="check-btn" id="q_mono_1b" disabled onclick="revealQ('q_mono_1','B')">Check answer</button>
+        <div class="rationale" id="q_mono_1r"><strong>Correct: B — Azithromycin if strep coverage needed, and no contact sports.</strong> Mononucleosis is managed supportively. If concurrent GAS is suspected or needs to be covered, azithromycin is the safe choice. Amoxicillin and ampicillin cause a diffuse maculopapular rash in up to 90% of EBV patients — they must be avoided. Splenomegaly requires activity restriction — no contact sports for 3–4 weeks to prevent splenic rupture. <div class="rat-wrong"><strong>A (amoxicillin):</strong> Absolutely contraindicated in mononucleosis — causes diffuse maculopapular rash in up to 90% of patients. <strong>C (penicillin V):</strong> Penicillin V is acceptable for GAS pharyngitis but beta-lactams as a class carry the rash risk in mono — azithromycin is the safer alternative. <strong>D (acyclovir):</strong> Acyclovir is not effective for EBV-associated mononucleosis in immunocompetent patients.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">GAS vs. mono distinction and amoxicillin contraindication in mono are confirmed midterm questions. AOM vs AOE differentiation appears in both standard and NOT/EXCEPT formats.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Giving amoxicillin for strep coverage in a patient who actually has mono. The exam gives a sore throat patient with POSTERIOR cervical LAD and splenomegaly — this is mono, not strep. Amoxicillin = rash.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Peritonsillar abscess: uvula deviates AWAY from the abscess. If uvula deviates LEFT, the abscess is on the RIGHT (it pushes the uvula away). Hot potato voice + trismus = peritonsillar abscess.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">The sinusitis antibiotic threshold: 10 days or double worsening. Students treat at 7 days. The correct threshold is 10 days of symptoms OR symptoms that improve then worsen — not just color or severity of discharge.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: BPPV vs Ménière -->
+<div class="concept-row two-col" id="c-bppv">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">BPPV vs. Ménière Disease</div>
+    <div class="week-tag">Week 3 · Bates' technique — Dix-Hallpike</div>
+  </div>
+  <div class="card-body">
+    <div class="prose">
+      <p>Benign paroxysmal positional vertigo (BPPV) is the most common cause of vertigo in primary care. Ménière disease is less common but tested as a comparison. The exam asks you to identify which diagnosis fits the clinical picture — the key discriminators are episode duration, the presence or absence of hearing loss and tinnitus, and whether the Dix-Hallpike maneuver is positive.</p>
+    </div>
+
+    <div class="table-cap">BPPV vs. Ménière disease — the comparison</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>BPPV</th><th>Ménière Disease</th></tr></thead>
+      <tbody>
+        <tr><td>Episode duration</td><td><strong>&lt;1 minute</strong> — brief, seconds to less than a minute</td><td><strong>20 minutes to several hours</strong> — prolonged episodes</td></tr>
+        <tr><td>Trigger</td><td>Specific head position changes — rolling over in bed, looking up, bending forward</td><td>Spontaneous — not purely positional</td></tr>
+        <tr><td>Hearing loss</td><td><strong>ABSENT</strong> — no hearing change</td><td><strong>Unilateral sensorineural hearing loss</strong> — low-frequency first</td></tr>
+        <tr><td>Tinnitus / aural fullness</td><td>Absent</td><td><strong>Present</strong> — tinnitus + aural fullness (ear pressure)</td></tr>
+        <tr><td>Dix-Hallpike maneuver</td><td><strong>POSITIVE</strong> — brief rotatory nystagmus with 5–20 sec latency, fatigues with repetition</td><td>Negative</td></tr>
+        <tr><td>Treatment</td><td><strong>Epley maneuver</strong> (canalith repositioning) — 80–90% effective in a single session</td><td>Low-sodium diet, diuretics, betahistine. Referral to ENT for refractory cases.</td></tr>
+        <tr><td>Cause</td><td>Displaced calcium carbonate crystals (otoliths) in the posterior semicircular canal</td><td>Endolymphatic hydrops — increased fluid pressure in the inner ear</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Dix-Hallpike maneuver — how to perform and interpret</div>
+    <table class="data-table">
+      <thead><tr><th>Step</th><th>Technique</th></tr></thead>
+      <tbody>
+        <tr><td>1. Position</td><td>Patient seated at the edge of the table. Turn head 45° to the side being tested.</td></tr>
+        <tr><td>2. Maneuver</td><td>Quickly lower patient to supine with head hanging 20–30° below the table edge. Maintain 45° head turn.</td></tr>
+        <tr><td>3. Positive result</td><td>Brief rotatory (torsional) nystagmus appears after a 5–20 second latency. Vertigo is reproduced. Nystagmus lasts &lt;60 seconds and FATIGUES with repeated testing.</td></tr>
+        <tr><td>4. Negative result</td><td>No nystagmus, or nystagmus that does not fatigue or has no latency → consider central cause → MRI.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="critical">
+      <div class="critical-lbl">⚠ Central vertigo — when to order MRI</div>
+      <div class="critical-text">Red flags suggesting central (NOT benign) vertigo: nystagmus that does <strong>not fatigue</strong>, direction-changing nystagmus, associated neurological deficits (diplopia, dysarthria, ataxia, facial numbness), or new severe headache. These findings warrant urgent MRI — do not treat as BPPV.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">BPPV episodes</div><div class="snap-val"><b>&lt;1 minute</b> — positional, no hearing loss</div></div>
+      <div class="snap"><div class="snap-lbl">Ménière episodes</div><div class="snap-val"><b>20 min–hours</b> + hearing loss + tinnitus</div></div>
+      <div class="snap"><div class="snap-lbl">BPPV treatment</div><div class="snap-val"><b>Epley maneuver</b> — canalith repositioning</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 55-year-old woman reports episodic dizziness that occurs when she rolls over in bed and lasts about 30 seconds before resolving on its own. She denies hearing loss, tinnitus, or ear fullness. Dix-Hallpike maneuver reproduces her vertigo with brief rotatory nystagmus that appears after a few seconds and resolves within 40 seconds. The nystagmus does not occur when the maneuver is repeated immediately. Which of the following is the most appropriate initial treatment?</div>
+        <div class="opts" id="q_bppv_1o">
+          <button class="opt" onclick="checkQ('q_bppv_1','A')"><div class="opt-lt">A</div>Low-sodium diet and oral hydrochlorothiazide</button>
+          <button class="opt" onclick="checkQ('q_bppv_1','B')"><div class="opt-lt">B</div>Urgent MRI of the brain to rule out central vertigo</button>
+          <button class="opt" onclick="checkQ('q_bppv_1','C')"><div class="opt-lt">C</div>Epley canalith repositioning maneuver</button>
+          <button class="opt" onclick="checkQ('q_bppv_1','D')"><div class="opt-lt">D</div>Referral to ENT for endolymphatic shunt surgery</button>
+        </div>
+        <button class="check-btn" id="q_bppv_1b" disabled onclick="revealQ('q_bppv_1','C')">Check answer</button>
+        <div class="rationale" id="q_bppv_1r"><strong>Correct: C — Epley canalith repositioning maneuver.</strong> This is classic BPPV: brief (&lt;1 minute) positional vertigo triggered by head movement, no hearing loss or tinnitus, positive Dix-Hallpike with rotatory nystagmus that has latency and FATIGUES (disappears on repeat testing). Epley maneuver repositions the displaced otoliths and resolves BPPV in 80–90% of patients in a single session. <div class="rat-wrong"><strong>A (low-sodium diet + diuretic):</strong> Treatment for Ménière disease — which has prolonged episodes (20 min–hours) + hearing loss + tinnitus. <strong>B (urgent MRI):</strong> MRI is indicated for central vertigo red flags — non-fatiguing nystagmus, direction-changing nystagmus, or associated neurological deficits. This patient has none. <strong>D (ENT surgery):</strong> Surgical management for refractory Ménière disease — not appropriate here.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">BPPV vs Ménière appears consistently on Week 3. The Dix-Hallpike maneuver and Epley treatment are Bates'-chapter content tested directly. Episode duration is the fastest differentiator.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Ordering MRI for every patient with vertigo. MRI is for central vertigo (non-fatiguing nystagmus, neurological deficits). Classic BPPV with a positive fatiguing Dix-Hallpike = treat with Epley, no imaging needed.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">The Epley maneuver is a series of head position changes that moves the displaced otolith (calcium crystal) from the posterior semicircular canal back into the utricle where it causes no symptoms. 80–90% effective in a single office visit.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Students prescribe meclizine (antihistamine/antiemetic) for BPPV. Meclizine treats nausea but does nothing to reposition the otolith. Epley maneuver is the correct treatment — meclizine is a distractor.</div></div>
+  <div class="mc mc-src"><div class="mc-lbl">Bates' reference</div><div class="mc-val">Bates' Ch. 7 — Ears. Dix-Hallpike technique and interpretation described explicitly. Chamberlain Week 3 study guide references the maneuver by name.</div></div>
+</div>
+</div>
+
+</div><!-- week3 -->
+
+<hr class="week-divider">
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- WEEK 4 — GASTROINTESTINAL                          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="week4">
+<div class="week-hdr">
+  <div class="week-hdr-num">4</div>
+  <div class="week-hdr-text">
+    <div class="week-hdr-title">Gastrointestinal</div>
+    <div class="week-hdr-sub">Appendicitis · IBD vs IBS · GERD · H. pylori · Diverticulitis · Celiac · Colon cancer screening</div>
+  </div>
+</div>
+
+<!-- CONCEPT: Appendicitis & Abdominal Pain by Location -->
+
+<div class="week-jump-nav"><span class="week-jump-lbl">Jump to:</span><a href="#c-abdominal">Abdominal Pain</a><a href="#c-ibd">IBD vs IBS</a><a href="#c-gi-misc">GERD · H. pylori</a><a href="#c-pud">PUD &amp; Barrett's</a></div>
+
+<div class="concept-row two-col" id="c-abdominal">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Abdominal Pain by Location &amp; Appendicitis</div>
+    <div class="week-tag">Week 4</div>
+  </div>
+  <div class="card-body">
+    <div class="prose">
+      <p>Abdominal pain location is the most important initial clue in GI diagnosis. The exam gives a location and asks you to identify the most likely diagnosis — or gives a diagnosis and asks about its expected location. Know the quadrant map cold.</p>
+    </div>
+
+    <div class="table-cap">Abdominal quadrant pain — top diagnoses by location</div>
+    <table class="data-table">
+      <thead><tr><th>Location</th><th>Top diagnoses</th><th>Key discriminating feature</th></tr></thead>
+      <tbody>
+        <tr><td>RUQ</td><td>Acute cholecystitis, cholelithiasis, hepatitis</td><td>Murphy sign (cholecystitis); post-fatty meal pain; elevated LFTs</td></tr>
+        <tr><td>RLQ</td><td>Appendicitis, ovarian pathology (female), Crohn's</td><td>McBurney point; periumbilical → RLQ migration; fever + anorexia</td></tr>
+        <tr><td>LLQ</td><td>Diverticulitis, sigmoid pathology, ovarian pathology</td><td>Age &gt;50 + low fiber diet; fever + leukocytosis</td></tr>
+        <tr><td>Epigastric</td><td>GERD, peptic ulcer, pancreatitis (head)</td><td>Post-meal heartburn (GERD); empty-stomach relief (duodenal ulcer); radiates to back (pancreatitis)</td></tr>
+        <tr><td>Periumbilical</td><td>Early appendicitis, mesenteric ischemia</td><td>Migrates to RLQ = appendicitis; pain out of proportion to exam = mesenteric ischemia</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Appendicitis — classic progression and physical exam signs</div>
+    <table class="data-table">
+      <thead><tr><th>Sign</th><th>Technique</th><th>Indicates</th></tr></thead>
+      <tbody>
+        <tr><td>McBurney point tenderness</td><td>Deep palpation at 1/3 between ASIS and umbilicus</td><td>Direct tenderness over appendix base — most specific</td></tr>
+        <tr><td>Rovsing sign</td><td>Palpate LLQ → patient reports RLQ pain</td><td>Contralateral peritoneal irritation from inflamed appendix</td></tr>
+        <tr><td>Psoas sign</td><td>Extend right hip while patient lies on left side</td><td>Positive = retrocecal appendicitis irritating iliopsoas muscle</td></tr>
+        <tr><td>Obturator sign</td><td>Flex and internally rotate right hip</td><td>Positive = pelvic appendicitis near the obturator internus</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip — appendicitis progression</div>
+      <div class="exam-tip-text">Appendicitis always starts as <strong>vague periumbilical pain</strong>, then anorexia/nausea, then pain <strong>migrates to RLQ within 12–24 hours</strong>. The exam will describe early periumbilical pain — the student must recognize the migration pattern and not be distracted by the initial location.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Appendicitis migration</div><div class="snap-val">Periumbilical → <b>RLQ</b> in 12–24h</div></div>
+      <div class="snap"><div class="snap-lbl">McBurney point</div><div class="snap-val">1/3 from <b>ASIS to umbilicus</b></div></div>
+      <div class="snap"><div class="snap-lbl">Rovsing sign</div><div class="snap-val">LLQ pressure → <b>RLQ pain</b></div></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★☆</div><div class="mc-val">The periumbilical → RLQ migration pattern and McBurney point are tested in every GI week. The exam also tests Rovsing sign as a distractor in red-flag abdominal pain scenarios.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Early appendicitis looks like periumbilical pain — not RLQ. Students miss early appendicitis because they expect RLQ pain from the start. The periumbilical onset is part of the classic presentation.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Anorexia is a classic feature of appendicitis. "The patient reports no appetite since the pain started" — this is a diagnostic clue that distinguishes appendicitis from functional causes of abdominal pain.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Confusing Rovsing sign with McBurney point. McBurney = direct RLQ tenderness at a specific point. Rovsing = LLQ pressure causing RLQ pain (contralateral). Both indicate appendicitis but by different mechanisms.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: IBD vs IBS -->
+<div class="concept-row two-col" id="c-ibd">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">IBD vs. IBS — The Most Tested GI Distinction</div>
+    <div class="week-tag">Week 4 · Guaranteed question</div>
+  </div>
+  <div class="card-body">
+
+
+    <div class="table-cap">IBD vs. IBS — the complete comparison</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>IBD (Crohn / UC)</th><th>IBS (Irritable Bowel Syndrome)</th></tr></thead>
+      <tbody>
+        <tr><td>Disease type</td><td>ORGANIC — structural inflammation, mucosal or transmural</td><td>FUNCTIONAL — no structural change, no inflammation</td></tr>
+        <tr><td>Blood in stool</td><td><strong>YES — bloody diarrhea is hallmark</strong></td><td><strong>NEVER — blood = IBD, not IBS</strong></td></tr>
+        <tr><td>Inflammatory markers</td><td>Elevated CRP, ESR, fecal calprotectin, leukocytosis</td><td>Normal CRP, ESR, colonoscopy</td></tr>
+        <tr><td>Weight loss / fever</td><td>Common in active disease</td><td>Absent</td></tr>
+        <tr><td>Diagnosis</td><td>Colonoscopy + biopsy required</td><td>Rome IV clinical criteria — no required testing</td></tr>
+        <tr><td>Rome IV criteria (IBS)</td><td>N/A</td><td>Recurrent abdominal pain ≥1 day/week × 3 months, associated with stool changes or improving with defecation</td></tr>
+        <tr><td>Treatment</td><td>Mesalamine (UC), steroids, biologics (anti-TNF)</td><td>Low-FODMAP diet, fiber, antispasmodics, CBT</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Crohn vs. Ulcerative Colitis — the internal IBD distinction</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Crohn Disease</th><th>Ulcerative Colitis</th></tr></thead>
+      <tbody>
+        <tr><td>Location</td><td>Any GI segment (mouth to anus)</td><td>Rectum → extends proximally. Always involves rectum.</td></tr>
+        <tr><td>Distribution</td><td>SKIP lesions — diseased areas with normal tissue between</td><td>CONTINUOUS — no skip lesions</td></tr>
+        <tr><td>Depth</td><td>TRANSMURAL — all bowel wall layers. Fistulas, abscesses.</td><td>MUCOSAL only — inner lining only. No fistulas.</td></tr>
+        <tr><td>Cancer risk</td><td>Increased but lower than UC</td><td>Significantly elevated — surveillance colonoscopy required</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">NOT/EXCEPT — the guaranteed version</div>
+      <div class="not-except-text">"Which of the following is NOT consistent with IBS?" → <strong>rectal bleeding</strong>. IBS never causes blood in the stool. This is the most commonly tested single fact about IBS. If you see blood in the stool, the diagnosis is IBD.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Blood = IBD</div><div class="snap-val">IBS <span class="coral">NEVER</span> causes blood in stool</div></div>
+      <div class="snap"><div class="snap-lbl">Crohn</div><div class="snap-val"><b>Skip lesions</b> + transmural + fistulas</div></div>
+      <div class="snap"><div class="snap-lbl">UC</div><div class="snap-val"><b>Rectum → proximal</b>, continuous, mucosal</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 26-year-old woman presents with 4 months of crampy abdominal pain that improves after bowel movements, alternating constipation and diarrhea, and bloating. She has had no weight loss, no fever, and no blood in her stool. CBC and CRP are both normal. Which of the following is NOT consistent with her diagnosis?</div>
+        <div class="opts" id="q_ibs_1o">
+          <button class="opt" onclick="checkQ('q_ibs_1','B')"><div class="opt-lt">A</div>Normal inflammatory markers</button>
+          <button class="opt" onclick="checkQ('q_ibs_1','C')"><div class="opt-lt">B</div>Presence of bright red blood in the stool</button>
+          <button class="opt" onclick="checkQ('q_ibs_1','D')"><div class="opt-lt">C</div>Absence of structural abnormality on colonoscopy</button>
+          <button class="opt" onclick="checkQ('q_ibs_1','A')"><div class="opt-lt">D</div>Symptoms improving with defecation</button>
+        </div>
+        <button class="check-btn" id="q_ibs_1b" disabled onclick="revealQ('q_ibs_1','D')">Check answer</button>
+        <div class="rationale" id="q_ibs_1r"><strong>Correct: C — Blood in stool is NOT consistent with IBS.</strong> IBS is a functional disorder with no structural change and no inflammation. Rectal bleeding never occurs in IBS — its presence indicates an organic cause (IBD, colorectal cancer, hemorrhoids). All other options are consistent with IBS: improving with defecation (Rome IV criterion), normal CRP (functional disorder), and normal colonoscopy (no structural pathology). <div class="rat-wrong">A, B, and D are all consistent with IBS and therefore NOT the correct answer to a NOT/EXCEPT question.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">IBD vs. IBS is the single most tested GI concept on the NR511 midterm. The "IBS never causes blood" fact appears in multiple question formats every semester.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">The exam gives a patient with crampy diarrhea and asks what distinguishes IBD from IBS — students who answer "diarrhea" are wrong. Both cause diarrhea. The answer is always "blood in the stool" or "elevated CRP/ESR."</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Crohn disease can cause perianal fistulas and abscesses — UC never does. This is a reliable Crohn-specific finding. If the exam mentions a perianal fistula with IBD = Crohn, not UC.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">UC always involves the rectum. Students confuse Crohn (can spare the rectum, has skip lesions) with UC (rectum always involved, continuous). If the rectum is spared = Crohn.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: GERD, H. pylori, Diverticulitis, Celiac, Colon Cancer Screening -->
+<div class="concept-row two-col" id="c-gi-misc">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">GERD · H. pylori · Diverticulitis · Celiac · Colon Cancer Screening</div>
+    <div class="week-tag">Week 4</div>
+  </div>
+  <div class="card-body">
+
+    <div class="table-cap">GERD — alarm features requiring immediate EGD</div>
+    <table class="data-table">
+      <thead><tr><th>Alarm feature</th><th>Concern</th></tr></thead>
+      <tbody>
+        <tr><td>Dysphagia (difficulty swallowing)</td><td>Esophageal stricture or cancer</td></tr>
+        <tr><td>Odynophagia (pain with swallowing)</td><td>Esophageal ulcer or infection</td></tr>
+        <tr><td>Unintentional weight loss</td><td>Malignancy</td></tr>
+        <tr><td>Hematemesis or melena</td><td>Active upper GI bleed</td></tr>
+        <tr><td>New symptoms age &gt;60 or refractory symptoms</td><td>Barrett's esophagus, adenocarcinoma</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">NOT/EXCEPT — GERD management</div>
+      <div class="not-except-text">"Which is NOT an alarm feature requiring endoscopy in a GERD patient?" → heartburn alone without dysphagia, weight loss, or bleeding. Simple heartburn is managed with lifestyle + PPI without EGD first. The alarm features change the management entirely.</div>
+    </div>
+
+    <div class="table-cap">H. pylori — diagnosis and treatment</div>
+    <table class="data-table">
+      <thead><tr><th>Aspect</th><th>Key fact</th></tr></thead>
+      <tbody>
+        <tr><td>Preferred non-invasive diagnosis</td><td>Urea breath test OR stool antigen test</td></tr>
+        <tr><td>Avoid serology for diagnosis</td><td>Antibody tests cannot distinguish active from past infection</td></tr>
+        <tr><td>First-line treatment</td><td>Triple therapy: PPI + clarithromycin + amoxicillin × 14 days</td></tr>
+        <tr><td>PCN allergy</td><td>PPI + clarithromycin + metronidazole × 14 days</td></tr>
+        <tr><td>Confirm eradication</td><td>Urea breath test or stool antigen — 4 weeks AFTER completing antibiotics</td></tr>
+        <tr><td>Serology for eradication</td><td><strong>NOT recommended</strong> — antibodies persist for months after eradication</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip — H. pylori eradication confirmation</div>
+      <div class="exam-tip-text">"Which test is NOT recommended for confirming H. pylori eradication?" → serology. Antibodies remain positive for months to years after successful eradication. Use urea breath test or stool antigen 4 weeks after completing treatment.</div>
+    </div>
+
+    <div class="table-cap">Diverticulitis vs. Diverticulosis</div>
+    <table class="data-table">
+      <thead><tr><th></th><th>Diverticulosis</th><th>Diverticulitis</th></tr></thead>
+      <tbody>
+        <tr><td>Symptoms</td><td>Asymptomatic in 80%</td><td>LLQ pain + fever + leukocytosis + nausea</td></tr>
+        <tr><td>Bleeding</td><td>Painless lower GI bleeding (diverticular bleed)</td><td>No rectal bleeding</td></tr>
+        <tr><td>Diagnosis</td><td>Incidental on colonoscopy</td><td>CT abdomen/pelvis with contrast</td></tr>
+        <tr><td>Treatment</td><td>High-fiber diet, no treatment needed</td><td>Oral antibiotics if uncomplicated (amoxicillin-clavulanate). IV antibiotics + admission if complicated.</td></tr>
+        <tr><td>Colonoscopy during acute attack</td><td>Screening per guidelines</td><td><strong>CONTRAINDICATED</strong> — risk of perforation. Defer 6–8 weeks.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="table-cap">Celiac disease — key facts</div>
+    <table class="data-table">
+      <thead><tr><th>Aspect</th><th>Key fact</th></tr></thead>
+      <tbody>
+        <tr><td>Mechanism</td><td>Immune reaction to gluten (wheat, rye, barley) → villous atrophy → malabsorption</td></tr>
+        <tr><td>Screening test</td><td>Anti-tTG IgA (anti-tissue transglutaminase IgA) — check total IgA simultaneously</td></tr>
+        <tr><td>Confirmatory test</td><td>Duodenal biopsy — villous atrophy, crypt hyperplasia</td></tr>
+        <tr><td>Treatment</td><td>Strict gluten-free diet — lifelong. No medication.</td></tr>
+        <tr><td>Associated skin finding</td><td>Dermatitis herpetiformis — pruritic vesicular rash on elbows and knees</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">★ Colon cancer screening — critical update</div>
+      <div class="not-except-text">USPSTF updated the screening start age from 50 to <strong>45</strong> in 2021. "At what age should average-risk colorectal cancer screening begin?" → <strong>45</strong>. This is a confirmed exam trap because many resources still cite 50. Continue screening through age 75. Colonoscopy every 10 years remains the gold standard.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">H. pylori eradication test</div><div class="snap-val"><b>Urea breath test</b> — not serology</div></div>
+      <div class="snap"><div class="snap-lbl">Celiac screening</div><div class="snap-val"><b>Anti-tTG IgA</b> — then biopsy</div></div>
+      <div class="snap"><div class="snap-lbl">Colon cancer screening</div><div class="snap-val">Start at age <span class="coral">45</span> — updated from 50</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style question</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 1</div>
+        <div class="q-stem">A 47-year-old asymptomatic man with no personal or family history of colorectal cancer asks about cancer screening. He has never had a colonoscopy. He is African American. Per current USPSTF guidelines, which of the following is correct?</div>
+        <div class="opts" id="q_colon_1o">
+          <button class="opt" onclick="checkQ('q_colon_1','A')"><div class="opt-lt">A</div>He is below the screening age of 50 — no screening needed at this time</button>
+          <button class="opt" onclick="checkQ('q_colon_1','B')"><div class="opt-lt">B</div>He should begin screening now — current USPSTF recommendation is age 45</button>
+          <button class="opt" onclick="checkQ('q_colon_1','C')"><div class="opt-lt">C</div>African American patients require screening starting at age 40 per separate guidelines</button>
+          <button class="opt" onclick="checkQ('q_colon_1','D')"><div class="opt-lt">D</div>Screening is only indicated if he has symptoms such as rectal bleeding or weight loss</button>
+        </div>
+        <button class="check-btn" id="q_colon_1b" disabled onclick="revealQ('q_colon_1','B')">Check answer</button>
+        <div class="rationale" id="q_colon_1r"><strong>Correct: B — Screen now at age 47.</strong> The USPSTF updated the colorectal cancer screening start age from 50 to 45 in 2021. This patient at 47 is within the screening age range and should begin now. <div class="rat-wrong"><strong>A:</strong> Age 50 was the old threshold — superseded by the 2021 update to age 45. <strong>C:</strong> USPSTF does not have a separate earlier start age for African American patients — the recommendation is age 45 for all average-risk adults. Some professional societies previously recommended 40 for Black patients but USPSTF is 45. <strong>D:</strong> Colorectal cancer screening is for asymptomatic patients — symptomatic patients require diagnostic colonoscopy, not screening.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★★</div><div class="mc-val">The colon cancer screening age update (45, not 50) appears on virtually every GI midterm. H. pylori eradication confirmation and GERD alarm features also appear consistently.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Screening age 50 is outdated. The USPSTF changed it to 45 in 2021. The exam includes 50 as a distractor. Students who haven't updated their knowledge will choose 50 — and miss the question.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">Do NOT perform colonoscopy during acute diverticulitis — perforation risk. Wait 6–8 weeks after resolution. The exam may present this as the "most appropriate next step" — colonoscopy during the acute attack is always wrong.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Using serology to confirm H. pylori eradication. Serology (antibody test) stays positive for months after successful treatment. Urea breath test or stool antigen at 4 weeks post-treatment is the correct confirmation method.</div></div>
+</div>
+</div>
+
+<!-- CONCEPT: Peptic Ulcer Disease & Barrett's Esophagus -->
+<div class="concept-row two-col" id="c-pud">
+<div class="concept-left">
+<div class="card">
+  <div class="card-hdr">
+    <div class="card-name">Peptic Ulcer Disease &amp; Barrett's Esophagus</div>
+    <div class="week-tag">Week 4 · Pain timing + GERD complication</div>
+  </div>
+  <div class="card-body">
+
+
+    <div class="table-cap">Duodenal ulcer vs. Gastric ulcer — the pain timing rule</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Duodenal Ulcer</th><th>Gastric Ulcer</th></tr></thead>
+      <tbody>
+        <tr><td>Pain timing</td><td><strong>Relieved by food</strong> — acid is buffered by food in the duodenum</td><td><strong>Worsened by food</strong> — food stimulates more acid secretion against the damaged stomach wall</td></tr>
+        <tr><td>Night pain</td><td>Classic — patient wakes 2–3 AM with pain (stomach empties, acid unbuffered)</td><td>Less classic</td></tr>
+        <tr><td>H. pylori association</td><td>70% caused by H. pylori</td><td>H. pylori + NSAIDs (more equal split)</td></tr>
+        <tr><td>Location</td><td>Epigastric — first part of duodenum most common</td><td>Epigastric — lesser curvature of stomach most common</td></tr>
+        <tr><td>Cancer risk</td><td>Very low</td><td>Slightly elevated — biopsy all gastric ulcers at endoscopy</td></tr>
+        <tr><td>First-line treatment</td><td>PPI × 8 weeks + H. pylori eradication if positive</td><td>PPI × 8–12 weeks + H. pylori eradication + biopsy all gastric ulcers</td></tr>
+      </tbody>
+    </table>
+
+    <div class="exam-tip">
+      <div class="exam-tip-lbl">★ Exam tip — the food rule</div>
+      <div class="exam-tip-text"><strong>Duodenal = food RELIEVES</strong> (duodenum is downstream — food buffers acid before it reaches the ulcer). <strong>Gastric = food WORSENS</strong> (food stimulates parietal cells to secrete more acid onto the damaged stomach wall). The exam gives you a patient and says "pain improves after eating" = duodenal. "Pain is worse after meals" = gastric.</div>
+    </div>
+
+    <div class="table-cap">Barrett's esophagus — GERD's most important complication</div>
+    <table class="data-table">
+      <thead><tr><th>Feature</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Definition</td><td>Metaplastic replacement of normal squamous esophageal epithelium with intestinal columnar epithelium (goblet cells) — a result of chronic acid injury</td></tr>
+        <tr><td>Cause</td><td>Chronic GERD — typically 5+ years of untreated or undertreated reflux</td></tr>
+        <tr><td>Significance</td><td>Precursor to <strong>esophageal adenocarcinoma</strong> — Barrett's carries 30–40× increased risk of adenocarcinoma</td></tr>
+        <tr><td>Diagnosis</td><td>Upper endoscopy (EGD) with biopsy — "salmon-colored" mucosa in the distal esophagus</td></tr>
+        <tr><td>Surveillance</td><td>Regular EGD surveillance is required — interval depends on presence of dysplasia. No dysplasia = every 3–5 years. Low-grade dysplasia = every 6–12 months.</td></tr>
+        <tr><td>Who to screen</td><td>Men &gt;50 with chronic GERD symptoms (&gt;5 years) + at least one risk factor: obesity, tobacco use, White race, nocturnal symptoms, hiatal hernia</td></tr>
+      </tbody>
+    </table>
+
+    <div class="not-except">
+      <div class="not-except-lbl">NOT/EXCEPT — Barrett's esophagus</div>
+      <div class="not-except-text">"Which of the following is NOT true about Barrett's esophagus?" → it resolves with PPI therapy. PPIs reduce acid and relieve symptoms but do NOT reverse the metaplastic change. Barrett's requires ongoing endoscopic surveillance regardless of symptom control.</div>
+    </div>
+
+    <div class="snap-row">
+      <div class="snap"><div class="snap-lbl">Food relieves pain</div><div class="snap-val"><b>Duodenal</b> ulcer</div></div>
+      <div class="snap"><div class="snap-lbl">Food worsens pain</div><div class="snap-val"><b>Gastric</b> ulcer</div></div>
+      <div class="snap"><div class="snap-lbl">Barrett's risk</div><div class="snap-val">GERD → <span class="coral">adenocarcinoma</span> precursor</div></div>
+    </div>
+
+    <div class="exam-block">
+      <div class="exam-hdr"><span class="exam-hdr-lbl">Exam-style questions</span><span class="exam-hdr-badge">NR511 format</span></div>
+      <div class="exam-body">
+        <div class="q-num">Question 1 of 2</div>
+        <div class="q-stem">A 42-year-old man reports 3 months of epigastric pain that wakes him from sleep at 2 AM. He notes that eating a snack at bedtime relieves the pain temporarily. He takes ibuprofen occasionally for back pain. H. pylori breath test returns positive. Which of the following best describes his ulcer type and mechanism?</div>
+        <div class="opts" id="q_pud_1o">
+          <button class="opt" onclick="checkQ('q_pud_1','C')"><div class="opt-lt">A</div>Gastric ulcer — H. pylori only causes gastric ulcers, not duodenal ulcers</button>
+          <button class="opt" onclick="checkQ('q_pud_1','D')"><div class="opt-lt">B</div>GERD — nocturnal symptoms indicate acid reflux rather than ulcer disease</button>
+          <button class="opt" onclick="checkQ('q_pud_1','A')"><div class="opt-lt">C</div>Gastric ulcer — food stimulates acid secretion onto the damaged stomach wall, worsening pain</button>
+          <button class="opt" onclick="checkQ('q_pud_1','B')"><div class="opt-lt">D</div>Duodenal ulcer — food buffers acid in the duodenum, temporarily relieving pain</button>
+        </div>
+        <button class="check-btn" id="q_pud_1b" disabled onclick="revealQ('q_pud_1','D')">Check answer</button>
+        <div class="rationale" id="q_pud_1r"><strong>Correct: B — Duodenal ulcer.</strong> Pain relieved by food (eating a snack helps) + nocturnal pain waking at 2 AM (stomach is empty and acid is unbuffered) = classic duodenal ulcer pattern. Food buffers acid in the duodenum downstream from the ulcer. H. pylori is the cause of 70% of duodenal ulcers. <div class="rat-wrong"><strong>A:</strong> Gastric ulcer pain is WORSENED by food — the opposite of this patient's presentation. <strong>C:</strong> H. pylori causes BOTH gastric and duodenal ulcers — duodenal is actually more common with H. pylori. <strong>D:</strong> GERD causes heartburn and regurgitation, not food-relieved nocturnal epigastric pain.</div></div>
+
+        <div class="q-div"></div>
+        <div class="q-num">Question 2 of 2</div>
+        <div class="q-stem">A 56-year-old obese man with a 10-year history of GERD reports that his heartburn symptoms are now well-controlled on pantoprazole. An upper endoscopy performed for routine surveillance shows salmon-colored mucosa in the distal esophagus. Biopsy confirms intestinal metaplasia with no dysplasia. Which of the following is the most appropriate management?</div>
+        <div class="opts" id="q_pud_2o">
+          <button class="opt" onclick="checkQ('q_pud_2','D')"><div class="opt-lt">A</div>Reassure the patient — Barrett's esophagus resolves with PPI therapy</button>
+          <button class="opt" onclick="checkQ('q_pud_2','A')"><div class="opt-lt">B</div>Discontinue pantoprazole — symptoms are controlled and surveillance is no longer needed</button>
+          <button class="opt" onclick="checkQ('q_pud_2','B')"><div class="opt-lt">C</div>Continue PPI and schedule repeat EGD surveillance in 3–5 years</button>
+          <button class="opt" onclick="checkQ('q_pud_2','C')"><div class="opt-lt">D</div>Refer for immediate esophagectomy — Barrett's always requires surgical resection</button>
+        </div>
+        <button class="check-btn" id="q_pud_2b" disabled onclick="revealQ('q_pud_2','A')">Check answer</button>
+        <div class="rationale" id="q_pud_2r"><strong>Correct: B — Continue PPI and schedule EGD surveillance in 3–5 years.</strong> Barrett's esophagus without dysplasia is managed with ongoing acid suppression (PPI) and endoscopic surveillance every 3–5 years. The PPI reduces symptoms and may slow progression but does NOT reverse the metaplastic change. <div class="rat-wrong"><strong>A:</strong> Stopping surveillance because symptoms are controlled is dangerous — Barrett's can progress to adenocarcinoma asymptomatically. <strong>C:</strong> Esophagectomy is reserved for high-grade dysplasia or early adenocarcinoma — not for non-dysplastic Barrett's. <strong>D:</strong> PPIs do NOT reverse Barrett's metaplasia — this is the most important false belief to correct.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="margin">
+  <div class="mc mc-stars"><div class="mc-lbl">Exam frequency</div><div class="star-row">★★★★☆</div><div class="mc-val">Duodenal vs gastric pain pattern is a confirmed clinical vignette question. Barrett's esophagus is named in the Chamberlain Week 4 study guide — the "PPIs don't reverse Barrett's" trap appears consistently.</div></div>
+  <div class="mc mc-trap"><div class="mc-lbl">⚠ Exam trap</div><div class="mc-val">Thinking PPIs reverse Barrett's esophagus. They don't. PPIs control acid and relieve symptoms, but the metaplastic change persists and requires ongoing EGD surveillance regardless of symptom control. Students who think "controlled = cured" miss this.</div></div>
+  <div class="mc mc-pearl"><div class="mc-lbl">◆ Clinical pearl</div><div class="mc-val">All gastric ulcers require biopsy at endoscopy to rule out gastric adenocarcinoma. Duodenal ulcers do not require routine biopsy — malignant transformation is extremely rare. This asymmetry is tested.</div></div>
+  <div class="mc mc-miss"><div class="mc-lbl">Most missed</div><div class="mc-val">Confusing the food-pain relationship. "Duodenal = relieved by food" (mnemonic: D for Downstream — food buffering reaches the duodenum). "Gastric = worsened by food" (food stimulates parietal cell acid secretion directly onto the damaged stomach). Write it out once.</div></div>
+</div>
+</div>
+
+</div><!-- week4 -->
+
+<!-- FOOTER -->
+<div class="guide-footer">
+  <div class="footer-brand">NR511 Midterm Guide · Greenwich School</div>
+  <div class="footer-note">Weeks 1–4 · HIV · Dermatology · HEENT · GI · Based on Chamberlain study guide + Bates' assigned chapters</div>
+  <button class="footer-btn" onclick="if(confirm('Sign out?')){localStorage.removeItem('nr511unlocked');window.location.replace('/nr511');}">Sign out</button>
+</div>
+
+</div><!-- page -->
+
+<script>
+// ── AUTH (preview-safe guard) ────────────────────────────
+(function(){
+  const unlocked =
+    typeof localStorage !== 'undefined' && (
+      localStorage.getItem('nr511unlocked') === 'true' ||
+      localStorage.getItem('nr509unlocked') === 'true'
+    );
+  const isPreview =
+    !window.location.hostname ||
+    window.location.hostname === 'localhost' ||
+    window.location.protocol === 'blob:' ||
+    window.location.hostname.includes('claude.ai');
+  if (!unlocked && !isPreview) {
+    const deployed =
+      window.location.hostname.includes('vercel.app') ||
+      window.location.hostname.includes('greenwich');
+    if (deployed) window.location.replace('/nr511');
+  }
+})();
+
+// ── QUESTION ENGINE ──────────────────────────────────────
+var _sel = {};
+
+function checkQ(qid, letter) {
+  if (_sel[qid + '_locked']) return;
+  var btns = document.querySelectorAll('#' + qid + 'o .opt');
+  btns.forEach(function(b) { b.classList.remove('selected'); });
+  var letters = ['A','B','C','D'];
+  btns.forEach(function(b, i) {
+    if (letters[i] === letter) b.classList.add('selected');
+  });
+  _sel[qid] = letter;
+  var checkBtn = document.getElementById(qid + 'b');
+  if (checkBtn) checkBtn.disabled = false;
+}
+
+function revealQ(qid, correct) {
+  if (_sel[qid + '_locked']) return;
+  _sel[qid + '_locked'] = true;
+  var chosen = _sel[qid];
+  var btns = document.querySelectorAll('#' + qid + 'o .opt');
+  var letters = ['A','B','C','D'];
+  btns.forEach(function(b, i) {
+    b.classList.remove('selected');
+    var l = letters[i];
+    if (l === correct)                     b.classList.add('correct');
+    else if (l === chosen && chosen !== correct) b.classList.add('wrong');
+    else                                   b.classList.add('neutral-r');
+    b.onclick = null;
+  });
+  var rat = document.getElementById(qid + 'r');
+  if (rat) rat.classList.add('open');
+  var checkBtn = document.getElementById(qid + 'b');
+  if (checkBtn) {
+    checkBtn.disabled = true;
+    checkBtn.textContent = chosen === correct ? '✓ Correct' : '✗ Incorrect';
+    checkBtn.style.background = chosen === correct ? '#2E7D52' : '#C0392B';
+  }
+}
+
+// ── WEEK NAV DOT HIGHLIGHTING ────────────────────────────
+(function(){
+  var dots = document.querySelectorAll('.nav-wk-dot');
+  var sections = ['week1','week2','week3','week4'];
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) {
+        var id = e.target.id;
+        var i = sections.indexOf(id);
+        dots.forEach(function(d, di) {
+          d.classList.remove('active','done','pending');
+          if (di === i) d.classList.add('active');
+          else if (di < i) d.classList.add('done');
+          else d.classList.add('pending');
+        });
+      }
+    });
+  }, { threshold: 0.25 });
+  sections.forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) obs.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
