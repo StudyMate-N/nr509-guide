@@ -26,10 +26,7 @@
       "Bash(unzip -o \"files \\(10\\).zip\" -d /tmp/nr509-new)",
       "Bash(wc -l /tmp/nr509-new/*.js /tmp/nr509-new/*.html /tmp/nr509-new/*.css /tmp/nr509-new/*.json)",
       "Bash(echo \"EXIT: $?\")",
-      "Bash(grep -l \"nav.js\" \"C:/Users/G840/Desktop/nr509-guide\"/*.html)",
-      "Bash(git push *)",
-      "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(grep -l \"nav.js\" \"C:/Users/G840/Desktop/nr509-guide\"/*.html)"
     ]
   }
 }
