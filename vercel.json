@@ -5,7 +5,8 @@
     { "source": "/exam", "destination": "/nr509/exam", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/nr511/cea", "destination": "/nr511/cea.html" }
+    { "source": "/nr511/cea", "destination": "/nr511/cea.html" },
+    { "source": "/nr511/podcast", "destination": "/nr511/podcast.html" }
   ],
   "headers": [
     {
